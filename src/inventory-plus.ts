@@ -2,133 +2,14 @@
  * @author Felix Müller
  */
 
-import ActorSheet5eCharacter from "../../systems/dnd5e/module/actor/sheets/character.js";
+import CONSTANTS from "./constants";
 
-class InventoryPlus {
+// import ActorSheet5eCharacter from "../../systems/dnd5e/module/actor/sheets/character.js";
 
-    static replaceGetData() {
-        if (typeof libWrapper === "function") {
-            libWrapper.register('inventory-plus', 'game.dnd5e.applications.ActorSheet5eCharacter.prototype.getData', function (wrapper, ...args) {
-                const sheetData = wrapper(...args);
+export class InventoryPlus {
 
-                let app = this;
-                let actor = this.actor;
-                let newInventory = InventoryPlus.processInventory(app, actor, sheetData.inventory);
-                sheetData.inventory = newInventory;
-
-                sheetData.data.attributes.encumbrance.value = InventoryPlus.calculateWeight(sheetData.inventory, actor.data.data.currency);
-                sheetData.data.attributes.encumbrance.pct = sheetData.data.attributes.encumbrance.value / sheetData.data.attributes.encumbrance.max * 100;
-
-                return sheetData;
-            },
-            "WRAPPER");
-        } else {
-            let oldGetData = ActorSheet5eCharacter.prototype.getData;
-
-            ActorSheet5eCharacter.prototype.getData = function () {
-                let app = this;
-                let actor = this.actor;
-
-                let data = oldGetData.bind(this)();
-                let newInventory = InventoryPlus.processInventory(app, actor, data.inventory);
-                data.inventory = newInventory;
-
-                data.data.attributes.encumbrance.value = InventoryPlus.calculateWeight(data.inventory, actor.data.data.currency);
-                data.data.attributes.encumbrance.pct = data.data.attributes.encumbrance.value / data.data.attributes.encumbrance.max * 100;
-                return data;
-            }
-        }
-    }
-
-    static replaceOnDropItem() {
-        let newOnDropItem = async function(event,data) {
-            // dropping new item
-            if (data.actorId !== this.object.id || data.data === undefined) {
-                const item = await Item.implementation.fromDropData(data);
-                const itemData = item.toJSON();
-                return this._onDropItemCreate(itemData);
-            }
-
-            // droping item outside inventory list, but ignore if already owned item
-            let targetLi = $(event.target).parents('li')[0];
-            if (targetLi === undefined || targetLi.className === undefined) {
-                if(data.actorId === this.object.id) {
-                    return;
-                } else {
-                    const item = await Item.implementation.fromDropData(data);
-                    const itemData = item.toJSON();
-                    return this._onDropItemCreate(itemData);
-                    //return ActorSheet5eCharacter.prototype._onDropItem.bind(this)(event, data);
-                }
-            }
-
-            // doing actual stuff!!!
-            let id = data.data._id;
-            let dropedItem = this.object.items.get(id);
-
-            let targetType = '';
-            let targetCss = InventoryPlus.getCSSName("sub-header");
-            if (targetLi.className.trim().indexOf(targetCss) !== -1) {
-                targetType = $(targetLi).find('.item-control')[0].dataset.type;
-            } else if (targetLi.className.trim().indexOf('item') !== -1) {
-                let itemId = targetLi.dataset.itemId;
-                let item = this.object.items.get(itemId);
-                targetType = this.inventoryPlus.getItemType(item.data);
-            }
-
-            // changing item list
-            let itemType = this.inventoryPlus.getItemType(data.data);
-            if (itemType !== targetType) {
-                let categoryWeight = this.inventoryPlus.getCategoryItemWeight(targetType);
-                let itemWeight = dropedItem.data.data.weight * dropedItem.data.data.quantity;
-                let maxWeight = Number(this.inventoryPlus.customCategorys[targetType].maxWeight ? this.inventoryPlus.customCategorys[targetType].maxWeight : 0);
-
-                if (maxWeight == NaN || maxWeight <= 0 || maxWeight >= (categoryWeight + itemWeight)) {
-                    await dropedItem.update({ 'flags.inventory-plus.category': targetType });
-                    itemType = targetType;
-                } else {
-                    ui.notifications.warn("Item exceedes categorys max weight");
-                    return;
-                }
-            }
-
-            // reordering items
-
-            // Get the drag source and its siblings
-            let source = dropedItem;
-            let siblings = this.object.items.filter(i => {
-                let type = this.inventoryPlus.getItemType(i.data);
-                return (type === itemType) && (i.data._id !== source.data._id)
-            });
-            // Get the drop target
-            let dropTarget = event.target.closest(".item");
-            let targetId = dropTarget ? dropTarget.dataset.itemId : null;
-            let target = siblings.find(s => s.data._id === targetId);
-
-            // Perform the sort
-            let sortUpdates = SortingHelpers.performIntegerSort(dropedItem, { target: target, siblings });
-            let updateData = sortUpdates.map(u => {
-                let update = u.update;
-                update._id = u.target.data._id;
-                return update;
-            });
-
-            // Perform the update
-            this.object.updateEmbeddedDocuments("Item", updateData);
-
-        }
-        if (typeof libWrapper === "function") {
-            libWrapper.register('inventory-plus', 'game.dnd5e.applications.ActorSheet5eCharacter.prototype._onDropItem', newOnDropItem,
-            "OVERRIDE");
-        } else {
-            if (this.oldOnDropItem === undefined) {
-                this.oldOnDropItem = ActorSheet5eCharacter.prototype._onDropItem;
-            }
-            let oldOnDropItem = this.oldOnDropItem;
-            ActorSheet5eCharacter.prototype._onDropItem = newOnDropItem;
-        }
-
-    }
+    actor:Actor;
+    customCategorys: {};
 
     static processInventory(app, actor, inventory) {
 
@@ -145,7 +26,7 @@ class InventoryPlus {
     }
 
     initCategorys() {
-        let actorFlag = this.actor.getFlag('inventory-plus', 'categorys');
+        const actorFlag = this.actor.getFlag(CONSTANTS.MODULE_NAME, 'categorys');
         if (actorFlag === undefined) {
             this.customCategorys = {
                 weapon: { label: "DND5E.ItemTypeWeaponPl", dataset: { type: "weapon" }, sortFlag: 1000, ignoreWeight: false, maxWeight: 0, ownWeight: 0, collapsed: false },
@@ -346,7 +227,7 @@ class InventoryPlus {
         for (let item of this.actor.items) {
             let type = this.getItemType(item.data);
             if (type === catType) {
-                //await item.unsetFlag('inventory-plus', 'category');
+                //await item.unsetFlag(CONSTANTS.MODULE_NAME, 'category');
                 changedItems.push({
                     _id: item.id,
                     '-=flags.inventory-plus':null
@@ -357,7 +238,7 @@ class InventoryPlus {
 
         delete this.customCategorys[catType];
         let deleteKey = `-=${catType}`
-        this.actor.setFlag('inventory-plus', 'categorys', { [deleteKey]:null });
+        this.actor.setFlag(CONSTANTS.MODULE_NAME, 'categorys', { [deleteKey]:null });
     }
 
     changeCategoryOrder(movedType, up) {
@@ -502,19 +383,6 @@ class InventoryPlus {
 
     async saveCategorys() {
         //this.actor.update({ 'flags.inventory-plus.categorys': this.customCategorys }).then(() => { console.log(this.actor.data.flags) });
-        await this.actor.setFlag('inventory-plus', 'categorys', this.customCategorys);
+        await this.actor.setFlag(CONSTANTS.MODULE_NAME, 'categorys', this.customCategorys);
     }
 }
-
-Hooks.on('ready', () => {
-    InventoryPlus.replaceGetData();
-
-    InventoryPlus.replaceOnDropItem();
-
-});
-
-Hooks.on(`renderActorSheet5eCharacter`, (app, html, data) => {
-    app.inventoryPlus.addInventoryFunctions(html);
-
-
-});

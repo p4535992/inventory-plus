@@ -43,137 +43,70 @@ function getGame(): Game {
 // }
 
 export const registerSettings = function (): void {
-  game.settings.registerMenu(CONSTANTS.MODULE_NAME, 'resetAllSettings', {
-    name: `${CONSTANTS.MODULE_NAME}.setting.reset.name`,
-    hint: `${CONSTANTS.MODULE_NAME}.setting.reset.hint`,
-    icon: 'fas fa-coins',
-    type: ResetSettingsDialog,
-    restricted: true,
-  });
-
-  // ============================================================
-  // OLD SETTINGS TO REMOVE PROBABLY
-  // ===========================================================
-
-  // game.settings.register(CONSTANTS.MODULE_NAME, 'useBasicPanelEffects', {
-  //   name: i18n(`${CONSTANTS.MODULE_NAME}.setting.useBasicPanelEffects.name`),
-  //   hint: i18n(`${CONSTANTS.MODULE_NAME}.setting.useBasicPanelEffects.hint`),
-  //   config: false,
-  //   scope: 'world',
-  //   default: true,
-  //   type: Boolean,
+  // game.settings.registerMenu(CONSTANTS.MODULE_NAME, 'resetAllSettings', {
+  //   name: `${CONSTANTS.MODULE_NAME}.setting.reset.name`,
+  //   hint: `${CONSTANTS.MODULE_NAME}.setting.reset.hint`,
+  //   icon: 'fas fa-coins',
+  //   type: ResetSettingsDialog,
+  //   restricted: true,
   // });
-
-  game.settings.register(CONSTANTS.MODULE_NAME, 'imageDisplay', {
-    name: i18n(`${CONSTANTS.MODULE_NAME}.setting.imageDisplay.name`),
-    hint: i18n(`${CONSTANTS.MODULE_NAME}.setting.imageDisplay.hint`),
-    scope: 'world',
-    config: true,
-    type: Boolean,
-    default: true,
-  });
-
-  game.settings.register(CONSTANTS.MODULE_NAME, 'imageOpacity', {
-    name: i18n(`${CONSTANTS.MODULE_NAME}.setting.opacity.name`),
-    hint: i18n(`${CONSTANTS.MODULE_NAME}.setting.opacity.hint`),
-    scope: 'world',
-    config: true,
-    range: <any>{ min: 0, max: 100, step: 1 },
-    type: Number,
-    default: 50,
-  });
-
-  game.settings.register(CONSTANTS.MODULE_NAME, 'rollItem', {
-    name: i18n(`${CONSTANTS.MODULE_NAME}.setting.rollItem.name`),
-    hint: i18n(`${CONSTANTS.MODULE_NAME}.setting.rollItem.hint`),
-    config: true,
-    scope: 'world',
-    default: true,
-    type: Boolean,
-  });
-
-  /** Which column should the button be placed on */
-  game.settings.register(CONSTANTS.MODULE_NAME, 'hudColumn', {
-    name: i18n(`${CONSTANTS.MODULE_NAME}.setting.hudColumn.title`),
-    hint: i18n(`${CONSTANTS.MODULE_NAME}.setting.hudColumn.hint`),
-    scope: 'client',
-    config: true,
-    type: String,
-    default: 'Right',
-    choices: <any>{
-      Left: 'Left',
-      Right: 'Right',
-    },
-  });
-
-  /** Whether the button should be placed on the top or bottom of the column */
-  game.settings.register(CONSTANTS.MODULE_NAME, 'hudTopBottom', {
-    name: i18n(`${CONSTANTS.MODULE_NAME}.setting.hudTopBottom.title`),
-    hint: i18n(`${CONSTANTS.MODULE_NAME}.setting.hudTopBottom.hint`),
-    scope: 'client',
-    config: true,
-    type: String,
-    default: 'Bottom',
-    choices: <any>{
-      Top: 'Top',
-      Bottom: 'Bottom',
-    },
-  });
 
   // ===================================================================
 
-  game.settings.register(CONSTANTS.MODULE_NAME, 'debug', {
-    name: `${CONSTANTS.MODULE_NAME}.setting.debug.name`,
-    hint: `${CONSTANTS.MODULE_NAME}.setting.debug.hint`,
-    scope: 'client',
-    config: true,
-    default: false,
-    type: Boolean,
-  });
+  // ===================================================================
 
-  game.settings.register(CONSTANTS.MODULE_NAME, 'debugHooks', {
-    name: `${CONSTANTS.MODULE_NAME}.setting.debugHooks.name`,
-    hint: `${CONSTANTS.MODULE_NAME}.setting.debugHooks.hint`,
-    scope: 'world',
-    config: false,
-    default: false,
-    type: Boolean,
-  });
+  // game.settings.register(CONSTANTS.MODULE_NAME, 'debug', {
+  //   name: `${CONSTANTS.MODULE_NAME}.setting.debug.name`,
+  //   hint: `${CONSTANTS.MODULE_NAME}.setting.debug.hint`,
+  //   scope: 'client',
+  //   config: true,
+  //   default: false,
+  //   type: Boolean,
+  // });
 
-  game.settings.register(CONSTANTS.MODULE_NAME, 'systemFound', {
-    name: `${CONSTANTS.MODULE_NAME}.setting.systemFound.name`,
-    hint: `${CONSTANTS.MODULE_NAME}.setting.systemFound.hint`,
-    scope: 'world',
-    config: false,
-    default: false,
-    type: Boolean,
-  });
+  // game.settings.register(CONSTANTS.MODULE_NAME, 'debugHooks', {
+  //   name: `${CONSTANTS.MODULE_NAME}.setting.debugHooks.name`,
+  //   hint: `${CONSTANTS.MODULE_NAME}.setting.debugHooks.hint`,
+  //   scope: 'world',
+  //   config: false,
+  //   default: false,
+  //   type: Boolean,
+  // });
 
-  game.settings.register(CONSTANTS.MODULE_NAME, 'systemNotFoundWarningShown', {
-    name: `${CONSTANTS.MODULE_NAME}.setting.systemNotFoundWarningShown.name`,
-    hint: `${CONSTANTS.MODULE_NAME}.setting.systemNotFoundWarningShown.hint`,
-    scope: 'world',
-    config: false,
-    default: false,
-    type: Boolean,
-  });
+  // game.settings.register(CONSTANTS.MODULE_NAME, 'systemFound', {
+  //   name: `${CONSTANTS.MODULE_NAME}.setting.systemFound.name`,
+  //   hint: `${CONSTANTS.MODULE_NAME}.setting.systemFound.hint`,
+  //   scope: 'world',
+  //   config: false,
+  //   default: false,
+  //   type: Boolean,
+  // });
 
-  game.settings.register(CONSTANTS.MODULE_NAME, 'preconfiguredSystem', {
-    name: `${CONSTANTS.MODULE_NAME}.setting.preconfiguredSystem.name`,
-    hint: `${CONSTANTS.MODULE_NAME}.setting.preconfiguredSystem.hint`,
-    scope: 'world',
-    config: false,
-    default: false,
-    type: Boolean,
-  });
+  // game.settings.register(CONSTANTS.MODULE_NAME, 'systemNotFoundWarningShown', {
+  //   name: `${CONSTANTS.MODULE_NAME}.setting.systemNotFoundWarningShown.name`,
+  //   hint: `${CONSTANTS.MODULE_NAME}.setting.systemNotFoundWarningShown.hint`,
+  //   scope: 'world',
+  //   config: false,
+  //   default: false,
+  //   type: Boolean,
+  // });
 
-  const settings = defaultSettings();
-  for (const [name, data] of Object.entries(settings)) {
-    game.settings.register(CONSTANTS.MODULE_NAME, name, <any>data);
-  }
-  // for (const [name, data] of Object.entries(otherSettings)) {
-  //     game.settings.register(CONSTANTS.MODULE_NAME, name, data);
+  // game.settings.register(CONSTANTS.MODULE_NAME, 'preconfiguredSystem', {
+  //   name: `${CONSTANTS.MODULE_NAME}.setting.preconfiguredSystem.name`,
+  //   hint: `${CONSTANTS.MODULE_NAME}.setting.preconfiguredSystem.hint`,
+  //   scope: 'world',
+  //   config: false,
+  //   default: false,
+  //   type: Boolean,
+  // });
+
+  // const settings = defaultSettings();
+  // for (const [name, data] of Object.entries(settings)) {
+  //   game.settings.register(CONSTANTS.MODULE_NAME, name, <any>data);
   // }
+  // // for (const [name, data] of Object.entries(otherSettings)) {
+  // //     game.settings.register(CONSTANTS.MODULE_NAME, name, data);
+  // // }
 };
 
 class ResetSettingsDialog extends FormApplication<FormApplicationOptions, object, any> {
@@ -278,69 +211,6 @@ function otherSettings(apply = false) {
       config: false,
       default: false,
       type: Boolean,
-    },
-
-    // useBasicPanelEffects: {
-    //   name: i18n(`${CONSTANTS.MODULE_NAME}.setting.useBasicPanelEffects.name`),
-    //   hint: i18n(`${CONSTANTS.MODULE_NAME}.setting.useBasicPanelEffects.hint`),
-    //   config: true,
-    //   scope: 'world',
-    //   default: false,
-    //   type: Boolean,
-    // },
-
-    imageDisplay: {
-      name: i18n(`${CONSTANTS.MODULE_NAME}.setting.imageDisplay.name`),
-      hint: i18n(`${CONSTANTS.MODULE_NAME}.setting.imageDisplay.hint`),
-      scope: 'world',
-      config: true,
-      type: Boolean,
-      default: true,
-    },
-
-    imageOpacity: {
-      name: i18n(`${CONSTANTS.MODULE_NAME}.setting.opacity.name`),
-      hint: i18n(`${CONSTANTS.MODULE_NAME}.setting.opacity.hint`),
-      scope: 'world',
-      config: true,
-      range: <any>{ min: 0, max: 100, step: 1 },
-      type: Number,
-      default: 50,
-    },
-
-    rollItem: {
-      name: i18n(`${CONSTANTS.MODULE_NAME}.setting.rollItem.name`),
-      hint: i18n(`${CONSTANTS.MODULE_NAME}.setting.rollItem.hint`),
-      config: true,
-      scope: 'world',
-      default: true,
-      type: Boolean,
-    },
-
-    hudColumn: {
-      name: i18n(`${CONSTANTS.MODULE_NAME}.setting.hudColumn.title`),
-      hint: i18n(`${CONSTANTS.MODULE_NAME}.setting.hudColumn.hint`),
-      scope: 'client',
-      config: true,
-      type: String,
-      default: 'Right',
-      choices: <any>{
-        Left: 'Left',
-        Right: 'Right',
-      },
-    },
-
-    hudTopBottom: {
-      name: i18n(`${CONSTANTS.MODULE_NAME}.setting.hudTopBottom.title`),
-      hint: i18n(`${CONSTANTS.MODULE_NAME}.setting.hudTopBottom.hint`),
-      scope: 'client',
-      config: true,
-      type: String,
-      default: 'Bottom',
-      choices: <any>{
-        Top: 'Top',
-        Bottom: 'Bottom',
-      },
     },
   };
 }

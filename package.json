@@ -1,9 +1,9 @@
 {
   "private": true,
   "name": "inventory-plus",
-  "title": "LightsHUD+ATE",
-  "description": "Lights HUD Control + Active Token Effect",
-  "version": "0.11.3",
+  "title": "Inventory+",
+  "description": "Enhances the default dnd5e sheets inventory to allow for reorganization",
+  "version": "0.5",
   "scripts": {
     "package": "gulp package",
     "build": "gulp build && gulp link",
