@@ -1,8 +1,7 @@
 import { game } from './settings';
 // ↓ IMPORT SYSTEMS HERE ↓
-import dnd5e from './systems/dnd5e';
-import pf2e from './systems/pf2e';
-import generic from './systems/generic';
+import dnd5e from '../systems/dnd5e';
+import generic from '../systems/generic';
 
 // ↑ IMPORT SYSTEMS HERE ↑
 
@@ -15,7 +14,6 @@ export const SYSTEMS = {
     return {
       // ↓ ADD SYSTEMS HERE ↓
       dnd5e,
-      pf2e,
       generic,
       // ↑ ADD SYSTEMS HERE ↑
     }?.[game.system.id];

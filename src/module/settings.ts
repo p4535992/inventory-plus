@@ -1,4 +1,3 @@
-import API from './api';
 import CONSTANTS from './constants';
 import { dialogWarning, i18n, warn } from './lib/lib';
 import { SYSTEMS } from './systems';
@@ -55,14 +54,14 @@ export const registerSettings = function (): void {
 
   // ===================================================================
 
-  // game.settings.register(CONSTANTS.MODULE_NAME, 'debug', {
-  //   name: `${CONSTANTS.MODULE_NAME}.setting.debug.name`,
-  //   hint: `${CONSTANTS.MODULE_NAME}.setting.debug.hint`,
-  //   scope: 'client',
-  //   config: true,
-  //   default: false,
-  //   type: Boolean,
-  // });
+  game.settings.register(CONSTANTS.MODULE_NAME, 'debug', {
+    name: `${CONSTANTS.MODULE_NAME}.setting.debug.name`,
+    hint: `${CONSTANTS.MODULE_NAME}.setting.debug.hint`,
+    scope: 'client',
+    config: true,
+    default: false,
+    type: Boolean,
+  });
 
   // game.settings.register(CONSTANTS.MODULE_NAME, 'debugHooks', {
   //   name: `${CONSTANTS.MODULE_NAME}.setting.debugHooks.name`,
