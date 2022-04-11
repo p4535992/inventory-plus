@@ -2,11 +2,10 @@
  * @author Felix Müller
  */
 
-import { ItemData } from '@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/data/module.mjs';
+import type { ItemData } from '@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/data/module.mjs';
 import CONSTANTS from './constants';
 import { Category, InventoryPlusFlags } from './inventory-plus-models';
-import { debug } from './lib/lib';
-import { canvas, game } from './settings';
+import { debug, getCSSName, warn } from './lib/lib';
 // import ActorSheet5eCharacter from "../../systems/dnd5e/module/actor/sheets/character.js";
 
 export class InventoryPlus {
@@ -144,7 +143,7 @@ export class InventoryPlus {
      *  add extra header functions
      */
 
-    const targetCss = `.inventory .${InventoryPlus.getCSSName('sub-header')}`;
+    const targetCss = `.inventory .${getCSSName('sub-header')}`;
     const headers = html.find(targetCss);
     for (let header of headers) {
       header = $(header);
@@ -158,21 +157,21 @@ export class InventoryPlus {
       }
 
       // toggle item visibility
-      const arrow = this.customCategorys[type].collapsed === true ? 'right' : 'down';
+      const arrow = this.customCategorys[type]?.collapsed === true ? 'right' : 'down';
       const toggleBtn = $(`<a class="toggle-collapse"><i class="fas fa-caret-${arrow}"></i></a>`).click((ev) => {
-        this.customCategorys[type].collapsed = !this.customCategorys[type].collapsed;
+        (<Category>this.customCategorys[type]).collapsed = <boolean>!this.customCategorys[type]?.collapsed;
         this.saveCategorys();
       });
       header.find('h3').before(toggleBtn);
 
       // reorder category
-      if (this.getLowestSortFlag() !== this.customCategorys[type].sortFlag) {
+      if (this.getLowestSortFlag() !== (<Category>this.customCategorys[type]).sortFlag) {
         const upBtn = $(
           `<a class="inv-plus-stuff shuffle-up" title="Move category up"><i class="fas fa-chevron-up"></i></a>`,
         ).click(() => this.changeCategoryOrder(type, true));
         extraStuff.append(upBtn);
       }
-      if (this.getHighestSortFlag() !== this.customCategorys[type].sortFlag) {
+      if (this.getHighestSortFlag() !== (<Category>this.customCategorys[type]).sortFlag) {
         const downBtn = $(
           `<a class="inv-plus-stuff shuffle-down" title="Move category down"><i class="fas fa-chevron-down"></i></a>`,
         ).click(() => this.changeCategoryOrder(type, false));
@@ -183,8 +182,8 @@ export class InventoryPlus {
       const editCategoryBtn = $('<a class="inv-plus-stuff customize-category"><i class="fas fa-edit"></i></a>').click(
         async (ev) => {
           const template = await renderTemplate(
-            'modules/inventory-plus/templates/categoryDialog.hbs',
-            this.customCategorys[type],
+            `modules/${CONSTANTS.MODULE_NAME}/templates/categoryDialog.hbs`,
+            <Category>this.customCategorys[type],
           );
           const d = new Dialog({
             title: 'Edit Inventory Category',
@@ -199,9 +198,9 @@ export class InventoryPlus {
                     const value = input.type === 'checkbox' ? input.checked : input.value;
                     if (input.dataset.dtype === 'Number') {
                       const valueN = Number(value) > 0 ? Number(value) : 0;
-                      this.customCategorys[type][input.name] = valueN;
+                      (<Category>this.customCategorys[type])[input.name] = valueN;
                     } else {
-                      this.customCategorys[type][input.name] = value;
+                      (<Category>this.customCategorys[type])[input.name] = value;
                     }
                   }
                   this.saveCategorys();
@@ -220,14 +219,14 @@ export class InventoryPlus {
       extraStuff.append(editCategoryBtn);
 
       // hide collapsed category items
-      if (this.customCategorys[type].collapsed === true) {
+      if ((<Category>this.customCategorys[type]).collapsed === true) {
         header.next().hide();
       }
 
-      if (this.customCategorys[type].maxWeight > 0) {
+      if ((<Category>this.customCategorys[type]).maxWeight > 0) {
         const weight = this.getCategoryItemWeight(type);
         const weightString = $(
-          `<label class="category-weight">( ${weight}/${this.customCategorys[type].maxWeight}  ${game.i18n.localize(
+          `<label class="category-weight">( ${weight}/${(<Category>this.customCategorys[type]).maxWeight}  ${game.i18n.localize(
             'DND5E.AbbreviationLbs',
           )})</label>`,
         );
@@ -240,7 +239,7 @@ export class InventoryPlus {
     const sections = <Record<string, Category>>duplicate(this.customCategorys);
 
     for (const id in sections) {
-      sections[id].items = [];
+      (<Category>sections[id]).items = [];
     }
 
     for (const section of inventory) {
@@ -249,13 +248,13 @@ export class InventoryPlus {
         if (sections[type] === undefined) {
           type = item.type;
         }
-        sections[type].items?.push(item);
+        (<Category>sections[type]).items?.push(item);
       }
     }
 
     // sort items within sections
     for (const id in sections) {
-      const section = sections[id];
+      const section = <Category>sections[id];
       section.items?.sort((a, b) => {
         return a.sort - b.sort;
       });
@@ -320,11 +319,11 @@ export class InventoryPlus {
     let currentSortFlag = 0;
     if (!up) currentSortFlag = 999999999;
     for (const id in this.customCategorys) {
-      const currentCategory = this.customCategorys[id];
+      const currentCategory = <Category>this.customCategorys[id];
       if (up) {
         if (
           id !== movedType &&
-          currentCategory.sortFlag < this.customCategorys[movedType].sortFlag &&
+          currentCategory.sortFlag < (<Category>this.customCategorys[movedType]).sortFlag &&
           currentCategory.sortFlag > currentSortFlag
         ) {
           targetType = id;
@@ -333,7 +332,7 @@ export class InventoryPlus {
       } else {
         if (
           id !== movedType &&
-          currentCategory.sortFlag > this.customCategorys[movedType].sortFlag &&
+          currentCategory.sortFlag > (<Category>this.customCategorys[movedType]).sortFlag &&
           currentCategory.sortFlag < currentSortFlag
         ) {
           targetType = id;
@@ -343,11 +342,11 @@ export class InventoryPlus {
     }
 
     if (movedType !== targetType) {
-      const oldMovedSortFlag = this.customCategorys[movedType].sortFlag;
+      const oldMovedSortFlag = this.customCategorys[movedType]?.sortFlag;
       const newMovedSortFlag = currentSortFlag;
 
-      this.customCategorys[movedType].sortFlag = newMovedSortFlag;
-      this.customCategorys[targetType].sortFlag = oldMovedSortFlag;
+      (<Category>this.customCategorys[movedType]).sortFlag = newMovedSortFlag;
+      (<Category>this.customCategorys[targetType]).sortFlag = <number>oldMovedSortFlag;
       this.applySortKey();
       this.saveCategorys();
     }
@@ -358,7 +357,7 @@ export class InventoryPlus {
 
     const keys = Object.keys(this.customCategorys);
     keys.sort((a, b) => {
-      return this.customCategorys[a].sortFlag - this.customCategorys[b].sortFlag;
+      return <number>this.customCategorys[a]?.sortFlag - <number>this.customCategorys[b]?.sortFlag;
     });
     for (const key of keys) {
       sortedCategorys[key] = this.customCategorys[key];
@@ -370,7 +369,11 @@ export class InventoryPlus {
     let highest = 0;
 
     for (const id in this.customCategorys) {
-      const cat = this.customCategorys[id];
+      const cat = <Category>this.customCategorys[id];
+      if(!cat){
+        warn(`Can't find the category with id '${id}'`, true);
+        return highest;
+      }
       if (cat.sortFlag > highest) {
         highest = cat.sortFlag;
       }
@@ -383,7 +386,8 @@ export class InventoryPlus {
     let lowest = 999999999;
 
     for (const id in this.customCategorys) {
-      const cat = this.customCategorys[id];
+      const cat = <Category>this.customCategorys[id];
+
       if (cat.sortFlag < lowest) {
         lowest = cat.sortFlag;
       }
@@ -422,52 +426,16 @@ export class InventoryPlus {
     return weight;
   }
 
-  static calculateWeight(inventory: Category[], currency: number): number {
-    let customWeight = 0;
-    for (const id in inventory) {
-      const section = inventory[id];
-      if (section.ignoreWeight !== true) {
-        for (const i of <ItemData[]>section.items) {
-          debug(i);
-          //@ts-ignore
-          customWeight += i.totalWeight;
-        }
-      }
-      if (Number(section.ownWeight) > 0) {
-        customWeight += Number(section.ownWeight);
-      }
-    }
-
-    let coinWeight = 0;
-    if (game.settings.get('dnd5e', 'currencyWeight')) {
-      const numCoins = <number>(
-        Object.values(currency).reduce((val: number, denom: number) => (val += Math.max(denom, 0)), 0)
-      );
-      if (game.settings.get('dnd5e', 'metricWeightUnits')) {
-        //@ts-ignore
-        coinWeight = Math.round((numCoins * 10) / CONFIG.DND5E.encumbrance.currencyPerWeight.metric) / 10;
-      } else {
-        //@ts-ignore
-        coinWeight = Math.round((numCoins * 10) / CONFIG.DND5E.encumbrance.currencyPerWeight.imperial) / 10;
-      }
-    }
-    customWeight += coinWeight;
-
-    customWeight = Number(customWeight.toFixed(2));
-
-    return customWeight;
-  }
-
-  static getCSSName(element) {
-    const version = <string[]>game.system.data.version.split('.');
-    if (element === 'sub-header') {
-      if (Number(version[0]) == 0 && Number(version[1]) <= 9 && Number(version[2]) <= 8) {
-        return 'inventory-header';
-      } else {
-        return 'items-header';
-      }
-    }
-  }
+  // static getCSSName(element) {
+  //   const version = <string[]>game.system.data.version.split('.');
+  //   if (element === 'sub-header') {
+  //     if (Number(version[0]) == 0 && Number(version[1]) <= 9 && Number(version[2]) <= 8) {
+  //       return 'inventory-header';
+  //     } else {
+  //       return 'items-header';
+  //     }
+  //   }
+  // }
 
   async saveCategorys() {
     //this.actor.update({ 'flags.inventory-plus.categorys': this.customCategorys }).then(() => { console.log(this.actor.data.flags) });

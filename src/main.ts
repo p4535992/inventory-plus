@@ -12,12 +12,11 @@
 // Import JavaScript modules
 
 // Import TypeScript modules
-import API from './module/api';
+import type API from './module/api';
 import CONSTANTS from './module/constants';
 import { error } from './module/lib/lib';
 import { initHooks, readyHooks, setupHooks } from './module/module';
 import { registerSettings } from './module/settings';
-import { canvas, game } from './module/settings';
 
 /* ------------------------------------ */
 /* Initialize module					*/
@@ -57,33 +56,13 @@ Hooks.once('setup', function () {
 /* ------------------------------------ */
 Hooks.once('ready', () => {
   // Do anything once the module is ready
-  if (!game.modules.get('lib-wrapper')?.active && game.user?.isGM) {
-    let word = 'install and activate';
-    if (game.modules.get('lib-wrapper')) word = 'activate';
-    throw error(`Requires the 'libWrapper' module. Please ${word} it.`);
-  }
-  if (!game.modules.get('socketlib')?.active && game.user?.isGM) {
-    let word = 'install and activate';
-    if (game.modules.get('socketlib')) word = 'activate';
-    throw error(`Requires the 'socketlib' module. Please ${word} it.`);
-  }
-  if (!game.modules.get('ATL')?.active && game.user?.isGM) {
-    let word = 'install and activate';
-    if (game.modules.get('ATL')) word = 'activate';
-    throw error(`Requires the 'ATL' module. Please ${word} it.`);
-  }
-  if (!game.modules.get('warpgate')?.active && game.user?.isGM) {
-    let word = 'install and activate';
-    if (game.modules.get('warpgate')) word = 'activate';
-    throw error(`Requires the 'warpgate' module. Please ${word} it.`);
-  }
 
   readyHooks();
 });
 
 // Add any additional hooks if necessary
 
-export interface LigthsHudAteModuleData {
+export interface InventoryPlusModuleData {
   api: typeof API;
   socket: any;
 }
@@ -93,7 +72,7 @@ export interface LigthsHudAteModuleData {
  * @param api to set to game module.
  */
 export function setApi(api: typeof API): void {
-  const data = game.modules.get(CONSTANTS.MODULE_NAME) as unknown as LigthsHudAteModuleData;
+  const data = game.modules.get(CONSTANTS.MODULE_NAME) as unknown as InventoryPlusModuleData;
   data.api = api;
 }
 
@@ -102,7 +81,7 @@ export function setApi(api: typeof API): void {
  * @returns Api from games module.
  */
 export function getApi(): typeof API {
-  const data = game.modules.get(CONSTANTS.MODULE_NAME) as unknown as LigthsHudAteModuleData;
+  const data = game.modules.get(CONSTANTS.MODULE_NAME) as unknown as InventoryPlusModuleData;
   return data.api;
 }
 
@@ -111,7 +90,7 @@ export function getApi(): typeof API {
  * @param socket to set to game module.
  */
 export function setSocket(socket: any): void {
-  const data = game.modules.get(CONSTANTS.MODULE_NAME) as unknown as LigthsHudAteModuleData;
+  const data = game.modules.get(CONSTANTS.MODULE_NAME) as unknown as InventoryPlusModuleData;
   data.socket = socket;
 }
 
@@ -120,7 +99,7 @@ export function setSocket(socket: any): void {
  * @returns Socket from games module.
  */
 export function getSocket() {
-  const data = game.modules.get(CONSTANTS.MODULE_NAME) as unknown as LigthsHudAteModuleData;
+  const data = game.modules.get(CONSTANTS.MODULE_NAME) as unknown as InventoryPlusModuleData;
   return data.socket;
 }
 
@@ -130,8 +109,7 @@ Hooks.once('libChangelogsReady', function () {
     CONSTANTS.MODULE_NAME,
     `
   - Rewriting with typescript and update for foundryvtt'
-  - Integration with ATE
   `,
-    'minor',
+    'major',
   );
 });

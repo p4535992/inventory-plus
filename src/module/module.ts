@@ -3,7 +3,7 @@ import API from './api';
 import CONSTANTS from './constants';
 import { InventoryPlus } from './inventory-plus';
 import { InventoryPlusFlags } from './inventory-plus-models';
-import { canvas, game } from './settings';
+import { getCSSName } from './lib/lib';
 
 export const initHooks = async (): Promise<void> => {
   // registerSettings();
@@ -49,7 +49,7 @@ export const readyHooks = async (): Promise<void> => {
       const newInventory = InventoryPlus.processInventory(this, actor, sheetData.inventory);
       sheetData.inventory = newInventory;
 
-      sheetData.data.attributes.encumbrance.value = InventoryPlus.calculateWeight(
+      sheetData.data.attributes.encumbrance.value = API.calculateWeight(
         sheetData.inventory,
         actor.data.data.currency,
       );
@@ -94,9 +94,9 @@ export const readyHooks = async (): Promise<void> => {
       const dropedItem = <Item>this.object.items.get(id);
 
       let targetType = '';
-      const targetCss = InventoryPlus.getCSSName('sub-header');
+      const targetCss = getCSSName('sub-header');
       if (targetLi.className.trim().indexOf(<string>targetCss) !== -1) {
-        targetType = <string>$(targetLi).find('.item-control')[0].dataset.type;
+        targetType = <string>(($(targetLi).find('.item-control'))[0])?.dataset.type;
       } else if (targetLi.className.trim().indexOf('item') !== -1) {
         const itemId = targetLi.dataset.itemId;
         const item = this.object.items.get(itemId);

@@ -1,11 +1,5 @@
-import EmbeddedCollection from '@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/abstract/embedded-collection.mjs';
-import {
-  ActorData,
-  TokenData,
-} from '@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/data/module.mjs';
 import API from '../api';
 import CONSTANTS from '../constants';
-import { canvas, game } from '../settings';
 
 // =============================
 // Module Generic function
@@ -62,7 +56,7 @@ export function isGMConnected() {
 }
 
 export function isGMConnectedAndSocketLibEnable() {
-  return isGMConnected() && !game.settings.get(CONSTANTS.MODULE_NAME, 'doNotUseSocketLibFeature');
+  return isGMConnected(); // && !game.settings.get(CONSTANTS.MODULE_NAME, 'doNotUseSocketLibFeature');
 }
 
 export function wait(ms) {
@@ -249,7 +243,7 @@ export function getFirstPlayerTokenSelected(): Token | null {
     return null;
     //}
   }
-  return selectedTokens[0];
+  return <Token>selectedTokens[0];
 }
 
 /**
@@ -266,7 +260,7 @@ export function getFirstPlayerToken(): Token | null {
     return null;
   }
   // If exactly one token is selected, take that
-  token = controlled[0];
+  token = <Token>controlled[0];
   if (!token) {
     if (!controlled.length || controlled.length == 0) {
       // If no token is selected use the token of the users character
@@ -314,3 +308,14 @@ function getElevationPlaceableObject(placeableObject: any): number {
 // =============================
 // Module specific function
 // =============================
+
+export function getCSSName(element) {
+  const version = <string[]>game.system.data.version.split('.');
+  if (element === 'sub-header') {
+    if (Number(version[0]) == 0 && Number(version[1]) <= 9 && Number(version[2]) <= 8) {
+      return 'inventory-header';
+    } else {
+      return 'items-header';
+    }
+  }
+}
