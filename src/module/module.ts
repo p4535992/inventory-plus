@@ -3,7 +3,7 @@ import API from './api';
 import CONSTANTS from './constants';
 import { InventoryPlus } from './inventory-plus';
 import { InventoryPlusFlags } from './inventory-plus-models';
-import { getCSSName } from './lib/lib';
+import { getCSSName, warn } from './lib/lib';
 
 export const initHooks = async (): Promise<void> => {
   // registerSettings();
@@ -120,7 +120,7 @@ export const readyHooks = async (): Promise<void> => {
           await dropedItem.setFlag(CONSTANTS.MODULE_NAME, InventoryPlusFlags.CATEGORY, targetType);
           itemType = targetType;
         } else {
-          ui.notifications?.warn('Item exceeds categories max weight');
+          warn(`Item exceeds categories max weight`, true);
           return;
         }
       }

@@ -102,14 +102,3 @@ export function getSocket() {
   const data = game.modules.get(CONSTANTS.MODULE_NAME) as unknown as InventoryPlusModuleData;
   return data.socket;
 }
-
-Hooks.once('libChangelogsReady', function () {
-  //@ts-ignore
-  libChangelogs.register(
-    CONSTANTS.MODULE_NAME,
-    `
-  - Rewriting with typescript and update for foundryvtt'
-  `,
-    'major',
-  );
-});

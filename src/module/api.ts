@@ -5,11 +5,11 @@ import { debug, warn } from "./lib/lib";
 
 const API = {
 
-  getTotalWeight(actorId:string){
+  calculateWeightFromActor(actorId:string): number{
     const actorEntity = game.actors?.get(actorId);
     if(!actorEntity){
-      warn(`NO actor found for id '${actorEntity}'`, true);
-      return;
+      warn(`No actor found for id '${actorId}'`, true);
+      return 0;
     }
 
     const inventoryItems: Item[] = [];

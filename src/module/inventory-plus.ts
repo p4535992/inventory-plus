@@ -5,7 +5,7 @@
 import type { ItemData } from '@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/data/module.mjs';
 import CONSTANTS from './constants';
 import { Category, InventoryPlusFlags } from './inventory-plus-models';
-import { debug, getCSSName, warn } from './lib/lib';
+import { debug, duplicateExtended, error, getCSSName, warn } from './lib/lib';
 // import ActorSheet5eCharacter from "../../systems/dnd5e/module/actor/sheets/character.js";
 
 export class InventoryPlus {
@@ -37,6 +37,7 @@ export class InventoryPlus {
           maxWeight: 0,
           ownWeight: 0,
           collapsed: false,
+          items:[],
         },
         equipment: {
           label: 'DND5E.ItemTypeEquipmentPl',
@@ -46,6 +47,7 @@ export class InventoryPlus {
           maxWeight: 0,
           ownWeight: 0,
           collapsed: false,
+          items:[],
         },
         consumable: {
           label: 'DND5E.ItemTypeConsumablePl',
@@ -55,6 +57,7 @@ export class InventoryPlus {
           maxWeight: 0,
           ownWeight: 0,
           collapsed: false,
+          items:[],
         },
         tool: {
           label: 'DND5E.ItemTypeToolPl',
@@ -64,6 +67,7 @@ export class InventoryPlus {
           maxWeight: 0,
           ownWeight: 0,
           collapsed: false,
+          items:[],
         },
         backpack: {
           label: 'DND5E.ItemTypeContainerPl',
@@ -73,6 +77,7 @@ export class InventoryPlus {
           maxWeight: 0,
           ownWeight: 0,
           collapsed: false,
+          items:[],
         },
         loot: {
           label: 'DND5E.ItemTypeLootPl',
@@ -82,6 +87,7 @@ export class InventoryPlus {
           maxWeight: 0,
           ownWeight: 0,
           collapsed: false,
+          items:[],
         },
       };
     } else {
@@ -179,7 +185,7 @@ export class InventoryPlus {
       }
 
       // edit category
-      const editCategoryBtn = $('<a class="inv-plus-stuff customize-category"><i class="fas fa-edit"></i></a>').click(
+      const editCategoryBtn = $(`<a class="inv-plus-stuff customize-category"><i class="fas fa-edit"></i></a>`).click(
         async (ev) => {
           const template = await renderTemplate(
             `modules/${CONSTANTS.MODULE_NAME}/templates/categoryDialog.hbs`,
@@ -236,7 +242,7 @@ export class InventoryPlus {
   }
 
   prepareInventory(inventory: Category[]) {
-    const sections = <Record<string, Category>>duplicate(this.customCategorys);
+    const sections = <Record<string, Category>>duplicateExtended(this.customCategorys);
 
     for (const id in sections) {
       (<Category>sections[id]).items = [];
@@ -276,7 +282,7 @@ export class InventoryPlus {
     }
 
     if (newCategory.label === undefined || newCategory.label === '') {
-      ui.notifications?.error('Could not create Category as no name was specified');
+      error(`Could not create Category as no name was specified`, true);
       return;
     }
 
