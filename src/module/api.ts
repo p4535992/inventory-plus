@@ -5,10 +5,10 @@ import { debug, warn } from "./lib/lib";
 
 const API = {
 
-  calculateWeightFromActor(actorId:string): number{
-    const actorEntity = game.actors?.get(actorId);
+  calculateWeightFromActor(actorIdOrName:string): number{
+    const actorEntity = game.actors?.get(actorIdOrName) || game.actors?.getName(actorIdOrName);
     if(!actorEntity){
-      warn(`No actor found for id '${actorId}'`, true);
+      warn(`No actor found for id '${actorIdOrName}'`, true);
       return 0;
     }
 

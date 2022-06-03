@@ -14,6 +14,7 @@
 A Foundry VTT module to enhance the dnd5e inventory. Allows to customize your Inventory in various ways.
 
 ![example](./wiki/preview.jpg)
+
 ## NOTE: If you are a javascript developer and not a typescript developer, you can just use the javascript files under the dist folder
 
 # Installation
@@ -35,6 +36,42 @@ This module uses the [libWrapper](https://github.com/ruipin/fvtt-lib-wrapper) li
 ## Details
 
 This module allows you to create custom inventory categories and sort items into them and the default categories. You can also order the categories around and even disable weight tracking on a per category basis.
+
+## API
+
+### game.modules.get('inventory-plus').api.calculateWeightFromActor(actorIdOrName:string) ⇒ <code>number</code>
+
+A method to calculate the weight (the one from the module filters) on the actor
+
+**Returns**: <code>number</code>
+
+| Param | Type | Description | Default |
+| --- | --- | --- | --- |
+| actorIdOrName | <code>string</code> | The actro id or name (if founded) | <code>undefined</code> |
+
+### game.modules.get('inventory-plus').api.calculateWeight(inventory: Category[], currency: number) ⇒ <code>number</code>
+
+A method to calculate the weight (the one from the module filters) on inventory array and the current currency present on the actor
+
+The `Category` object is rappresented like this:
+```
+{
+  label: string;
+  dataset: { type: string };
+  sortFlag: number;
+  ignoreWeight: boolean;
+  maxWeight: number;
+  ownWeight: number;
+  collapsed: boolean;
+  items: ItemData[];
+}
+```
+
+**Returns**: <code>number</code>
+
+| Param | Type | Description | Default |
+| --- | --- | --- | --- |
+| actorIdOrName | <code>string</code> | The actro id or name (if founded) | <code>undefined</code> 
 
 ## Contribution
 

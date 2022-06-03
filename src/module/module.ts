@@ -1,3 +1,4 @@
+import type { ItemData } from '@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/data/data.mjs';
 import { getApi, setApi } from '../main';
 import API from './api';
 import CONSTANTS from './constants';
@@ -45,12 +46,13 @@ export const readyHooks = async (): Promise<void> => {
       const sheetData = wrapper(...args);
 
       // let app = this;
-      const actor = this.actor;
+      const actor = <Actor>this.actor;
       const newInventory = InventoryPlus.processInventory(this, actor, sheetData.inventory);
       sheetData.inventory = newInventory;
 
       sheetData.data.attributes.encumbrance.value = API.calculateWeight(
         sheetData.inventory,
+        //@ts-ignore
         actor.data.data.currency,
       );
       sheetData.data.attributes.encumbrance.pct =
@@ -67,44 +69,123 @@ export const readyHooks = async (): Promise<void> => {
     'game.dnd5e.applications.ActorSheet5eCharacter.prototype._onDropItem',
     async function (wrapped, ...args) {
       const [event, data] = args;
-      // dropping new item
-      if (data.actorId !== this.object.id || data.data === undefined) {
-        //@ts-ignore
-        const item = <Item>await Item.implementation.fromDropData(data);
-        const itemData = item.toJSON();
-        return this._onDropItemCreate(itemData);
+      const actor = <Actor>this.actor;
+      const itemTypeCurrent =  data?.type || event.type;
+      if(itemTypeCurrent != 'Item'){
+        warn(`Type is not 'Item'`);
+        return;
       }
 
-      // dropping item outside inventory list, but ignore if already owned item
-      const targetLi = $(event.target).parents('li')[0];
-      if (targetLi === undefined || targetLi.className === undefined) {
-        if (data.actorId === this.object.id) {
-          return;
-        } else {
-          //@ts-ignore
-          const item = <Item>await Item.implementation.fromDropData(data);
-          const itemData = item.toJSON();
+      const itemId = data?.data?._id || data?.id; // || event.id || event.data?._id;
+      if(!itemId){
+        warn(`No id founded for the item`);
+        return;
+      }
+
+      const itemCurrent: Item = game.items?.get(itemId) || <Item>actor.items.get(itemId) || undefined;
+      if(!itemCurrent){
+        warn(`No itemCurrent founded for the item`);
+        return;
+      }
+
+      const itemData:ItemData = itemCurrent?.data;
+      if(!itemData){
+        warn(`No itemdata founded for the item`);
+        return;
+      }
+
+      // Yea i hate my life
+      const actorId = data.actorId;
+      // const actorId = data && data.actorId 
+      //   ? data.actorId 
+      //   : (event.actorId 
+      //     ? event.actorId 
+      //     : (itemCurrent 
+      //       ? actor.id
+      //       : undefined));
+
+      // const itemId = itemID;
+
+      // dropping new item
+      if (actorId !== this.object.id || itemData === undefined) {
+        // const item = <Item>await Item.implementation.fromDropData(itemData);
+        // const itemDataTmp = item.toJSON();
+        // const itemDataTmp = item.data;
+        // return this._onDropItemCreate(itemDataTmp);
+        if(!actor.items.get(<string>itemId)){
+          // const items = await Item.createDocuments([<any>itemData], {parent: actor});
+          // const item = <Item>items[0];
+          // if(item){
+          //   itemId = item.id;
+          // }else{
+          //   itemId = itemData._id;
+          // }
+          // //@ts-ignore
+          // if(!itemData.flags?.core?.sourceId){
+          //   setProperty(itemData,`flags.core.sourceId`, itemData._id);
+          // }
+          // //@ts-ignore
+          // if(!itemData.data?.advancement){
+          //   setProperty(itemData, `data.advancement`, {});
+          // }
           return this._onDropItemCreate(itemData);
-          //return ActorSheet5eCharacter.prototype._onDropItem.bind(this)(event, data);
         }
       }
 
+      // dropping item outside inventory list, but ignore if already owned item
+      const targetLi = <HTMLLIElement>$(event.target).parents('li')[0];
+      if (targetLi === undefined || targetLi.className === undefined) {
+        if (actorId === this.object.id) {
+          // Do nothing
+          //return;
+        } else {
+          if(!actor.items.get(<string>itemId)){
+            // const items = await Item.createDocuments([<any>itemData], {parent: actor});
+            // const item = <Item>items[0];
+            // if(item){
+            //   itemId = item.id;
+            // }else{
+            //   itemId = itemData._id;
+            // }
+            // //@ts-ignore
+            // if(!itemData.flags?.core?.sourceId){
+            //   setProperty(itemData,`flags.core.sourceId`, itemData._id);
+            // }
+            // //@ts-ignore
+            // if(!itemData.data?.advancement){
+            //   setProperty(itemData, `data.advancement`, {});
+            // }
+            return this._onDropItemCreate(itemData);
+          }
+          // const item = <Item>await Item.implementation.fromDropData(itemData);
+          // const itemDataTmp = item.toJSON();
+          // return this._onDropItemCreate(itemDataTmp);
+          // return ActorSheet5eCharacter.prototype._onDropItem.bind(this)(event, itemData);
+        }
+      }
+      
+
+      // const targetLi = <HTMLLIElement>$(event.target).parents('li')[0];
       // doing actual stuff!!!
-      const id = data.data._id;
-      const dropedItem = <Item>this.object.items.get(id);
+      // const itemId = itemData._id;
+      const dropedItem = <Item>this.object.items.get(itemId);
+      if(!dropedItem){
+        warn(`No dropedItem founded for the item`);
+        return;
+      }
 
       let targetType = '';
       const targetCss = getCSSName('sub-header');
       if (targetLi.className.trim().indexOf(<string>targetCss) !== -1) {
         targetType = <string>(($(targetLi).find('.item-control'))[0])?.dataset.type;
       } else if (targetLi.className.trim().indexOf('item') !== -1) {
-        const itemId = targetLi.dataset.itemId;
-        const item = this.object.items.get(itemId);
+        const itemId = <string>targetLi.dataset.itemId;
+        const item = <Item>this.object.items.get(itemId);
         targetType = this.inventoryPlus.getItemType(item.data);
       }
 
       // changing item list
-      let itemType = this.inventoryPlus.getItemType(data.data);
+      let itemType = this.inventoryPlus.getItemType(itemData); // data.data
       if (itemType !== targetType) {
         const categoryWeight = this.inventoryPlus.getCategoryItemWeight(targetType);
         //@ts-ignore
@@ -149,7 +230,7 @@ export const readyHooks = async (): Promise<void> => {
       // Perform the update
       this.object.updateEmbeddedDocuments('Item', updateData);
     },
-    'OVERRIDE',
+    'MIXED', //'OVERRIDE',
   );
 
   // Hooks.on(`renderActorSheet5eCharacter`, (app, html, data) => {

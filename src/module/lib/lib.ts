@@ -161,7 +161,7 @@ export function cleanUpString(stringToCleanUp: string) {
   }
 }
 
-export function isStringEquals(stringToCheck1: string, stringToCheck2: string, startsWith = true): boolean {
+export function isStringEquals(stringToCheck1: string, stringToCheck2: string, startsWith = false): boolean {
   if (stringToCheck1 && stringToCheck2) {
     const s1 = cleanUpString(stringToCheck1) ?? '';
     const s2 = cleanUpString(stringToCheck2) ?? '';
@@ -176,7 +176,7 @@ export function isStringEquals(stringToCheck1: string, stringToCheck2: string, s
 }
 
 /**
- * The duplicate function of foundry keep converting my stirng value to "0"
+ * The duplicate function of foundry keep converting my string value to "0"
  * i don't know why this methos is a brute force solution for avoid that problem
  */
 export function duplicateExtended(obj: any): any {

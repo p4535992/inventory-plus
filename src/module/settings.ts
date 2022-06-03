@@ -105,13 +105,13 @@ function otherSettings(apply = false) {
       type: Boolean,
     },
 
-    debugHooks: {
-      name: `${CONSTANTS.MODULE_NAME}.setting.debugHooks.name`,
-      hint: `${CONSTANTS.MODULE_NAME}.setting.debugHooks.hint`,
-      scope: 'world',
-      config: false,
-      default: false,
-      type: Boolean,
-    },
+    // debugHooks: {
+    //   name: `${CONSTANTS.MODULE_NAME}.setting.debugHooks.name`,
+    //   hint: `${CONSTANTS.MODULE_NAME}.setting.debugHooks.hint`,
+    //   scope: 'world',
+    //   config: false,
+    //   default: false,
+    //   type: Boolean,
+    // },
   };
 }
