@@ -1,4 +1,3 @@
-
 import type { ItemData } from '@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/data/data.mjs';
 
 export class Category {
@@ -14,5 +13,5 @@ export class Category {
 
 export enum InventoryPlusFlags {
   CATEGORYS = 'categorys',
-  CATEGORY = 'category'
+  CATEGORY = 'category',
 }

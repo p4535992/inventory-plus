@@ -1,13 +1,12 @@
-import type { ItemData } from "@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/data/module.mjs";
-import CONSTANTS from "./constants";
-import { Category, InventoryPlusFlags } from "./inventory-plus-models";
-import { debug, warn } from "./lib/lib";
+import type { ItemData } from '@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/data/module.mjs';
+import CONSTANTS from './constants';
+import { Category, InventoryPlusFlags } from './inventory-plus-models';
+import { debug, warn } from './lib/lib';
 
 const API = {
-
-  calculateWeightFromActor(actorIdOrName:string): number{
+  calculateWeightFromActor(actorIdOrName: string): number {
     const actorEntity = game.actors?.get(actorIdOrName) || game.actors?.getName(actorIdOrName);
-    if(!actorEntity){
+    if (!actorEntity) {
       warn(`No actor found for id '${actorIdOrName}'`, true);
       return 0;
     }
@@ -120,9 +119,7 @@ const API = {
     if (game.settings.get('dnd5e', 'currencyWeight') && actorEntity.data.data.currency) {
       //@ts-ignore
       const currency = actorEntity.data.data.currency;
-      const numCoins = <number>(
-        Object.values(currency).reduce((val: any, denom: any) => (val += Math.max(denom, 0)), 0)
-      );
+      const numCoins = <number>Object.values(currency).reduce((val: any, denom: any) => (val += Math.max(denom, 0)), 0);
 
       let currencyPerWeight = 0;
       if (game.settings.get('dnd5e', 'metricWeightUnits')) {
@@ -142,12 +139,11 @@ const API = {
     return totalWeight;
   },
 
-
   calculateWeight(inventory: Category[], currency: number): number {
     let customWeight = 0;
     for (const id in inventory) {
       const section = <Category>inventory[id];
-      if(!section){
+      if (!section) {
         warn(`Can't find the section with id '${id}'`, true);
         continue;
       }
@@ -181,8 +177,7 @@ const API = {
     customWeight = Number(customWeight.toFixed(2));
 
     return customWeight;
-  }
-
+  },
 };
 
 export default API;

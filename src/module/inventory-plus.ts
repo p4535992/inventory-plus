@@ -12,7 +12,7 @@ export class InventoryPlus {
   actor: Actor;
   customCategorys: Record<string, Category>;
 
-  static processInventory(app, actor:Actor, inventory:Category[]) {
+  static processInventory(app, actor: Actor, inventory: Category[]) {
     if (app.inventoryPlus === undefined) {
       app.inventoryPlus = new InventoryPlus();
       app.inventoryPlus.init(actor);
@@ -20,7 +20,7 @@ export class InventoryPlus {
     return (<InventoryPlus>app.inventoryPlus).prepareInventory(inventory);
   }
 
-  init(actor:Actor, inventory:Category[]) {
+  init(actor: Actor, inventory: Category[]) {
     this.actor = actor;
     this.initCategorys();
   }
@@ -37,7 +37,7 @@ export class InventoryPlus {
           maxWeight: 0,
           ownWeight: 0,
           collapsed: false,
-          items:[],
+          items: [],
         },
         equipment: {
           label: 'DND5E.ItemTypeEquipmentPl',
@@ -47,7 +47,7 @@ export class InventoryPlus {
           maxWeight: 0,
           ownWeight: 0,
           collapsed: false,
-          items:[],
+          items: [],
         },
         consumable: {
           label: 'DND5E.ItemTypeConsumablePl',
@@ -57,7 +57,7 @@ export class InventoryPlus {
           maxWeight: 0,
           ownWeight: 0,
           collapsed: false,
-          items:[],
+          items: [],
         },
         tool: {
           label: 'DND5E.ItemTypeToolPl',
@@ -67,7 +67,7 @@ export class InventoryPlus {
           maxWeight: 0,
           ownWeight: 0,
           collapsed: false,
-          items:[],
+          items: [],
         },
         backpack: {
           label: 'DND5E.ItemTypeContainerPl',
@@ -77,7 +77,7 @@ export class InventoryPlus {
           maxWeight: 0,
           ownWeight: 0,
           collapsed: false,
-          items:[],
+          items: [],
         },
         loot: {
           label: 'DND5E.ItemTypeLootPl',
@@ -87,7 +87,7 @@ export class InventoryPlus {
           maxWeight: 0,
           ownWeight: 0,
           collapsed: false,
-          items:[],
+          items: [],
         },
       };
     } else {
@@ -232,9 +232,9 @@ export class InventoryPlus {
       if ((<Category>this.customCategorys[type]).maxWeight > 0) {
         const weight = this.getCategoryItemWeight(type);
         const weightString = $(
-          `<label class="category-weight">( ${weight}/${(<Category>this.customCategorys[type]).maxWeight}  ${game.i18n.localize(
-            'DND5E.AbbreviationLbs',
-          )})</label>`,
+          `<label class="category-weight">( ${weight}/${
+            (<Category>this.customCategorys[type]).maxWeight
+          }  ${game.i18n.localize('DND5E.AbbreviationLbs')})</label>`,
         );
         header.find('h3').append(weightString);
       }
@@ -376,7 +376,7 @@ export class InventoryPlus {
 
     for (const id in this.customCategorys) {
       const cat = <Category>this.customCategorys[id];
-      if(!cat){
+      if (!cat) {
         warn(`Can't find the category with id '${id}'`, true);
         return highest;
       }

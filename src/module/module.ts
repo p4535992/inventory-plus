@@ -70,64 +70,36 @@ export const readyHooks = async (): Promise<void> => {
     async function (wrapped, ...args) {
       const [event, data] = args;
       const actor = <Actor>this.actor;
-      const itemTypeCurrent =  data?.type || event.type;
-      if(itemTypeCurrent != 'Item'){
+      const itemTypeCurrent = data?.type || event.type;
+      if (itemTypeCurrent != 'Item') {
         warn(`Type is not 'Item'`);
         return;
       }
 
       const itemId = data?.data?._id || data?.id; // || event.id || event.data?._id;
-      if(!itemId){
+      if (!itemId) {
         warn(`No id founded for the item`);
         return;
       }
 
       const itemCurrent: Item = game.items?.get(itemId) || <Item>actor.items.get(itemId) || undefined;
-      if(!itemCurrent){
+      if (!itemCurrent) {
         warn(`No itemCurrent founded for the item`);
         return;
       }
 
-      const itemData:ItemData = itemCurrent?.data;
-      if(!itemData){
+      const itemData: ItemData = itemCurrent?.data;
+      if (!itemData) {
         warn(`No itemdata founded for the item`);
         return;
       }
 
       // Yea i hate my life
       const actorId = data.actorId;
-      // const actorId = data && data.actorId 
-      //   ? data.actorId 
-      //   : (event.actorId 
-      //     ? event.actorId 
-      //     : (itemCurrent 
-      //       ? actor.id
-      //       : undefined));
-
-      // const itemId = itemID;
 
       // dropping new item
       if (actorId !== this.object.id || itemData === undefined) {
-        // const item = <Item>await Item.implementation.fromDropData(itemData);
-        // const itemDataTmp = item.toJSON();
-        // const itemDataTmp = item.data;
-        // return this._onDropItemCreate(itemDataTmp);
-        if(!actor.items.get(<string>itemId)){
-          // const items = await Item.createDocuments([<any>itemData], {parent: actor});
-          // const item = <Item>items[0];
-          // if(item){
-          //   itemId = item.id;
-          // }else{
-          //   itemId = itemData._id;
-          // }
-          // //@ts-ignore
-          // if(!itemData.flags?.core?.sourceId){
-          //   setProperty(itemData,`flags.core.sourceId`, itemData._id);
-          // }
-          // //@ts-ignore
-          // if(!itemData.data?.advancement){
-          //   setProperty(itemData, `data.advancement`, {});
-          // }
+        if (!actor.items.get(<string>itemId)) {
           return this._onDropItemCreate(itemData);
         }
       }
@@ -139,37 +111,17 @@ export const readyHooks = async (): Promise<void> => {
           // Do nothing
           //return;
         } else {
-          if(!actor.items.get(<string>itemId)){
-            // const items = await Item.createDocuments([<any>itemData], {parent: actor});
-            // const item = <Item>items[0];
-            // if(item){
-            //   itemId = item.id;
-            // }else{
-            //   itemId = itemData._id;
-            // }
-            // //@ts-ignore
-            // if(!itemData.flags?.core?.sourceId){
-            //   setProperty(itemData,`flags.core.sourceId`, itemData._id);
-            // }
-            // //@ts-ignore
-            // if(!itemData.data?.advancement){
-            //   setProperty(itemData, `data.advancement`, {});
-            // }
+          if (!actor.items.get(<string>itemId)) {
             return this._onDropItemCreate(itemData);
           }
-          // const item = <Item>await Item.implementation.fromDropData(itemData);
-          // const itemDataTmp = item.toJSON();
-          // return this._onDropItemCreate(itemDataTmp);
-          // return ActorSheet5eCharacter.prototype._onDropItem.bind(this)(event, itemData);
         }
       }
-      
 
       // const targetLi = <HTMLLIElement>$(event.target).parents('li')[0];
       // doing actual stuff!!!
       // const itemId = itemData._id;
       const dropedItem = <Item>this.object.items.get(itemId);
-      if(!dropedItem){
+      if (!dropedItem) {
         warn(`No dropedItem founded for the item`);
         return;
       }
@@ -177,7 +129,7 @@ export const readyHooks = async (): Promise<void> => {
       let targetType = '';
       const targetCss = getCSSName('sub-header');
       if (targetLi.className.trim().indexOf(<string>targetCss) !== -1) {
-        targetType = <string>(($(targetLi).find('.item-control'))[0])?.dataset.type;
+        targetType = <string>$(targetLi).find('.item-control')[0]?.dataset.type;
       } else if (targetLi.className.trim().indexOf('item') !== -1) {
         const itemId = <string>targetLi.dataset.itemId;
         const item = <Item>this.object.items.get(itemId);
