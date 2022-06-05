@@ -96,23 +96,84 @@ export const readyHooks = async (): Promise<void> => {
 
       // Yea i hate my life
       const actorId = data.actorId;
+      let createdItem:Item|undefined = undefined;
+
+
+      // dropping item outside inventory list, but ignore if already owned item
+      const targetLi = <HTMLLIElement>$(event.target).parents('li')[0];
+      let targetType = '';
+      const targetCss = getCSSName('sub-header');
+      if (targetLi && targetLi.className) {
+        if (targetLi.className.trim().indexOf(<string>targetCss) !== -1) {
+          targetType = <string>$(targetLi).find('.item-control')[0]?.dataset.type;
+        } else if (targetLi.className.trim().indexOf('item') !== -1) {
+          const itemId = <string>targetLi.dataset.itemId;
+          const item = <Item>this.object.items.get(itemId);
+          targetType = this.inventoryPlus.getItemType(item.data);
+        }
+      }else{
+        warn(`No target li html founded`, true);
+        // return;
+      }
 
       // dropping new item
       if (actorId !== this.object.id || itemData === undefined) {
         if (!actor.items.get(<string>itemId)) {
-          return this._onDropItemCreate(itemData);
+          // START WEIGHT CONTROL
+          // changing item list
+          const itemType = this.inventoryPlus.getItemType(itemData); // data.data
+          if (itemType !== targetType) {
+            const categoryWeight = this.inventoryPlus.getCategoryItemWeight(targetType);
+            //@ts-ignore
+            const itemWeight = itemData.data.weight * itemData.data.quantity;
+            const maxWeight = Number(
+              this.inventoryPlus.customCategorys[targetType].maxWeight
+                ? this.inventoryPlus.customCategorys[targetType].maxWeight
+                : 0,
+            );
+
+            if (isNaN(maxWeight) || maxWeight <= 0 || maxWeight >= categoryWeight + itemWeight) {
+              // do nothing
+            } else {
+              warn(`Item exceeds categories max weight`, true);
+              return;
+            }
+          }
+          // END WEIGHT CONTROL
+          const items:Item[] = await this._onDropItemCreate(itemData);
+          createdItem = items[0];
         }
       }
 
-      // dropping item outside inventory list, but ignore if already owned item
-      const targetLi = <HTMLLIElement>$(event.target).parents('li')[0];
       if (targetLi === undefined || targetLi.className === undefined) {
         if (actorId === this.object.id) {
           // Do nothing
           //return;
         } else {
           if (!actor.items.get(<string>itemId)) {
-            return this._onDropItemCreate(itemData);
+            // START WEIGHT CONTROL
+            // changing item list
+            const itemType = this.inventoryPlus.getItemType(itemData); // data.data
+            if (itemType !== targetType) {
+              const categoryWeight = this.inventoryPlus.getCategoryItemWeight(targetType);
+              //@ts-ignore
+              const itemWeight = itemData.data.weight * itemData.data.quantity;
+              const maxWeight = Number(
+                this.inventoryPlus.customCategorys[targetType].maxWeight
+                  ? this.inventoryPlus.customCategorys[targetType].maxWeight
+                  : 0,
+              );
+
+              if (isNaN(maxWeight) || maxWeight <= 0 || maxWeight >= categoryWeight + itemWeight) {
+                // do nothing
+              } else {
+                warn(`Item exceeds categories max weight`, true);
+                return;
+              }
+            }
+            // END WEIGHT CONTROL
+            const items:Item[] = await this._onDropItemCreate(itemData);
+            createdItem = items[0];
           }
         }
       }
@@ -120,20 +181,14 @@ export const readyHooks = async (): Promise<void> => {
       // const targetLi = <HTMLLIElement>$(event.target).parents('li')[0];
       // doing actual stuff!!!
       // const itemId = itemData._id;
-      const dropedItem = <Item>this.object.items.get(itemId);
+      let dropedItem = <Item>this.object.items.get(itemId);
       if (!dropedItem) {
-        warn(`No dropedItem founded for the item`);
-        return;
-      }
-
-      let targetType = '';
-      const targetCss = getCSSName('sub-header');
-      if (targetLi.className.trim().indexOf(<string>targetCss) !== -1) {
-        targetType = <string>$(targetLi).find('.item-control')[0]?.dataset.type;
-      } else if (targetLi.className.trim().indexOf('item') !== -1) {
-        const itemId = <string>targetLi.dataset.itemId;
-        const item = <Item>this.object.items.get(itemId);
-        targetType = this.inventoryPlus.getItemType(item.data);
+        if(createdItem){
+          dropedItem = createdItem;
+        }else{
+          warn(`No dropedItem founded for the item`);
+          return;
+        }
       }
 
       // changing item list
@@ -173,10 +228,14 @@ export const readyHooks = async (): Promise<void> => {
 
       // Perform the sort
       const sortUpdates = SortingHelpers.performIntegerSort(dropedItem, { target: target, siblings });
-      const updateData = sortUpdates.map((u) => {
+      let updateData:any[] = sortUpdates.map((u) => {
         const update: any = u.update;
         update._id = u.target.data._id;
         return update;
+      });
+
+      updateData = updateData.filter((i) =>{
+        return i._id != null && i._id != undefined && i._id != ''; 
       });
 
       // Perform the update
@@ -195,6 +254,11 @@ export const readyHooks = async (): Promise<void> => {
 const module = {
   async renderActorSheet5eCharacter(...args) {
     const [app, html, data] = args;
+    if (!app.inventoryPlus) {
+      const actorEntityTmp: any = <Actor>game.actors?.get(data.actor._id);
+      app.inventoryPlus = new InventoryPlus();
+      app.inventoryPlus.init(actorEntityTmp);
+    }
     app.inventoryPlus.addInventoryFunctions(html);
   },
 };
