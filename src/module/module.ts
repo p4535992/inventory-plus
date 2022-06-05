@@ -113,7 +113,9 @@ export const readyHooks = async (): Promise<void> => {
         }
       }else{
         warn(`No target li html founded`, true);
-        // return;
+        if(!this.inventoryPlus.customCategorys[targetType]){
+          return;
+        }
       }
 
       // dropping new item

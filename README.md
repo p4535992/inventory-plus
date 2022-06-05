@@ -1,3 +1,5 @@
+# Inventory+
+
 ![Latest Release Download Count](https://img.shields.io/github/downloads/p4535992/inventory-plus/latest/module.zip?color=2b82fc&label=DOWNLOADS&style=for-the-badge) 
 
 [![Forge Installs](https://img.shields.io/badge/dynamic/json?label=Forge%20Installs&query=package.installs&suffix=%25&url=https%3A%2F%2Fforge-vtt.com%2Fapi%2Fbazaar%2Fpackage%2Finventory-plus&colorB=006400&style=for-the-badge)](https://forge-vtt.com/bazaar#package=inventory-plus) 
@@ -11,8 +13,6 @@
 ![GitHub all releases](https://img.shields.io/github/downloads/p4535992/inventory-plus/total?style=for-the-badge)
 
 ### If you want to buy me a coffee [![alt-text](https://img.shields.io/badge/-Patreon-%23ff424d?style=for-the-badge)](https://www.patreon.com/p4535992) or if you want to support the original author with paypal  to felix.mueller.86@web.de
-
-# Inventory+
 
 A Foundry VTT module to enhance the dnd5e inventory. Allows to customize your Inventory in various ways.
 
