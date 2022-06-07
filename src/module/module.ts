@@ -4,7 +4,7 @@ import API from './api';
 import CONSTANTS from './constants';
 import { InventoryPlus } from './inventory-plus';
 import { InventoryPlusFlags } from './inventory-plus-models';
-import { getCSSName, warn } from './lib/lib';
+import { getCSSName, i18n, warn } from './lib/lib';
 
 export const initHooks = async (): Promise<void> => {
   // registerSettings();
@@ -118,6 +118,9 @@ export const readyHooks = async (): Promise<void> => {
         }
       }
 
+      const categoryName = <string>i18n(this.inventoryPlus.customCategorys[targetType].label);
+      // const headerElement = $(<HTMLElement>targetLi.parentElement?.parentElement).find(`h3:contains("${categoryName}")`);
+
       // dropping new item
       if (actorId !== this.object.id || itemData === undefined) {
         if (!actor.items.get(<string>itemId)) {
@@ -137,7 +140,7 @@ export const readyHooks = async (): Promise<void> => {
             if (isNaN(maxWeight) || maxWeight <= 0 || maxWeight >= categoryWeight + itemWeight) {
               // do nothing
             } else {
-              warn(`Item exceeds categories max weight`, true);
+              warn(`Item can be insert because exceeds max weight on category ${categoryName}`, true);
               return;
             }
           }
@@ -169,7 +172,7 @@ export const readyHooks = async (): Promise<void> => {
               if (isNaN(maxWeight) || maxWeight <= 0 || maxWeight >= categoryWeight + itemWeight) {
                 // do nothing
               } else {
-                warn(`Item exceeds categories max weight`, true);
+                warn(`Item can be insert because exceeds max weight on category ${categoryName}`, true);
                 return;
               }
             }
@@ -210,7 +213,7 @@ export const readyHooks = async (): Promise<void> => {
           await dropedItem.setFlag(CONSTANTS.MODULE_NAME, InventoryPlusFlags.CATEGORY, targetType);
           itemType = targetType;
         } else {
-          warn(`Item exceeds categories max weight`, true);
+          warn(`Item can be insert because exceeds max weight on category ${categoryName}`, true);
           return;
         }
       }

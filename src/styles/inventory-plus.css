@@ -1,55 +1,70 @@
-.dnd5e.sheet .filter-list {
+.inventory-filters .filter-list {
   max-width: 100%;
 }
 
-.dnd5e.sheet .filter-list .custom-category {
+.inventory-filters .filter-list .custom-category {
   flex-grow: 2;
 }
 
-.dnd5e.sheet.actor .inventory-list .item-controls .remove-category {
+.inventory-list .item-controls .remove-category {
   flex: 0 0 100%;
 }
 
-.dnd5e.sheet.actor .inventory-list .inv-plus-stuff {
+.inventory-list .inv-plus-stuff {
   flex: inherit;
   opacity: 0.5;
 }
 
-.dnd5e.sheet.actor .inventory-list .inv-plus-stuff:hover,
-.dnd5e.sheet.actor .inventory-list .toggle-collapse:hover {
+.inventory-list .inv-plus-stuff:hover,
+.inventory-list .toggle-collapse:hover {
   opacity: 1;
 }
 
-.dnd5e.sheet.actor .inventory-list .toggle-collapse {
+.inventory-list .toggle-collapse {
   flex: 0;
   opacity: 0.5;
   font-size: 18px;
   margin-left: 4px;
 }
 
-.dnd5e.sheet.actor .inventory-list .inv-plus-stuff div {
+.inventory-list .inv-plus-stuff div {
   flex-grow: 1;
   max-width: 120px;
 }
 
-.dnd5e.sheet.actor .inventory-list .inv-plus-stuff a {
+.inventory-list .inv-plus-stuff a {
   flex-grow: 0;
   margin-right: 2px;
 }
 
-.dnd5e.sheet.actor .inventory-list .inv-plus-stuff input {
+.inventory-list .inv-plus-stuff input {
   height: 16px;
   width: 16px;
 }
 
-.dnd5e.sheet.actor .inventory-list .category-weight {
+.inventory-list .category-weight {
   margin-left: 5px;
   opacity: 0.5;
   font-size: small;
 }
 
-.dnd5e.sheet.actor .inventory-list .category-weight:hover {
+.inventory-list .category-weight:hover {
   opacity: 1;
+}
+
+.inventory-list .category-weight .fa-weight-hanging {
+  color: darkred;
+  text-shadow: 0 0 8px darkred;
+}
+
+.inventory-list .category-weight .fa-balance-scale-right {
+  color: darkorange;
+  text-shadow: 0 0 8px darkorange;
+}
+
+.inventory-list .category-weight .fa-feather {
+  color: darkgreen;
+  text-shadow: 0 0 8px darkgreen;
 }
 
 .inv-plus-dialog {

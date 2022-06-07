@@ -20,7 +20,7 @@ export class InventoryPlus {
     return (<InventoryPlus>app.inventoryPlus).prepareInventory(inventory);
   }
 
-  init(actor: Actor, inventory: Category[]) {
+  init(actor: Actor) { // , inventory: Category[]
     this.actor = actor;
     this.initCategorys();
   }
@@ -162,22 +162,24 @@ export class InventoryPlus {
         return;
       }
 
+      const currentCategory = <Category>this.customCategorys[type];
+
       // toggle item visibility
-      const arrow = this.customCategorys[type]?.collapsed === true ? 'right' : 'down';
+      const arrow = currentCategory?.collapsed === true ? 'right' : 'down';
       const toggleBtn = $(`<a class="toggle-collapse"><i class="fas fa-caret-${arrow}"></i></a>`).click((ev) => {
-        (<Category>this.customCategorys[type]).collapsed = <boolean>!this.customCategorys[type]?.collapsed;
+        currentCategory.collapsed = <boolean>!currentCategory?.collapsed;
         this.saveCategorys();
       });
       header.find('h3').before(toggleBtn);
 
       // reorder category
-      if (this.getLowestSortFlag() !== (<Category>this.customCategorys[type]).sortFlag) {
+      if (this.getLowestSortFlag() !== currentCategory.sortFlag) {
         const upBtn = $(
           `<a class="inv-plus-stuff shuffle-up" title="Move category up"><i class="fas fa-chevron-up"></i></a>`,
         ).click(() => this.changeCategoryOrder(type, true));
         extraStuff.append(upBtn);
       }
-      if (this.getHighestSortFlag() !== (<Category>this.customCategorys[type]).sortFlag) {
+      if (this.getHighestSortFlag() !== currentCategory.sortFlag) {
         const downBtn = $(
           `<a class="inv-plus-stuff shuffle-down" title="Move category down"><i class="fas fa-chevron-down"></i></a>`,
         ).click(() => this.changeCategoryOrder(type, false));
@@ -189,7 +191,7 @@ export class InventoryPlus {
         async (ev) => {
           const template = await renderTemplate(
             `modules/${CONSTANTS.MODULE_NAME}/templates/categoryDialog.hbs`,
-            <Category>this.customCategorys[type],
+            currentCategory,
           );
           const d = new Dialog({
             title: 'Edit Inventory Category',
@@ -204,9 +206,9 @@ export class InventoryPlus {
                     const value = input.type === 'checkbox' ? input.checked : input.value;
                     if (input.dataset.dtype === 'Number') {
                       const valueN = Number(value) > 0 ? Number(value) : 0;
-                      (<Category>this.customCategorys[type])[input.name] = valueN;
+                      currentCategory[input.name] = valueN;
                     } else {
-                      (<Category>this.customCategorys[type])[input.name] = value;
+                      currentCategory[input.name] = value;
                     }
                   }
                   this.saveCategorys();
@@ -225,16 +227,28 @@ export class InventoryPlus {
       extraStuff.append(editCategoryBtn);
 
       // hide collapsed category items
-      if ((<Category>this.customCategorys[type]).collapsed === true) {
+      if (currentCategory.collapsed === true) {
         header.next().hide();
       }
 
-      if ((<Category>this.customCategorys[type]).maxWeight > 0) {
-        const weight = this.getCategoryItemWeight(type);
+      let icon = ``;
+      if(currentCategory.ignoreWeight){
+        icon = `<i class="fas fa-feather"></i>`;
+      }else if(currentCategory.ownWeight > 0){
+        icon = `<i class="fas fa-weight-hanging"></i>`;
+      }else{
+        icon = `<i class="fas fa-balance-scale-right"></i>`;
+      }
+
+      if (currentCategory.maxWeight > 0) {
+        const weight = <number>this.getCategoryItemWeight(type);
+        const weightUnit = game.settings.get('dnd5e', 'metricWeightUnits')
+          ? game.i18n.localize('DND5E.AbbreviationKgs')
+          : game.i18n.localize('DND5E.AbbreviationLbs')
+        const weightValue = `(${weight}/${currentCategory.maxWeight} ${weightUnit})`;
+
         const weightString = $(
-          `<label class="category-weight">( ${weight}/${
-            (<Category>this.customCategorys[type]).maxWeight
-          }  ${game.i18n.localize('DND5E.AbbreviationLbs')})</label>`,
+          `<label class="category-weight"> ${icon} ${weightValue}</label>`
         );
         header.find('h3').append(weightString);
       }
