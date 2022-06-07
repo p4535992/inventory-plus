@@ -1,3 +1,8 @@
+### 0.5.1
+
+- Add some featurs, some icon , css style , ecc.
+- Bug fix: [[BUG] Can't transfer items from compendiums to character sheet DnD5e](https://github.com/p4535992/inventory-plus/issues/1)
+
 ### 0.5.0
 
 - Converted project from javascript to typescript

@@ -4,7 +4,7 @@ import API from './api';
 import CONSTANTS from './constants';
 import { InventoryPlus } from './inventory-plus';
 import { InventoryPlusFlags } from './inventory-plus-models';
-import { getCSSName, i18n, warn } from './lib/lib';
+import { getCSSName, i18n, retrieveItemFromData, warn } from './lib/lib';
 
 export const initHooks = async (): Promise<void> => {
   // registerSettings();
@@ -82,7 +82,7 @@ export const readyHooks = async (): Promise<void> => {
         return;
       }
 
-      const itemCurrent: Item = game.items?.get(itemId) || <Item>actor.items.get(itemId) || undefined;
+      const itemCurrent = await retrieveItemFromData(actor, itemId, '', data.pack);
       if (!itemCurrent) {
         warn(`No itemCurrent founded for the item`);
         return;
@@ -140,7 +140,7 @@ export const readyHooks = async (): Promise<void> => {
             if (isNaN(maxWeight) || maxWeight <= 0 || maxWeight >= categoryWeight + itemWeight) {
               // do nothing
             } else {
-              warn(`Item can be insert because exceeds max weight on category ${categoryName}`, true);
+              warn(`Item can be insert because exceeds max weight on category '${categoryName}'`, true);
               return;
             }
           }
@@ -172,7 +172,7 @@ export const readyHooks = async (): Promise<void> => {
               if (isNaN(maxWeight) || maxWeight <= 0 || maxWeight >= categoryWeight + itemWeight) {
                 // do nothing
               } else {
-                warn(`Item can be insert because exceeds max weight on category ${categoryName}`, true);
+                warn(`Item can be insert because exceeds max weight on category '${categoryName}'`, true);
                 return;
               }
             }
@@ -213,7 +213,7 @@ export const readyHooks = async (): Promise<void> => {
           await dropedItem.setFlag(CONSTANTS.MODULE_NAME, InventoryPlusFlags.CATEGORY, targetType);
           itemType = targetType;
         } else {
-          warn(`Item can be insert because exceeds max weight on category ${categoryName}`, true);
+          warn(`Item can be insert because exceeds max weight on category '${categoryName}'`, true);
           return;
         }
       }
