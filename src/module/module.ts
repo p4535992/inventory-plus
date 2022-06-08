@@ -70,7 +70,7 @@ export const readyHooks = async (): Promise<void> => {
     async function (wrapped, ...args) {
       const [event, data] = args;
       const actor = <Actor>this.actor;
-      const itemTypeCurrent = data?.type || event.type;
+      const itemTypeCurrent = data?.type; // || event.type;
 
       if (itemTypeCurrent != 'Item') {
         warn(i18n(`${CONSTANTS.MODULE_NAME}.dialogs.warn.itemtypecurrent`));
@@ -224,10 +224,10 @@ export const readyHooks = async (): Promise<void> => {
       // reordering items
 
       // Get the drag source and its siblings
-      const source = dropedItem;
+      // const source = dropedItem;
       const siblings = <Item[]>this.object.items.filter((i: Item) => {
         const type = <string>this.inventoryPlus.getItemType(i.data);
-        return type === itemType && i.data._id !== source.data._id;
+        return type === itemType && i.data._id !== dropedItem.data._id;
       });
       // Get the drop target
       const dropTarget = event.target.closest('.item');
