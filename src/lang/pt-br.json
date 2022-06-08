@@ -24,5 +24,14 @@
   "inventory-plus.inv-plus-dialog.accept": "Aceitar",
   "inventory-plus.inv-plus-dialog.cancel": "Cancelar",
   "inventory-plus.inv-plus-dialog.deletecategoryprefix": "Excluir",
-  "inventory-plus.inv-plus-dialog.deletecategory": "Excluir Categoria"
+  "inventory-plus.inv-plus-dialog.deletecategory": "Excluir Categoria",
+
+  "inventory-plus.dialogs.warn.notargethtml":"Nenhum html de destino encontrado para a queda do item. Geralmente acontece quando a queda ocorre em um beco sem saída, tentar novamente arrastar e soltar é a solução mais simples",
+  "inventory-plus.dialogs.warn.nocategoryfounded": "Nenhuma categoria fundada com o tipo '{targetType}'",
+  "inventory-plus.dialogs.warn.itemtypecurrent": "O tipo não é 'Item'",
+  "inventory-plus.dialogs.warn.itemid": "Nenhum itemId encontrado para o item",
+  "inventory-plus.dialogs.warn.itemcurrent": "Nenhum itemCurrent encontrado para o item",
+  "inventory-plus.dialogs.warn.itemdata": "Nenhum itemData encontrado para o item",
+  "inventory-plus.dialogs.warn.exceedsmaxweight": "O item não pode ser inserido porque excede o peso máximo na categoria '{categoryName}'",
+  "inventory-plus.dialogs.warn.nodroppeditem": "Nenhum item encontrado"
 }

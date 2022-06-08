@@ -24,5 +24,14 @@
   "inventory-plus.inv-plus-dialog.accept": "Accept",
   "inventory-plus.inv-plus-dialog.cancel": "Cancel",
   "inventory-plus.inv-plus-dialog.deletecategoryprefix": "Del.",
-  "inventory-plus.inv-plus-dialog.deletecategory": "Delete Category"
+  "inventory-plus.inv-plus-dialog.deletecategory": "Delete Category",
+
+  "inventory-plus.dialogs.warn.notargethtml":"No target html founded for the drop of the item. Usually happens when the drop occurs at a dead end, retrying the drag and drop is the simplest solution",
+  "inventory-plus.dialogs.warn.nocategoryfounded": "No category founded with type '{targetType}'",
+  "inventory-plus.dialogs.warn.itemtypecurrent": "Type is not 'Item'",
+  "inventory-plus.dialogs.warn.itemid": "No itemId founded for the item",
+  "inventory-plus.dialogs.warn.itemcurrent": "No itemCurrent founded for the item",
+  "inventory-plus.dialogs.warn.itemdata": "No itemData founded for the item",
+  "inventory-plus.dialogs.warn.exceedsmaxweight": "Item cannot be insert because exceeds max weight on category '{categoryName}'",
+  "inventory-plus.dialogs.warn.nodroppeditem": "No Item founded"
 }

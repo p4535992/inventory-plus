@@ -4,7 +4,7 @@ import API from './api';
 import CONSTANTS from './constants';
 import { InventoryPlus } from './inventory-plus';
 import { InventoryPlusFlags } from './inventory-plus-models';
-import { getCSSName, i18n, retrieveItemFromData, warn } from './lib/lib';
+import { getCSSName, i18n, warn, i18nFormat, retrieveItemFromData } from './lib/lib';
 
 export const initHooks = async (): Promise<void> => {
   // registerSettings();
@@ -71,26 +71,27 @@ export const readyHooks = async (): Promise<void> => {
       const [event, data] = args;
       const actor = <Actor>this.actor;
       const itemTypeCurrent = data?.type || event.type;
+
       if (itemTypeCurrent != 'Item') {
-        warn(`Type is not 'Item'`);
+        warn(i18n(`${CONSTANTS.MODULE_NAME}.dialogs.warn.itemtypecurrent`));
         return;
       }
 
       const itemId = data?.data?._id || data?.id; // || event.id || event.data?._id;
       if (!itemId) {
-        warn(`No id founded for the item`);
+        warn(i18n(`${CONSTANTS.MODULE_NAME}.dialogs.warn.itemid`));
         return;
       }
 
       const itemCurrent = await retrieveItemFromData(actor, itemId, '', data.pack);
       if (!itemCurrent) {
-        warn(`No itemCurrent founded for the item`);
+        warn(i18n(`${CONSTANTS.MODULE_NAME}.dialogs.warn.itemcurrent`));
         return;
       }
 
       const itemData: ItemData = itemCurrent?.data;
       if (!itemData) {
-        warn(`No itemdata founded for the item`);
+        warn(i18n(`${CONSTANTS.MODULE_NAME}.dialogs.warn.itemdata`));
         return;
       }
 
@@ -112,10 +113,12 @@ export const readyHooks = async (): Promise<void> => {
           targetType = this.inventoryPlus.getItemType(item.data);
         }
       }else{
-        warn(`No target li html founded`, true);
-        if(!this.inventoryPlus.customCategorys[targetType]){
-          return;
-        }
+        warn(i18n(`${CONSTANTS.MODULE_NAME}.dialogs.warn.notargethtml`), true);
+      }
+
+      if(!targetType || !this.inventoryPlus.customCategorys[targetType]){
+        warn(i18nFormat(`${CONSTANTS.MODULE_NAME}.dialogs.warn.nocategoryfounded`, {targetType: targetType}), true);
+        return;
       }
 
       const categoryName = <string>i18n(this.inventoryPlus.customCategorys[targetType].label);
@@ -140,7 +143,7 @@ export const readyHooks = async (): Promise<void> => {
             if (isNaN(maxWeight) || maxWeight <= 0 || maxWeight >= categoryWeight + itemWeight) {
               // do nothing
             } else {
-              warn(`Item can be insert because exceeds max weight on category '${categoryName}'`, true);
+              warn(i18nFormat(`${CONSTANTS.MODULE_NAME}.dialogs.warn.exceedsmaxweight`, {categoryName: categoryName}), true);
               return;
             }
           }
@@ -172,7 +175,7 @@ export const readyHooks = async (): Promise<void> => {
               if (isNaN(maxWeight) || maxWeight <= 0 || maxWeight >= categoryWeight + itemWeight) {
                 // do nothing
               } else {
-                warn(`Item can be insert because exceeds max weight on category '${categoryName}'`, true);
+                warn(i18nFormat(`${CONSTANTS.MODULE_NAME}.dialogs.warn.exceedsmaxweight`, {categoryName: categoryName}), true);
                 return;
               }
             }
@@ -191,7 +194,7 @@ export const readyHooks = async (): Promise<void> => {
         if(createdItem){
           dropedItem = createdItem;
         }else{
-          warn(`No dropedItem founded for the item`);
+          warn(i18n(`${CONSTANTS.MODULE_NAME}.dialogs.warn.nodroppeditem`));
           return;
         }
       }
@@ -213,7 +216,7 @@ export const readyHooks = async (): Promise<void> => {
           await dropedItem.setFlag(CONSTANTS.MODULE_NAME, InventoryPlusFlags.CATEGORY, targetType);
           itemType = targetType;
         } else {
-          warn(`Item can be insert because exceeds max weight on category '${categoryName}'`, true);
+          warn(i18nFormat(`${CONSTANTS.MODULE_NAME}.dialogs.warn.exceedsmaxweight`, {categoryName: categoryName}), true);
           return;
         }
       }
@@ -240,7 +243,7 @@ export const readyHooks = async (): Promise<void> => {
       });
 
       updateData = updateData.filter((i) =>{
-        return i._id != null && i._id != undefined && i._id != ''; 
+        return i._id != null && i._id != undefined && i._id != '';
       });
 
       // Perform the update

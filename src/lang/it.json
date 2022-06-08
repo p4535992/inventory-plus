@@ -1,0 +1,37 @@
+{
+  "inventory-plus.setting.reset.name": "Ripristina impostazioni predefinite",
+  "inventory-plus.setting.reset.label": "Ripristina impostazioni predefinite",
+  "inventory-plus.setting.reset.hint": "Questo ripristinerà tutte le impostazioni di default del sistema di gioco attivo.",
+  "inventory-plus.setting.debug.name": "Abilita debugging",
+  "inventory-plus.setting.debug.label": "Stampa i messaggi di debug sulla console",
+  "inventario-plus.setting.debug.hint": " ",
+
+  "inventory-plus.dialogs.resettings.title": "Ripristina le impostazioni del modulo",
+  "inventory-plus.dialogs.resetsettings.content": "Sei sicuro di voler ripristinare tutte le impostazioni del modulo sui valori predefiniti del sistema attuale? <strong>QUESTO NON PUÒ ESSERE ANNULLATO!</strong>",
+  "inventory-plus.dialogs.resetsettings.confirm": "Ripristina impostazioni modulo",
+  "inventory-plus.dialogs.resettings.cancel": "Annulla",
+
+  "inventory-plus.inv-plus-dialog.categoryname": "Nome categoria:",
+  "inventory-plus.inv-plus-dialog.maxweightdescription": "Interrompe l'inserimento di qualsiasi articolo nella categoria se il peso combinato dell'articolo viene aumentato oltre questo numero.",
+  "inventario-plus.inv-plus-dialog.maxweightprefix": "Peso massimo:",
+  "inventory-plus.inv-plus-dialog.inherentweightdescription": "Se impostato su un numero superiore a 0, il peso totale trasportato verrà aumentato di tale importo.",
+  "inventory-plus.inv-plus-dialog.inherentweightprefix": "Peso intrinseco:",
+  "inventory-plus.inv-plus-dialog.ignoreweightdescription": "Se selezionato, il peso degli articoli in questa categoria non verrà calcolato in base alla capacità di carico.",
+  "inventory-plus.inv-plus-dialog.ignoreweightprefix": "Ignora peso articolo:",
+
+  "inventory-plus.inv-plus-dialog.addcustomcategory": "Aggiungi categoria personalizzata",
+  "inventory-plus.inv-plus-dialog.creatingnewinventorycategory": "Creazione di una nuova categoria di inventario",
+  "inventario-plus.inv-plus-dialog.accept": "Accetta",
+  "inventory-plus.inv-plus-dialog.cancel": "Annulla",
+  "inventory-plus.inv-plus-dialog.deletecategoryprefix": "Cancella.",
+  "inventory-plus.inv-plus-dialog.deletecategory": "Elimina categoria",
+
+  "inventory-plus.dialogs.warn.notargethtml": "Nessun html di destinazione trovato per il rilascio dell'elemento. Di solito accade quando il rilascio si verifica in un vicolo cieco, riprovare a trascinare e rilasciare e' la soluzione più semplice",
+  "inventory-plus.dialogs.warn.nocategoryfounded": "Nessuna categoria trovata con il tipo '{targetType}'",
+  "inventory-plus.dialogs.warn.itemtypecurrent": "Il tipo non e' 'Item'",
+  "inventory-plus.dialogs.warn.itemid": "Nessun itemId trovato per l'oggetto",
+  "inventory-plus.dialogs.warn.itemcurrent": "Nessun itemCurrent trovato per l'oggetto",
+  "inventory-plus.dialogs.warn.itemdata": "Nessun dato itemData trovato per l'articolo",
+  "inventory-plus.dialogs.warn.exceedsmaxweight": "Impossibile inserire l'articolo perché supera il peso massimo nella categoria '{categoryName}'",
+  "inventory-plus.dialogs.warn.nodroppeditem": "Nessun oggetto trovato"
+}
