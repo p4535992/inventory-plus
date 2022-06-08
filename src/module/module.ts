@@ -97,8 +97,7 @@ export const readyHooks = async (): Promise<void> => {
 
       // Yea i hate my life
       const actorId = data.actorId;
-      let createdItem:Item|undefined = undefined;
-
+      let createdItem: Item | undefined = undefined;
 
       // dropping item outside inventory list, but ignore if already owned item
       const targetLi = <HTMLLIElement>$(event.target).parents('li')[0];
@@ -114,22 +113,22 @@ export const readyHooks = async (): Promise<void> => {
         }
       }
 
-      if(!targetType){
+      if (!targetType) {
         // No type founded use standard system
         await this._onDropItemCreate(itemData);
         return;
       }
-      if(targetType=='feat' || targetType=='spell' || targetType=='class'){
+      if (targetType == 'feat' || targetType == 'spell' || targetType == 'class') {
         await this._onDropItemCreate(itemData);
         return;
       }
-      if (!targetLi){
+      if (!targetLi) {
         warn(i18n(`${CONSTANTS.MODULE_NAME}.dialogs.warn.notargethtml`), true);
         return;
       }
 
-      if(!targetType || !this.inventoryPlus.customCategorys[targetType]){
-        warn(i18nFormat(`${CONSTANTS.MODULE_NAME}.dialogs.warn.nocategoryfounded`, {targetType: targetType}), true);
+      if (!targetType || !this.inventoryPlus.customCategorys[targetType]) {
+        warn(i18nFormat(`${CONSTANTS.MODULE_NAME}.dialogs.warn.nocategoryfounded`, { targetType: targetType }), true);
         return;
       }
 
@@ -155,12 +154,15 @@ export const readyHooks = async (): Promise<void> => {
             if (isNaN(maxWeight) || maxWeight <= 0 || maxWeight >= categoryWeight + itemWeight) {
               // do nothing
             } else {
-              warn(i18nFormat(`${CONSTANTS.MODULE_NAME}.dialogs.warn.exceedsmaxweight`, {categoryName: categoryName}), true);
+              warn(
+                i18nFormat(`${CONSTANTS.MODULE_NAME}.dialogs.warn.exceedsmaxweight`, { categoryName: categoryName }),
+                true,
+              );
               return;
             }
           }
           // END WEIGHT CONTROL
-          const items:Item[] = await this._onDropItemCreate(itemData);
+          const items: Item[] = await this._onDropItemCreate(itemData);
           createdItem = items[0];
         }
       }
@@ -187,12 +189,15 @@ export const readyHooks = async (): Promise<void> => {
               if (isNaN(maxWeight) || maxWeight <= 0 || maxWeight >= categoryWeight + itemWeight) {
                 // do nothing
               } else {
-                warn(i18nFormat(`${CONSTANTS.MODULE_NAME}.dialogs.warn.exceedsmaxweight`, {categoryName: categoryName}), true);
+                warn(
+                  i18nFormat(`${CONSTANTS.MODULE_NAME}.dialogs.warn.exceedsmaxweight`, { categoryName: categoryName }),
+                  true,
+                );
                 return;
               }
             }
             // END WEIGHT CONTROL
-            const items:Item[] = await this._onDropItemCreate(itemData);
+            const items: Item[] = await this._onDropItemCreate(itemData);
             createdItem = items[0];
           }
         }
@@ -203,9 +208,9 @@ export const readyHooks = async (): Promise<void> => {
       // const itemId = itemData._id;
       let dropedItem = <Item>this.object.items.get(itemId);
       if (!dropedItem) {
-        if(createdItem){
+        if (createdItem) {
           dropedItem = createdItem;
-        }else{
+        } else {
           warn(i18n(`${CONSTANTS.MODULE_NAME}.dialogs.warn.nodroppeditem`));
           return;
         }
@@ -228,7 +233,10 @@ export const readyHooks = async (): Promise<void> => {
           await dropedItem.setFlag(CONSTANTS.MODULE_NAME, InventoryPlusFlags.CATEGORY, targetType);
           itemType = targetType;
         } else {
-          warn(i18nFormat(`${CONSTANTS.MODULE_NAME}.dialogs.warn.exceedsmaxweight`, {categoryName: categoryName}), true);
+          warn(
+            i18nFormat(`${CONSTANTS.MODULE_NAME}.dialogs.warn.exceedsmaxweight`, { categoryName: categoryName }),
+            true,
+          );
           return;
         }
       }
@@ -248,13 +256,13 @@ export const readyHooks = async (): Promise<void> => {
 
       // Perform the sort
       const sortUpdates = SortingHelpers.performIntegerSort(dropedItem, { target: target, siblings });
-      let updateData:any[] = sortUpdates.map((u) => {
+      let updateData: any[] = sortUpdates.map((u) => {
         const update: any = u.update;
         update._id = u.target.data._id;
         return update;
       });
 
-      updateData = updateData.filter((i) =>{
+      updateData = updateData.filter((i) => {
         return i._id != null && i._id != undefined && i._id != '';
       });
 

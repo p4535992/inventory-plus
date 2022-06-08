@@ -20,7 +20,8 @@ export class InventoryPlus {
     return (<InventoryPlus>app.inventoryPlus).prepareInventory(inventory);
   }
 
-  init(actor: Actor) { // , inventory: Category[]
+  init(actor: Actor) {
+    // , inventory: Category[]
     this.actor = actor;
     this.initCategorys();
   }
@@ -96,35 +97,37 @@ export class InventoryPlus {
     }
   }
 
-  addInventoryFunctions(html) {
+  addInventoryFunctions(html: JQuery<HTMLElement>) {
     /*
      *  create custom category
      */
-    const addCategoryBtn = $(`<a class="custom-category"><i class="fas fa-plus">${i18n(`${CONSTANTS.MODULE_NAME}.inv-plus-dialog.addcustomcategory`)}</i></a>`).click(
-      async (ev) => {
-        const template = await renderTemplate(`modules/${CONSTANTS.MODULE_NAME}/templates/categoryDialog.hbs`, {});
-        const d = new Dialog({
-          title: i18n(`${CONSTANTS.MODULE_NAME}.inv-plus-dialog.creatingnewinventorycategory`),
-          content: template,
-          buttons: {
-            accept: {
-              icon: '<i class="fas fa-check"></i>',
-              label: i18n(`${CONSTANTS.MODULE_NAME}.inv-plus-dialog.accept`),
-              callback: async (html: JQuery<HTMLElement>) => {
-                const input = html.find('input');
-                this.createCategory(input);
-              },
-            },
-            cancel: {
-              icon: '<i class="fas fa-times"></i>',
-              label: i18n(`${CONSTANTS.MODULE_NAME}.inv-plus-dialog.cancel`),
+    const addCategoryBtn = $(
+      `<a class="custom-category"><i class="fas fa-plus">${i18n(
+        `${CONSTANTS.MODULE_NAME}.inv-plus-dialog.addcustomcategory`,
+      )}</i></a>`,
+    ).click(async (ev) => {
+      const template = await renderTemplate(`modules/${CONSTANTS.MODULE_NAME}/templates/categoryDialog.hbs`, {});
+      const d = new Dialog({
+        title: i18n(`${CONSTANTS.MODULE_NAME}.inv-plus-dialog.creatingnewinventorycategory`),
+        content: template,
+        buttons: {
+          accept: {
+            icon: '<i class="fas fa-check"></i>',
+            label: i18n(`${CONSTANTS.MODULE_NAME}.inv-plus-dialog.accept`),
+            callback: async (html: JQuery<HTMLElement>) => {
+              const input = html.find('input');
+              this.createCategory(input);
             },
           },
-          default: 'cancel',
-        });
-        d.render(true);
-      },
-    );
+          cancel: {
+            icon: '<i class="fas fa-times"></i>',
+            label: i18n(`${CONSTANTS.MODULE_NAME}.inv-plus-dialog.cancel`),
+          },
+        },
+        default: 'cancel',
+      });
+      d.render(true);
+    });
     html.find('.inventory .filter-list').prepend(addCategoryBtn);
 
     /*
@@ -133,14 +136,19 @@ export class InventoryPlus {
 
     const createBtns = html.find('.inventory .item-create');
     for (const createBtn of createBtns) {
-      const type = createBtn.dataset.type;
+      const type = <string>createBtn.dataset.type;
       if (['weapon', 'equipment', 'consumable', 'tool', 'backpack', 'loot'].indexOf(type) === -1) {
-        const parent = createBtn.parentNode;
+        const parent = <ParentNode>createBtn.parentNode;
         const removeCategoryBtn = $(
-          `<a class="item-control remove-category" title="${i18n(`${CONSTANTS.MODULE_NAME}.inv-plus-dialog.deletecategory`)}"
-            data-type="${type}"><i class="fas fa-minus"></i>${i18n(`${CONSTANTS.MODULE_NAME}.inv-plus-dialog.deletecategoryprefix`)}</a>`,
+          `<a class="item-control remove-category" title="${i18n(
+            `${CONSTANTS.MODULE_NAME}.inv-plus-dialog.deletecategory`,
+          )}"
+            data-type="${type}"><i class="fas fa-minus"></i>${i18n(
+            `${CONSTANTS.MODULE_NAME}.inv-plus-dialog.deletecategoryprefix`,
+          )}</a>`,
         );
         removeCategoryBtn.click((ev) => this.removeCategory(ev));
+        //@ts-ignore
         parent.innerHTML = '';
         $(parent).append(removeCategoryBtn);
       }
@@ -152,9 +160,9 @@ export class InventoryPlus {
 
     const targetCss = `.inventory .${getCSSName('sub-header')}`;
     const headers = html.find(targetCss);
-    for (let header of headers) {
-      header = $(header);
-      const type = header.find('.item-control')[0].dataset.type;
+    for (const headerTmp of headers) {
+      const header = <JQuery<HTMLElement>>$(headerTmp);
+      const type = <string>(<HTMLElement>header.find('.item-control')[0]).dataset.type;
 
       const extraStuff = $('<div class="inv-plus-stuff flexrow"></div>');
       header.find('h3').after(extraStuff);
@@ -233,11 +241,11 @@ export class InventoryPlus {
       }
 
       let icon = ``;
-      if(currentCategory.ignoreWeight){
+      if (currentCategory.ignoreWeight) {
         icon = `<i class="fas fa-feather"></i>`;
-      }else if(currentCategory.ownWeight > 0){
+      } else if (currentCategory.ownWeight > 0) {
         icon = `<i class="fas fa-weight-hanging"></i>`;
-      }else{
+      } else {
         icon = `<i class="fas fa-balance-scale-right"></i>`;
       }
 
@@ -245,12 +253,10 @@ export class InventoryPlus {
         const weight = <number>this.getCategoryItemWeight(type);
         const weightUnit = game.settings.get('dnd5e', 'metricWeightUnits')
           ? game.i18n.localize('DND5E.AbbreviationKgs')
-          : game.i18n.localize('DND5E.AbbreviationLbs')
+          : game.i18n.localize('DND5E.AbbreviationLbs');
         const weightValue = `(${weight}/${currentCategory.maxWeight} ${weightUnit})`;
 
-        const weightString = $(
-          `<label class="category-weight"> ${icon} ${weightValue}</label>`
-        );
+        const weightString = $(`<label class="category-weight"> ${icon} ${weightValue}</label>`);
         header.find('h3').append(weightString);
       }
     }
@@ -318,8 +324,6 @@ export class InventoryPlus {
       if (type === catType) {
         //await item.unsetFlag(CONSTANTS.MODULE_NAME, InventoryPlusFlag.CATEGORY);
         changedItems.push(<any>{
-          // _id: item.id,
-          // '-=flags.inventory-plus':null
           _id: <string>item.id,
           flags: {
             'inventory-plus': null,
@@ -459,7 +463,6 @@ export class InventoryPlus {
   // }
 
   async saveCategorys() {
-    //this.actor.update({ 'flags.inventory-plus.categorys': this.customCategorys }).then(() => { console.log(this.actor.data.flags) });
     await this.actor.setFlag(CONSTANTS.MODULE_NAME, InventoryPlusFlags.CATEGORYS, this.customCategorys);
   }
 }

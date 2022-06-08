@@ -26,7 +26,7 @@
   "inventory-plus.inv-plus-dialog.deletecategoryprefix": "Excluir",
   "inventory-plus.inv-plus-dialog.deletecategory": "Excluir Categoria",
 
-  "inventory-plus.dialogs.warn.notargethtml":"Nenhum html de destino encontrado para a queda do item. Geralmente acontece quando a queda ocorre em um beco sem saída, tentar novamente arrastar e soltar é a solução mais simples",
+  "inventory-plus.dialogs.warn.notargethtml": "Nenhum html de destino encontrado para a queda do item. Geralmente acontece quando a queda ocorre em um beco sem saída, tentar novamente arrastar e soltar é a solução mais simples",
   "inventory-plus.dialogs.warn.nocategoryfounded": "Nenhuma categoria fundada com o tipo '{targetType}'",
   "inventory-plus.dialogs.warn.itemtypecurrent": "O tipo não é 'Item'",
   "inventory-plus.dialogs.warn.itemid": "Nenhum itemId encontrado para o item",

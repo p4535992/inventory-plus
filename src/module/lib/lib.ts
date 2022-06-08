@@ -320,23 +320,28 @@ export function getCSSName(element) {
   }
 }
 
-export async function retrieveItemFromData(actor:Actor,itemId:string, itemName:string, currentCompendium:string):Promise<Item> {
-  let itemFounded:Item|null = null;
+export async function retrieveItemFromData(
+  actor: Actor,
+  itemId: string,
+  itemName: string,
+  currentCompendium: string,
+): Promise<Item> {
+  let itemFounded: Item | null = null;
   if (currentCompendium) {
-      const pack = game.packs.get(currentCompendium);
-      if (pack) {
-          await pack.getIndex();
-          for (const entityComp of pack.index) {
-              const itemComp = <StoredDocument<Item>>await pack.getDocument(entityComp._id);
-              if (itemComp.id === itemId || itemComp.name === itemName) {
-                  itemFounded = itemComp;
-                  break;
-              }
-          }
+    const pack = game.packs.get(currentCompendium);
+    if (pack) {
+      await pack.getIndex();
+      for (const entityComp of pack.index) {
+        const itemComp = <StoredDocument<Item>>await pack.getDocument(entityComp._id);
+        if (itemComp.id === itemId || itemComp.name === itemName) {
+          itemFounded = itemComp;
+          break;
+        }
       }
+    }
   }
   if (!itemFounded) {
-    itemFounded =game.items?.get(itemId) || <Item>actor.items.get(itemId) || undefined;
+    itemFounded = game.items?.get(itemId) || <Item>actor.items.get(itemId) || undefined;
   }
   return itemFounded;
 }
