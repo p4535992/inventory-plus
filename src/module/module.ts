@@ -112,8 +112,20 @@ export const readyHooks = async (): Promise<void> => {
           const item = <Item>this.object.items.get(itemId);
           targetType = this.inventoryPlus.getItemType(item.data);
         }
-      }else{
+      }
+
+      if(!targetType){
+        // No type founded use standard system
+        await this._onDropItemCreate(itemData);
+        return;
+      }
+      if(targetType=='feat' || targetType=='spell' || targetType=='class'){
+        await this._onDropItemCreate(itemData);
+        return;
+      }
+      if (!targetLi){
         warn(i18n(`${CONSTANTS.MODULE_NAME}.dialogs.warn.notargethtml`), true);
+        return;
       }
 
       if(!targetType || !this.inventoryPlus.customCategorys[targetType]){
