@@ -115,21 +115,56 @@ export const readyHooks = async (): Promise<void> => {
 
       if (!targetType) {
         // No type founded use standard system
-        await this._onDropItemCreate(itemData);
-        return;
+
+        if (!this.actor.isOwner) return false;
+        const item = <Item>await Item.fromDropData(data);
+        const itemData = item.toObject();
+
+        // Handle item sorting within the same Actor
+        if (await this._isFromSameActor(data)) return this._onSortItem(event, itemData);
+
+        // Create the owned item
+        return this._onDropItemCreate(itemData);
       }
+
       if (targetType == 'feat' || targetType == 'spell' || targetType == 'class') {
-        await this._onDropItemCreate(itemData);
-        return;
+        if (!this.actor.isOwner) return false;
+        const item = <Item>await Item.fromDropData(data);
+        const itemData = item.toObject();
+
+        // Handle item sorting within the same Actor
+        if (await this._isFromSameActor(data)) return this._onSortItem(event, itemData);
+
+        // Create the owned item
+        return this._onDropItemCreate(itemData);
       }
+
       if (!targetLi) {
         warn(i18n(`${CONSTANTS.MODULE_NAME}.dialogs.warn.notargethtml`), true);
-        return;
+
+        if (!this.actor.isOwner) return false;
+        const item = <Item>await Item.fromDropData(data);
+        const itemData = item.toObject();
+
+        // Handle item sorting within the same Actor
+        if (await this._isFromSameActor(data)) return this._onSortItem(event, itemData);
+
+        // Create the owned item
+        return this._onDropItemCreate(itemData);
       }
 
       if (!targetType || !this.inventoryPlus.customCategorys[targetType]) {
         warn(i18nFormat(`${CONSTANTS.MODULE_NAME}.dialogs.warn.nocategoryfounded`, { targetType: targetType }), true);
-        return;
+
+        if (!this.actor.isOwner) return false;
+        const item = <Item>await Item.fromDropData(data);
+        const itemData = item.toObject();
+
+        // Handle item sorting within the same Actor
+        if (await this._isFromSameActor(data)) return this._onSortItem(event, itemData);
+
+        // Create the owned item
+        return this._onDropItemCreate(itemData);
       }
 
       const categoryName = <string>i18n(this.inventoryPlus.customCategorys[targetType].label);
@@ -162,8 +197,18 @@ export const readyHooks = async (): Promise<void> => {
             }
           }
           // END WEIGHT CONTROL
-          const items: Item[] = await this._onDropItemCreate(itemData);
-          createdItem = items[0];
+          if (!this.actor.isOwner) return false;
+          // const item = <Item>await Item.fromDropData(data);
+          // const itemData = item.toObject();
+
+          // Handle item sorting within the same Actor
+          if (await this._isFromSameActor(data)) {
+            // return this._onSortItem(event, itemData);
+          } else {
+            // Create the owned item
+            const items: Item[] = await this._onDropItemCreate(itemData);
+            createdItem = items[0];
+          }
         }
       }
 
@@ -197,8 +242,18 @@ export const readyHooks = async (): Promise<void> => {
               }
             }
             // END WEIGHT CONTROL
-            const items: Item[] = await this._onDropItemCreate(itemData);
-            createdItem = items[0];
+            if (!this.actor.isOwner) return false;
+            // const item = <Item>await Item.fromDropData(data);
+            // const itemData = item.toObject();
+
+            // Handle item sorting within the same Actor
+            if (await this._isFromSameActor(data)) {
+              // return this._onSortItem(event, itemData);
+            } else {
+              // Create the owned item
+              const items: Item[] = await this._onDropItemCreate(itemData);
+              createdItem = items[0];
+            }
           }
         }
       }
