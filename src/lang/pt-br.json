@@ -1,0 +1,28 @@
+{
+  "inventory-plus.setting.reset.name": "Redefinir as configurações para o padrão",
+  "inventory-plus.setting.reset.label": "Redefinir as Configurações",
+  "inventory-plus.setting.reset.hint": "Isso irá redefinir todas as configurações de volta para o padrão do sistema ativo.",
+  "inventory-plus.setting.debug.name": "Ativar depuração",
+  "inventory-plus.setting.debug.label": "Mostra mensagens de depuração no console",
+  "inventory-plus.setting.debug.hint": " ",
+
+  "inventory-plus.dialogs.resetsettings.title": "Redefinir Configurações do Módulo",
+  "inventory-plus.dialogs.resetsettings.content": "Tem certeza de que deseja redefinir todas as configurações do módulo para os padrões do sistema atual? <strong>ISTO NÃO PODE SER DESFEITO!</strong>",
+  "inventory-plus.dialogs.resetsettings.confirm": "Redefinir",
+  "inventory-plus.dialogs.resetsettings.cancel": "Cancelar",
+
+  "inventory-plus.inv-plus-dialog.categoryname": "Nome da Categoria:",
+  "inventory-plus.inv-plus-dialog.maxweightdescription": "Impede que qualquer item seja colocado na categoria se o peso do item exceda o limite desse número.",
+  "inventory-plus.inv-plus-dialog.maxweightprefix": "Peso Máximo:",
+  "inventory-plus.inv-plus-dialog.inherentweightdescription": "Se definido para qualquer número acima de 0, o peso será aumentado nesse valor em sua Capacidade de Carga.",
+  "inventory-plus.inv-plus-dialog.inherentweightprefix": "Peso da Categoria:",
+  "inventory-plus.inv-plus-dialog.ignoreweightdescription": "Se marcado, o peso dos itens nesta categoria não serão calculados em sua Capacidade de Carga.",
+  "inventory-plus.inv-plus-dialog.ignoreweightprefix": "Ignorar Peso dos Itens:",
+
+  "inventory-plus.inv-plus-dialog.addcustomcategory": "Adicionar Categoria Personalizada",
+  "inventory-plus.inv-plus-dialog.creatingnewinventorycategory": "Criando Nova Categoria de Inventário",
+  "inventory-plus.inv-plus-dialog.accept": "Aceitar",
+  "inventory-plus.inv-plus-dialog.cancel": "Cancelar",
+  "inventory-plus.inv-plus-dialog.deletecategoryprefix": "Excluir",
+  "inventory-plus.inv-plus-dialog.deletecategory": "Excluir Categoria"
+}

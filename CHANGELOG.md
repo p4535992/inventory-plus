@@ -1,3 +1,9 @@
+### 0.5.2
+
+- Update i18n for PT-BR ty to @eduardopato41
+- Bug fix: [PT-BR Translation](https://github.com/p4535992/inventory-plus/issues/2)
+- Bug fix again: [[BUG] Can't transfer items from compendiums to character sheet DnD5e](https://github.com/p4535992/inventory-plus/issues/1)
+
 ### 0.5.1
 
 - Add some featurs, some icon , css style , ecc.

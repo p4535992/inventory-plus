@@ -5,7 +5,7 @@
 import type { ItemData } from '@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/data/module.mjs';
 import CONSTANTS from './constants';
 import { Category, InventoryPlusFlags } from './inventory-plus-models';
-import { debug, duplicateExtended, error, getCSSName, warn } from './lib/lib';
+import { debug, duplicateExtended, error, getCSSName, i18n, warn } from './lib/lib';
 // import ActorSheet5eCharacter from "../../systems/dnd5e/module/actor/sheets/character.js";
 
 export class InventoryPlus {
@@ -100,27 +100,27 @@ export class InventoryPlus {
     /*
      *  create custom category
      */
-    const addCategoryBtn = $('<a class="custom-category"><i class="fas fa-plus"></i> Add Custom Category</a>').click(
+    const addCategoryBtn = $(`<a class="custom-category"><i class="fas fa-plus">${i18n(`${CONSTANTS.MODULE_NAME}.inv-plus-dialog.addcustomcategory`)}</i></a>`).click(
       async (ev) => {
         const template = await renderTemplate(`modules/${CONSTANTS.MODULE_NAME}/templates/categoryDialog.hbs`, {});
         const d = new Dialog({
-          title: 'Creating new Inventory Category',
+          title: i18n(`${CONSTANTS.MODULE_NAME}.inv-plus-dialog.creatingnewinventorycategory`),
           content: template,
           buttons: {
             accept: {
               icon: '<i class="fas fa-check"></i>',
-              label: 'Accept',
+              label: i18n(`${CONSTANTS.MODULE_NAME}.inv-plus-dialog.accept`),
               callback: async (html: JQuery<HTMLElement>) => {
                 const input = html.find('input');
                 this.createCategory(input);
               },
             },
-            cancle: {
+            cancel: {
               icon: '<i class="fas fa-times"></i>',
-              label: 'Cancel',
+              label: i18n(`${CONSTANTS.MODULE_NAME}.inv-plus-dialog.cancel`),
             },
           },
-          default: 'accept',
+          default: 'cancel',
         });
         d.render(true);
       },
@@ -137,7 +137,8 @@ export class InventoryPlus {
       if (['weapon', 'equipment', 'consumable', 'tool', 'backpack', 'loot'].indexOf(type) === -1) {
         const parent = createBtn.parentNode;
         const removeCategoryBtn = $(
-          `<a class="item-control remove-category" title="Delete Category" data-type="${type}"><i class="fas fa-minus"></i> Del.</a>`,
+          `<a class="item-control remove-category" title="${i18n(`${CONSTANTS.MODULE_NAME}.inv-plus-dialog.deletecategory`)}"
+            data-type="${type}"><i class="fas fa-minus"></i>${i18n(`${CONSTANTS.MODULE_NAME}.inv-plus-dialog.deletecategoryprefix`)}</a>`,
         );
         removeCategoryBtn.click((ev) => this.removeCategory(ev));
         parent.innerHTML = '';
