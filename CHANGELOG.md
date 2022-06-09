@@ -1,3 +1,8 @@
+### 0.5.4
+
+- Added some features
+- Bug fix again: [[BUG] Can't transfer items from compendiums to character sheet DnD5e](https://github.com/p4535992/inventory-plus/issues/1)
+
 ### 0.5.3
 
 - Bug fix again: [[BUG] Can't transfer items from compendiums to character sheet DnD5e](https://github.com/p4535992/inventory-plus/issues/1)

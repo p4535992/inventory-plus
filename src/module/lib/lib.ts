@@ -383,8 +383,7 @@ export function checkCompatible(actorTypeName1: string, actorTypeName2: string, 
     if (withActorTypeName1 == actorTypeName2) return true;
     if (withActorTypeName2 == actorTypeName1) return true;
   } catch (err: any) {
-    console.error('TransferStuff | ', err.message);
-    ui.notifications.error('TransferStuff | ' + err.message);
+    error(err.message, true);
   }
   return false;
 }
@@ -455,7 +454,7 @@ export function transferItem(
       targetSheet.actor?.createEmbeddedDocuments('Item', [<any>createdItem.data]);
     }
   } else {
-    ui.notifications.error('TransferStuff | could not transfer ' + transferedQuantity + ' items');
+    error('could not transfer ' + transferedQuantity + ' items', true);
   }
 }
 
@@ -757,7 +756,7 @@ export function delayedSort(actor: Actor) {
 
 // ========================================================
 
-export function newEncumbrance(actorData) {
+export function calculateEncumbranceWithEquippedMultiplier(actorData) {
   let eqpMultiplyer = 1;
   if (game.settings.get(CONSTANTS.MODULE_NAME, 'enableEquipmentMultiplier')) {
     eqpMultiplyer = <number>game.settings.get(CONSTANTS.MODULE_NAME, 'equipmentMultiplier') || 1;

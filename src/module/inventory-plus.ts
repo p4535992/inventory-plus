@@ -5,7 +5,7 @@
 import type { ItemData } from '@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/data/module.mjs';
 import CONSTANTS from './constants';
 import { Category, InventoryPlusFlags } from './inventory-plus-models';
-import { debug, duplicateExtended, error, getCSSName, i18n, warn } from './lib/lib';
+import { debug, duplicateExtended, error, getCSSName, i18n, info, is_real_number, warn } from './lib/lib';
 // import ActorSheet5eCharacter from "../../systems/dnd5e/module/actor/sheets/character.js";
 
 export class InventoryPlus {
@@ -437,18 +437,37 @@ export class InventoryPlus {
     if (type === undefined || this.customCategorys[type] === undefined) {
       type = item.type;
     }
+    if (this.customCategorys[type] && this.customCategorys[type]?.dataset.type != item.type) {
+      return item.type;
+    }
     return type;
   }
 
   getCategoryItemWeight(type: string) {
-    let weight = 0;
+    let totalCategoryWeight = 0;
     for (const i of this.actor.items) {
       if (type === this.getItemType(i.data)) {
         //@ts-ignore
-        weight += i.data.data.weight * i.data.data.quantity;
+        const q = <number>i.data.data.quantity;
+        //@ts-ignore
+        const w = <number>i.data.data.weight;
+        let eqpMultiplyer = 1;
+        if (game.settings.get(CONSTANTS.MODULE_NAME, 'enableEquipmentMultiplier')) {
+          eqpMultiplyer = <number>game.settings.get(CONSTANTS.MODULE_NAME, 'equipmentMultiplier') || 1;
+        }
+        //@ts-ignore
+        const e = <number>i.data.data.equipped ? eqpMultiplyer : 1;
+        if (is_real_number(w) && is_real_number(q)) {
+          //@ts-ignore
+          totalCategoryWeight += w * q * e;
+        } else {
+          info(
+            `The item '${i.name}', on category '${type}', on actor ${this.actor?.name} has not valid weight or quantity `,
+          );
+        }
       }
     }
-    return weight;
+    return totalCategoryWeight;
   }
 
   // static getCSSName(element) {

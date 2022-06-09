@@ -44,7 +44,7 @@ This module allows you to create custom inventory categories and sort items into
 
 ## Features
 
-Due to collisions, code maintenance problems and **reduction in the number of modules** I have rewritten for the inherent use of the module some features of other modules, mentioned in the _credits_ of this document. I invite you to support these authors in their various kofis and patreons. Each feature is non-blocking with the other modules and can be activated / deactivated from a specific module setting, which we list below
+Due to collisions, code maintenance problems, and **reduction in the number of modules** I have rewritten for the inherent use of the module some features of other modules, mentioned in the _credits_ of this document. I invite you to support these authors in their various kofis and patreons. Each feature is non-blocking with the other modules and can be activated / deactivated from a specific module setting, which we list below
 
 **Feature: Enable item transfer:** Even if it's the main feature of this module you can still disable item transfer. Know that you can temporarily disable the transfer feature by pressing the alt key while you move the item.
 
