@@ -12,6 +12,58 @@ export const registerSettings = function (): void {
 
   // ===================================================================
 
+  // =================================
+  // INTEGRATION TRANSFER STUFF
+  // =================================
+
+  game.settings.register(CONSTANTS.MODULE_NAME, 'enableItemTransfer', {
+    name: `${CONSTANTS.MODULE_NAME}.setting.enableItemTransfer.name`,
+    hint: `${CONSTANTS.MODULE_NAME}.setting.enableItemTransfer.hint`,
+    scope: 'world',
+    config: true,
+    type: Boolean,
+    default: false,
+  });
+
+  game.settings.register(CONSTANTS.MODULE_NAME, 'enableCurrencyTransfer', {
+    name: `${CONSTANTS.MODULE_NAME}.setting.enableCurrencyTransfer.name`,
+    hint: `${CONSTANTS.MODULE_NAME}.setting.enableCurrencyTransfer.hint`,
+    scope: 'world',
+    config: true,
+    type: Boolean,
+    default: true,
+  });
+
+  game.settings.register(CONSTANTS.MODULE_NAME, 'actorTransferSame', {
+    name: `${CONSTANTS.MODULE_NAME}.setting.actorTransferSame.name`,
+    hint: `${CONSTANTS.MODULE_NAME}.setting.actorTransferSame.hint`,
+    scope: 'world',
+    config: true,
+    type: Boolean,
+    default: true,
+  });
+
+  game.settings.register(CONSTANTS.MODULE_NAME, 'actorTransferPairs', {
+    name: `${CONSTANTS.MODULE_NAME}.setting.actorTransferPairs.name`,
+    hint: `${CONSTANTS.MODULE_NAME}.setting.actorTransferPairs.hint`,
+    scope: 'world',
+    config: true,
+    type: String,
+    default: '',
+    onChange: (value: string) => {
+      try {
+        JSON.parse('{' + value + '}');
+      } catch (err: any) {
+        ui.notifications.error(err.message);
+        throw err;
+      }
+    },
+  });
+
+  // =================================
+  // INTEGRATION SORTER 5E
+  // =================================
+
   // ===================================================================
 
   game.settings.register(CONSTANTS.MODULE_NAME, 'debug', {

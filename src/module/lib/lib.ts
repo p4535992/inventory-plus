@@ -389,7 +389,7 @@ export function checkCompatible(actorTypeName1: string, actorTypeName2: string, 
   return false;
 }
 
-export function deleteItem(sheet: Token, itemId: string) {
+export function deleteItem(sheet: ActorSheet, itemId: string) {
   if (sheet.actor?.deleteEmbeddedDocuments != undefined) {
     sheet.actor?.deleteEmbeddedDocuments('Item', [itemId]);
   } else {
@@ -398,7 +398,7 @@ export function deleteItem(sheet: Token, itemId: string) {
   }
 }
 
-export function deleteItemIfZero(sheet: Token, itemId: string) {
+export function deleteItemIfZero(sheet: ActorSheet, itemId: string) {
   const item = sheet.actor?.data.items.get(itemId);
   if (item == undefined) {
     return;
@@ -410,8 +410,8 @@ export function deleteItemIfZero(sheet: Token, itemId: string) {
 }
 
 export function transferItem(
-  sourceSheet: Token,
-  targetSheet: Token,
+  sourceSheet: ActorSheet,
+  targetSheet: ActorSheet,
   originalItemId: string,
   createdItem: Item,
   originalQuantity: number,
@@ -443,8 +443,9 @@ export function transferItem(
     }
 
     originalItem.update({ 'data.quantity': newOriginalQuantity }).then((i: Item) => {
-      // const sh = <FormApplication<FormApplicationOptions, FormApplication.Data<{}, FormApplicationOptions>>>i.actor?.sheet;
-      deleteItemIfZero(<Token>i.actor?.token?.object, <string>i.data._id);
+      const sh = <FormApplication<FormApplicationOptions, FormApplication.Data<{}, FormApplicationOptions>>>i.actor?.sheet;
+      //@ts-ignore
+      deleteItemIfZero(<ActorSheet>sh, <string>i.data._id);
     });
     if (stacked === false) {
       //@ts-ignore
@@ -468,7 +469,7 @@ export function transferCurrency(html: JQuery<HTMLElement>, sourceSheet, targetS
   }
 
   if (errors.length !== 0) {
-    error(game.i18n.localize(CONSTANTS.MODULE_NAME + '.notEnoughCurrency') + ' ' + errors.join(', '), true);
+    error(i18n(CONSTANTS.MODULE_NAME + '.notEnoughCurrency') + ' ' + errors.join(', '), true);
   } else {
     for (const c of currencies) {
       const amount = parseInt(<string>html.find('.' + c + ' input').val(), 10);
@@ -481,35 +482,46 @@ export function transferCurrency(html: JQuery<HTMLElement>, sourceSheet, targetS
 
 export function showItemTransferDialog(
   originalQuantity: number,
-  sourceSheet: Token,
-  targetSheet: Token,
-  originalItemId,
-  createdItem,
+  sourceSheet: ActorSheet,
+  targetSheet: ActorSheet,
+  originalItemId:string,
+  createdItem:Item,
 ) {
+  const contentDialog = `
+  <form class="transferstuff item">
+    <div class="form-group">
+      <input type="number" 
+        class="transferedQuantity" 
+        value="${originalQuantity}" 
+        min="0" 
+        max="${originalQuantity}" />
+      <button onclick="this.parentElement.querySelector('.transferedQuantity').value = '1'"
+        >${i18n(CONSTANTS.MODULE_NAME + '.one')}
+      </button>
+      <button 
+        onclick="this.parentElement.querySelector('.transferedQuantity').value = '${Math.round(originalQuantity / 2)}'"
+        >${i18n(CONSTANTS.MODULE_NAME + '.half')}
+      </button>
+      <button 
+        onclick="this.parentElement.querySelector('.transferedQuantity').value = '${originalQuantity}'"
+        >${i18n(CONSTANTS.MODULE_NAME + '.max')}
+      </button>
+      <label style="flex: none;">
+        <input style="vertical-align: middle;" 
+          type="checkbox" 
+          class="stack" 
+          checked="checked" 
+          />${i18n(CONSTANTS.MODULE_NAME + '.stackItems')}
+      </label>
+    </div>
+  </form>`;
   const transferDialog = new Dialog({
     title: 'How many items do you want to move?',
-    content: `
-        <form class="transferstuff item">
-          <div class="form-group">
-            <input type="number" class="transferedQuantity" value="${originalQuantity}" min="0" max="${originalQuantity}" />
-            <button onclick="this.parentElement.querySelector('.transferedQuantity').value = '1'">${game.i18n.localize(
-              CONSTANTS.MODULE_NAME + '.one',
-            )}</button>
-            <button onclick="this.parentElement.querySelector('.transferedQuantity').value = '${Math.round(
-              originalQuantity / 2,
-            )}'">${game.i18n.localize(CONSTANTS.MODULE_NAME + '.half')}</button>
-            <button onclick="this.parentElement.querySelector('.transferedQuantity').value = '${originalQuantity}'">${game.i18n.localize(
-      CONSTANTS.MODULE_NAME + '.max',
-    )}</button>
-            <label style="flex: none;"><input style="vertical-align: middle;" type="checkbox" class="stack" checked="checked" /> ${game.i18n.localize(
-              CONSTANTS.MODULE_NAME + '.stackItems',
-            )}</label>
-          </div>
-        </form>`,
+    content: contentDialog,
     buttons: {
       transfer: {
         //icon: "<i class='fas fa-check'></i>",
-        label: game.i18n.localize(CONSTANTS.MODULE_NAME + '.transfer'),
+        label: i18n(CONSTANTS.MODULE_NAME + '.transfer'),
         callback: (html: JQuery<HTMLElement>) => {
           const transferedQuantity = parseInt(<string>html.find('input.transferedQuantity').val(), 10);
           const stackItems = html.find('input.stack').is(':checked');
@@ -537,7 +549,7 @@ export function disabledIfZero(n: number): 'disabled' | '' {
   return '';
 }
 
-export function showCurrencyTransferDialog(sourceSheet: Token, targetSheet: Token) {
+export function showCurrencyTransferDialog(sourceSheet: ActorSheet, targetSheet: ActorSheet) {
   //@ts-ignore
   const pp = sourceSheet.actor?.data.data.currency.pp;
   //@ts-ignore
@@ -548,29 +560,56 @@ export function showCurrencyTransferDialog(sourceSheet: Token, targetSheet: Toke
   const sp = sourceSheet.actor?.data.data.currency.sp;
   //@ts-ignore
   const cp = sourceSheet.actor?.data.data.currency.cp;
-  const transferDialog = new Dialog({
-    title: game.i18n.localize(CONSTANTS.MODULE_NAME + '.howMuchCurrency'),
 
-    content: `
-        <form class="transferstuff currency">
-          <div class="form-group">
-            <span class="currency pp"><i class="fas fa-coins"></i><span>Platinum: </span><input type="number" value="0" min="0" ${disabledIfZero(
-              pp,
-            )} max="${pp}" /></span>
-            <span class="currency gp"><i class="fas fa-coins"></i><span>Gold: </span><input type="number" value="0" min="0" ${disabledIfZero(
-              gp,
-            )} max="${gp}" /></span>
-            <span class="currency ep"><i class="fas fa-coins"></i><span>Electrum: </span><input type="number" value="0" min="0" ${disabledIfZero(
-              ep,
-            )} max="${ep}" /></span>
-            <span class="currency sp"><i class="fas fa-coins"></i><span>Silver: </span><input type="number" value="0" min="0" ${disabledIfZero(
-              sp,
-            )} max="${sp}" /></span>
-            <span class="currency cp"><i class="fas fa-coins"></i><span>Copper: </span><input type="number" value="0" min="0" ${disabledIfZero(
-              cp,
-            )} max="${cp}" /></span>
-          </div>
-        </form>`,
+  const contentDialog = `
+  <form class="transferstuff currency">
+    <div class="form-group">
+      <span class="currency pp">
+        <i class="fas fa-coins"></i>
+        <span>Platinum: </span>
+        <input type="number" 
+        value="0" 
+        min="0" ${disabledIfZero(pp)} 
+        max="${pp}" />
+      </span>
+      <span class="currency gp">
+        <i class="fas fa-coins"></i>
+        <span>Gold: </span>
+        <input type="number" 
+        value="0" 
+        min="0" ${disabledIfZero(gp)} 
+        max="${gp}" />
+      </span>
+      <span class="currency ep">
+        <i class="fas fa-coins"></i>
+        <span>Electrum: </span>
+        <input type="number" 
+        value="0" 
+        min="0" ${disabledIfZero(ep)} 
+        max="${ep}" />
+      </span>
+      <span class="currency sp">
+        <i class="fas fa-coins"></i>
+        <span>Silver: </span>
+        <input type="number" 
+        value="0" 
+        min="0" ${disabledIfZero(sp)} 
+        max="${sp}" />
+      </span>
+      <span class="currency cp">
+        <i class="fas fa-coins"></i>
+        <span>Copper: </span>
+        <input type="number" 
+        value="0"
+        min="0" ${disabledIfZero(cp)} 
+        max="${cp}" />
+      </span>
+    </div>
+  </form>`;
+  const transferDialog = new Dialog({
+    title: i18n(CONSTANTS.MODULE_NAME + '.howMuchCurrency'),
+
+    content: contentDialog,
     buttons: {
       transfer: {
         //icon: "<i class='fas fa-check'></i>",
@@ -580,7 +619,7 @@ export function showCurrencyTransferDialog(sourceSheet: Token, targetSheet: Toke
         },
       },
     },
-    default: game.i18n.localize(CONSTANTS.MODULE_NAME + '.transfer'),
+    default: i18n(CONSTANTS.MODULE_NAME + '.transfer'),
   });
   transferDialog.render(true);
 }
