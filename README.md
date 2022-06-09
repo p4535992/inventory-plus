@@ -58,7 +58,7 @@ A method to calculate the weight (the one from the module filters) on the actor
 
 A method to calculate the weight (the one from the module filters) on inventory array and the current currency present on the actor
 
-The `Category` object is rappresented like this:
+The `Category` object is represented like this:
 ```
 {
   label: string;
@@ -78,8 +78,101 @@ The `Category` object is rappresented like this:
 | --- | --- | --- | --- |
 | actorIdOrName | <code>string</code> | The actro id or name (if founded) | <code>undefined</code> 
 
+# Build
+
+## Install all packages
+
+```bash
+npm install
+```
+## npm build scripts
+
+### build
+
+will build the code and copy all necessary assets into the dist folder and make a symlink to install the result into your foundry data; create a
+`foundryconfig.json` file with your Foundry Data path.
+
+```json
+{
+  "dataPath": "~/.local/share/FoundryVTT/"
+}
+```
+
+`build` will build and set up a symlink between `dist` and your `dataPath`.
+
+```bash
+npm run-script build
+```
+
+### NOTE:
+
+You don't need to build the `foundryconfig.json` file you can just copy the content of the `dist` folder on the module folder under `modules` of Foundry
+
+### build:watch
+
+`build:watch` will build and watch for changes, rebuilding automatically.
+
+```bash
+npm run-script build:watch
+```
+
+### clean
+
+`clean` will remove all contents in the dist folder (but keeps the link from build:install).
+
+```bash
+npm run-script clean
+```
+### lint and lintfix
+
+`lint` launch the eslint process based on the configuration [here](./.eslintrc)
+
+```bash
+npm run-script lint
+```
+
+`lintfix` launch the eslint process with the fix argument
+
+```bash
+npm run-script lintfix
+```
+
+### prettier-format
+
+`prettier-format` launch the prettier plugin based on the configuration [here](./.prettierrc)
+
+```bash
+npm run-script prettier-format
+```
+
+### package
+
+`package` generates a zip file containing the contents of the dist folder generated previously with the `build` command. Useful for those who want to manually load the module or want to create their own release
+
+```bash
+npm run-script package
+```
+
+## [Changelog](./changelog.md)
+
+## Issues
+
+Any issues, bugs, or feature requests are always welcome to be reported directly to the [Issue Tracker](https://github.com/p4535992/environment-interactionenvironment-interaction-multisystem/issues ), or using the [Bug Reporter Module](https://foundryvtt.com/packages/bug-reporter/).
+
 ## License
 
-<a rel="license" href="http://creativecommons.org/licenses/by/4.0/"><img alt="Creative Commons Licence" style="border-width:0" src="https://i.creativecommons.org/l/by/4.0/88x31.png" /></a><br /><span xmlns:dct="http://purl.org/dc/terms/" property="dct:title">Inventory+ - a module for Foundry VTT -</span> by <a xmlns:cc="http://creativecommons.org/ns#" href="https://github.com/syl3r86?tab=repositories" property="cc:attributionName" rel="cc:attributionURL">Felix Müller</a> is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/4.0/">Creative Commons Attribution 4.0 International License</a>.
+- **[Transfer Stuff](https://github.com/playest/TransferStuff)** : [GPL-3.0 License](https://github.com/playest/TransferStuff/blob/main/LICENSE)
+- **[Encumbrance calculator 5e](https://github.com/kandashi/encumbrance-calculator-5e)** : [MIT](https://github.com/kandashi/encumbrance-calculator-5e/blob/master/LICENSE)
+- **[Illandril's Inventory Sorter (5e)](https://github.com/illandril/FoundryVTT-inventory-sorter)** : [MIT](https://github.com/illandril/FoundryVTT-inventory-sorter/blob/master/LICENSE)
 
-This work is licensed under Foundry Virtual Tabletop [EULA - Limited License Agreement for module development v 0.3.8](https://foundryvtt.com/article/license/).
+This package is under an [Creative Commons Attribution 4.0 International License](LICENSE) and the [Foundry Virtual Tabletop Limited License Agreement for module development](https://foundryvtt.com/article/license/).
+
+## Credits
+
+- [playest](https://github.com/playest) for the module [Transfer Stuff](https://github.com/playest/TransferStuff)
+- [kandashi](https://github.com/kandashi) for the module [Encumbrance calculator 5e](https://github.com/kandashi/encumbrance-calculator-5e)
+- [illandril](https://github.com/illandril) for the module [Illandril's Inventory Sorter (5e)](https://github.com/illandril/FoundryVTT-inventory-sorter)
+
+## Acknowledgements
+
+Bootstrapped with League of Extraordinary FoundryVTT Developers  [foundry-vtt-types](https://github.com/League-of-Foundry-Developers/foundry-vtt-types).
