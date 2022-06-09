@@ -165,7 +165,7 @@ Any issues, bugs, or feature requests are always welcome to be reported directly
 - **[Encumbrance calculator 5e](https://github.com/kandashi/encumbrance-calculator-5e)** : [MIT](https://github.com/kandashi/encumbrance-calculator-5e/blob/master/LICENSE)
 - **[Illandril's Inventory Sorter (5e)](https://github.com/illandril/FoundryVTT-inventory-sorter)** : [MIT](https://github.com/illandril/FoundryVTT-inventory-sorter/blob/master/LICENSE)
 
-This package is under an [Creative Commons Attribution 4.0 International License](LICENSE) and the [Foundry Virtual Tabletop Limited License Agreement for module development](https://foundryvtt.com/article/license/).
+This package is under an [GPL-3.0 License](LICENSE) and the [Foundry Virtual Tabletop Limited License Agreement for module development](https://foundryvtt.com/article/license/).
 
 ## Credits
 
