@@ -443,7 +443,9 @@ export function transferItem(
     }
 
     originalItem.update({ 'data.quantity': newOriginalQuantity }).then((i: Item) => {
-      const sh = <FormApplication<FormApplicationOptions, FormApplication.Data<{}, FormApplicationOptions>>>i.actor?.sheet;
+      const sh = <FormApplication<FormApplicationOptions, FormApplication.Data<{}, FormApplicationOptions>>>(
+        i.actor?.sheet
+      );
       //@ts-ignore
       deleteItemIfZero(<ActorSheet>sh, <string>i.data._id);
     });
@@ -484,8 +486,8 @@ export function showItemTransferDialog(
   originalQuantity: number,
   sourceSheet: ActorSheet,
   targetSheet: ActorSheet,
-  originalItemId:string,
-  createdItem:Item,
+  originalItemId: string,
+  createdItem: Item,
 ) {
   const contentDialog = `
   <form class="transferstuff item">
@@ -622,4 +624,193 @@ export function showCurrencyTransferDialog(sourceSheet: ActorSheet, targetSheet:
     default: i18n(CONSTANTS.MODULE_NAME + '.transfer'),
   });
   transferDialog.render(true);
+}
+
+// ============================================================================
+
+function caseInsensitiveCompare(a, b) {
+  return a.localeCompare(b, undefined, { sensitivity: 'base' });
+}
+
+const TYPE_OFFSETS = {
+  class: 0,
+  feat: 100,
+  weapon: 1000,
+  equipment: 2000,
+  consumable: 3000,
+  tool: 4000,
+  backpack: 5000,
+  loot: 6000,
+  spell: 10000,
+  UNKNOWN: 20000,
+};
+
+export function getItemsToSort(actor) {
+  if (!actor || !actor.data) {
+    return [];
+  }
+  return actor.data.items.map((itemEntity) => {
+    const item = itemEntity.data;
+    const type = item.type;
+    const name = item.name;
+    let subtype = 0;
+    if (type === 'spell') {
+      const prepMode = item.data.preparation && item.data.preparation.mode;
+      if (prepMode === 'atwill') {
+        subtype = 10;
+      } else if (prepMode === 'innate') {
+        subtype = 11;
+      } else if (prepMode === 'pact') {
+        subtype = 12;
+      } else {
+        subtype = parseInt(item.data.level, 10) || 0;
+      }
+    } else if (type === 'feat') {
+      if (!item.data.activation || item.data.activation.type === '') {
+        // Passive feats
+        subtype = 0;
+      } else {
+        // Active feats
+        subtype = 1;
+      }
+    }
+    return {
+      id: itemEntity.id,
+      type: type,
+      subtype: subtype,
+      name: name,
+      sort: item.sort,
+    };
+  });
+}
+
+export function getSortedItems(actor) {
+  const itemsToSort = getItemsToSort(actor);
+  itemsToSort.sort((a, b) => {
+    const typeCompare = caseInsensitiveCompare(a.type, b.type);
+    if (typeCompare !== 0) {
+      return typeCompare;
+    }
+    const subtypeCompare = a.subtype - b.subtype;
+    if (subtypeCompare !== 0) {
+      return subtypeCompare;
+    }
+    return caseInsensitiveCompare(a.name, b.name);
+  });
+  return itemsToSort;
+}
+
+export function getItemSorts(actor: Actor): Map<string, { _id: string; sort: number }> {
+  const sortedItems = getSortedItems(actor);
+  const itemSorts = new Map();
+  let nextSort = 0;
+  let lastType: string | null = null;
+  let lastSubType = null;
+  for (const item of sortedItems) {
+    if (item.type !== lastType || item.subtype !== lastSubType) {
+      nextSort = 0;
+    }
+    nextSort++;
+    lastType = item.type;
+    lastSubType = item.subtype;
+
+    const typeOffset = TYPE_OFFSETS[<string>lastType] || TYPE_OFFSETS.UNKNOWN;
+    const subtypeOffset = item.subtype * 1000;
+    const newSort = typeOffset + subtypeOffset + nextSort;
+    itemSorts.set(item.id, { _id: item.id, sort: newSort });
+  }
+  return itemSorts;
+}
+
+export const sortedActors = new Set();
+
+export function sortItems(actor: Actor) {
+  sortedActors.add(actor.id);
+  const itemSorts = getItemSorts(actor);
+  const itemUpdates: any[] = [];
+  for (const itemSort of itemSorts.values()) {
+    const item = <Item>actor.items.get(itemSort._id);
+    if (item.data.sort !== itemSort.sort) {
+      debug(`item sort mismatch  id = ${item.id}, current = ${item.data.sort}, new = ${itemSort.sort}`);
+      itemUpdates.push(itemSort);
+    }
+  }
+  if (itemUpdates.length > 0) {
+    debug(`Updating sort for items ${itemUpdates}`);
+    //@ts-ignore
+    actor.updateEmbeddedDocuments('Item', itemUpdates, { inventorySorterUpdate: true });
+  }
+}
+
+export const pendingActorSorts = new Map();
+
+export function delayedSort(actor: Actor) {
+  if (!actor) {
+    return;
+  }
+  clearTimeout(pendingActorSorts.get(actor.id));
+  pendingActorSorts.set(
+    actor.id,
+    setTimeout(() => sortItems(actor), 150),
+  );
+}
+
+// ========================================================
+
+export function newEncumbrance(actorData) {
+  let eqpMultiplyer = 1;
+  if (game.settings.get(CONSTANTS.MODULE_NAME, 'enableEquipmentMultiplier')) {
+    eqpMultiplyer = <number>game.settings.get(CONSTANTS.MODULE_NAME, 'equipmentMultiplier') || 1;
+  }
+
+  // Get the total weight from items
+  const physicalItems = ['weapon', 'equipment', 'consumable', 'tool', 'backpack', 'loot'];
+  let weight = actorData.items.reduce((weight, i) => {
+    if (!physicalItems.includes(i.type)) return weight;
+    const q = <number>i.data.data.quantity || 0;
+    const w = <number>i.data.data.weight || 0;
+    const e = <number>i.data.data.equipped ? eqpMultiplyer : 1;
+    return weight + q * w * e;
+  }, 0);
+
+  // [Optional] add Currency Weight (for non-transformed actors)
+  if (game.settings.get('dnd5e', 'currencyWeight') && actorData.data.currency) {
+    const currency = actorData.data.currency;
+    const numCoins = <number>(
+      Object.values(currency).reduce((val: number, denom: number) => (val += Math.max(denom, 0)), 0)
+    );
+
+    const currencyPerWeight = game.settings.get('dnd5e', 'metricWeightUnits')
+      ? //@ts-ignore
+        CONFIG.DND5E.encumbrance.currencyPerWeight.metric
+      : //@ts-ignore
+        CONFIG.DND5E.encumbrance.currencyPerWeight.imperial;
+
+    weight += numCoins / currencyPerWeight;
+  }
+
+  // Determine the encumbrance size class
+  let mod =
+    {
+      tiny: 0.5,
+      sm: 1,
+      med: 1,
+      lg: 2,
+      huge: 4,
+      grg: 8,
+    }[actorData.data.traits.size] || 1;
+  if (this.getFlag('dnd5e', 'powerfulBuild')) mod = Math.min(mod * 2, 8);
+
+  // Compute Encumbrance percentage
+  weight = weight.toNearest(0.1);
+
+  const strengthMultiplier = game.settings.get('dnd5e', 'metricWeightUnits')
+    ? //@ts-ignore
+      CONFIG.DND5E.encumbrance.strMultiplier.metric
+    : //@ts-ignore
+      CONFIG.DND5E.encumbrance.strMultiplier.imperial;
+
+  const max = (actorData.data.abilities.str.value * strengthMultiplier * mod).toNearest(0.1);
+  const pct = Math.clamped((weight * 100) / max, 0, 100);
+  return { value: weight.toNearest(0.1), max, pct, encumbered: pct > 200 / 3 };
 }

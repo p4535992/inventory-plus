@@ -15,6 +15,9 @@ import {
   isAlt,
   showItemTransferDialog,
   error,
+  delayedSort,
+  sortedActors,
+  getItemSorts,
 } from './lib/lib';
 
 export const initHooks = async (): Promise<void> => {
@@ -136,11 +139,14 @@ export const readyHooks = async (): Promise<void> => {
         if (await this._isFromSameActor(data)) return this._onSortItem(event, itemData);
 
         // Create the owned item
-        if (game.settings.get(CONSTANTS.MODULE_NAME, 'enableItemTransfer')
-          && !await this._isFromSameActor(data) && !isAlt()) {
+        if (
+          game.settings.get(CONSTANTS.MODULE_NAME, 'enableItemTransfer') &&
+          !(await this._isFromSameActor(data)) &&
+          !isAlt()
+        ) {
           //@ts-ignore
           module.dropActorSheetDataTransferStuff(targetActor, targetActor.sheet, data);
-        }else{
+        } else {
           return this._onDropItemCreate(itemData);
         }
       }
@@ -154,11 +160,14 @@ export const readyHooks = async (): Promise<void> => {
         if (await this._isFromSameActor(data)) return this._onSortItem(event, itemData);
 
         // Create the owned item
-        if (game.settings.get(CONSTANTS.MODULE_NAME, 'enableItemTransfer')
-          && !await this._isFromSameActor(data) && !isAlt()) {
+        if (
+          game.settings.get(CONSTANTS.MODULE_NAME, 'enableItemTransfer') &&
+          !(await this._isFromSameActor(data)) &&
+          !isAlt()
+        ) {
           //@ts-ignore
           module.dropActorSheetDataTransferStuff(targetActor, targetActor.sheet, data);
-        }else{
+        } else {
           return this._onDropItemCreate(itemData);
         }
       }
@@ -174,11 +183,14 @@ export const readyHooks = async (): Promise<void> => {
         if (await this._isFromSameActor(data)) return this._onSortItem(event, itemData);
 
         // Create the owned item
-        if (game.settings.get(CONSTANTS.MODULE_NAME, 'enableItemTransfer')
-          && !await this._isFromSameActor(data) && !isAlt()) {
+        if (
+          game.settings.get(CONSTANTS.MODULE_NAME, 'enableItemTransfer') &&
+          !(await this._isFromSameActor(data)) &&
+          !isAlt()
+        ) {
           //@ts-ignore
           module.dropActorSheetDataTransferStuff(targetActor, targetActor.sheet, data);
-        }else{
+        } else {
           return this._onDropItemCreate(itemData);
         }
       }
@@ -194,11 +206,14 @@ export const readyHooks = async (): Promise<void> => {
         if (await this._isFromSameActor(data)) return this._onSortItem(event, itemData);
 
         // Create the owned item
-        if (game.settings.get(CONSTANTS.MODULE_NAME, 'enableItemTransfer')
-          && !await this._isFromSameActor(data) && !isAlt()) {
+        if (
+          game.settings.get(CONSTANTS.MODULE_NAME, 'enableItemTransfer') &&
+          !(await this._isFromSameActor(data)) &&
+          !isAlt()
+        ) {
           //@ts-ignore
           module.dropActorSheetDataTransferStuff(targetActor, targetActor.sheet, data);
-        }else{
+        } else {
           return this._onDropItemCreate(itemData);
         }
       }
@@ -242,11 +257,14 @@ export const readyHooks = async (): Promise<void> => {
             // return this._onSortItem(event, itemData);
           } else {
             // Create the owned item
-            if (game.settings.get(CONSTANTS.MODULE_NAME, 'enableItemTransfer')
-              && !await this._isFromSameActor(data) && !isAlt()) {
+            if (
+              game.settings.get(CONSTANTS.MODULE_NAME, 'enableItemTransfer') &&
+              !(await this._isFromSameActor(data)) &&
+              !isAlt()
+            ) {
               //@ts-ignore
               module.dropActorSheetDataTransferStuff(targetActor, targetActor.sheet, data);
-            }else{
+            } else {
               const items: Item[] = await this._onDropItemCreate(itemData);
               createdItem = items[0];
             }
@@ -293,11 +311,14 @@ export const readyHooks = async (): Promise<void> => {
               // return this._onSortItem(event, itemData);
             } else {
               // Create the owned item
-              if (game.settings.get(CONSTANTS.MODULE_NAME, 'enableItemTransfer')
-                && !await this._isFromSameActor(data) && !isAlt()) {
+              if (
+                game.settings.get(CONSTANTS.MODULE_NAME, 'enableItemTransfer') &&
+                !(await this._isFromSameActor(data)) &&
+                !isAlt()
+              ) {
                 //@ts-ignore
                 module.dropActorSheetDataTransferStuff(targetActor, targetActor.sheet, data);
-              }else{
+              } else {
                 const items: Item[] = await this._onDropItemCreate(itemData);
                 createdItem = items[0];
               }
@@ -377,21 +398,35 @@ export const readyHooks = async (): Promise<void> => {
 
   // Hooks.on(`renderActorSheet5eCharacter`, (app, html, data) => {
   Hooks.on(`renderActorSheet`, (app, html, data) => {
-    // app.inventoryPlus.addInventoryFunctions(html);
-    module.renderActorSheet5eCharacter(app, html, data);
+    module.renderActorSheet5eCharacterInventoryPlus(app, html, data);
+    module.renderActorSheetEnableInventorySorter(app, html, data);
   });
-  Hooks.on('dropActorSheetData', (targetActor:Actor, targetSheet:ActorSheet, futureItem:any) => {
-    // if (game.settings.get(CONSTANTS.MODULE_NAME, 'enableItemTransfer')) {
-    //   module.dropActorSheetDataTransferStuff(targetActor, targetSheet, futureItem);
-    // }
+  Hooks.on('dropActorSheetData', (targetActor: Actor, targetSheet: ActorSheet, futureItem: any) => {
+    // module.dropActorSheetDataTransferStuff(targetActor, targetSheet, futureItem);
+  });
+
+  Hooks.on('preUpdateItem', (item, changes, options, ...args) => {
+    module.preUpdateItemInventorySorter(item, changes, options, ...args);
+  });
+
+  Hooks.on('createItem', (item, options, userId, ...args) => {
+    module.createItemInventorySorter(item, options, userId, ...args);
+  });
+
+  Hooks.on('deleteItem', (item, options, userId, ...args) => {
+    module.deleteItemInventorySorter(item, options, userId, ...args);
+  });
+
+  Hooks.on('updateItem', (item, changes, options, userId) => {
+    module.updateItemInventorySorter(item, changes, options, userId);
   });
 };
 
 const module = {
-  async manageInventoryPlus(targetActor:Actor, targetSheet:ActorSheet, data:any){
+  async manageInventoryPlus(targetActor: Actor, targetSheet: ActorSheet, data: any) {
     // TODO THE HOOK IS BETTER THE WRAPPER
   },
-  async renderActorSheet5eCharacter(...args) {
+  async renderActorSheet5eCharacterInventoryPlus(...args) {
     const [app, html, data] = args;
     if (!app.inventoryPlus) {
       const actorEntityTmp: any = <Actor>game.actors?.get(data.actor._id);
@@ -400,9 +435,10 @@ const module = {
     }
     app.inventoryPlus.addInventoryFunctions(html);
   },
-  dropActorSheetDataTransferStuff(targetActor:Actor, targetSheet:ActorSheet, data:any) {
-
-    
+  dropActorSheetDataTransferStuff(targetActor: Actor, targetSheet: ActorSheet, data: any) {
+    if (!game.settings.get(CONSTANTS.MODULE_NAME, 'enableItemTransfer')) {
+      return;
+    }
     // if (isAlt()) {
     //   return; // ignore when Alt is pressed to drop.
     // }
@@ -436,10 +472,7 @@ const module = {
           const originalQuantity = data.data.data.quantity;
           const targetActorId = targetActor.data._id;
           const sourceActorId = data.actorId;
-          if (
-            game.settings.get(CONSTANTS.MODULE_NAME, 'enableCurrencyTransfer') &&
-            data.data.name === 'Currency'
-          ) {
+          if (game.settings.get(CONSTANTS.MODULE_NAME, 'enableCurrencyTransfer') && data.data.name === 'Currency') {
             showCurrencyTransferDialog(sourceSheet, targetSheet);
             return false;
           } else if (originalQuantity >= 1) {
@@ -448,6 +481,65 @@ const module = {
             return false;
           }
         }
+      }
+    }
+  },
+
+  preUpdateItemInventorySorter(item: Item, changes: any, options: any, ...args) {
+    if (!game.settings.get(CONSTANTS.MODULE_NAME, 'enableInventorySorter')) {
+      return;
+    }
+    if (changes.sort !== undefined) {
+      if (!options.inventorySorterUpdate) {
+        const itemSorts = getItemSorts(<Actor>item.parent);
+        const itemSort = itemSorts.get(changes._id);
+        if (itemSort) {
+          changes.sort = itemSort.sort;
+        }
+      }
+      if (item.data.sort === changes.sort && Object.keys(changes).length === 2) {
+        return false;
+      }
+    }
+  },
+
+  createItemInventorySorter(item: Item, options: any, userId: string, ...args) {
+    if (!game.settings.get(CONSTANTS.MODULE_NAME, 'enableInventorySorter')) {
+      return;
+    }
+    if (userId === game.userId) {
+      delayedSort(<Actor>item.parent);
+    }
+  },
+
+  deleteItemInventorySorter(item: Item, options: any, userId: string, ...args) {
+    if (!game.settings.get(CONSTANTS.MODULE_NAME, 'enableInventorySorter')) {
+      return;
+    }
+    if (userId === game.userId) {
+      delayedSort(<Actor>item.parent);
+    }
+  },
+
+  updateItemInventorySorter(item: Item, changes, options: any, userId: string) {
+    if (!game.settings.get(CONSTANTS.MODULE_NAME, 'enableInventorySorter')) {
+      return;
+    }
+    if (userId === game.userId) {
+      if (!options.inventorySorterUpdate) {
+        delayedSort(<Actor>item.parent);
+      }
+    }
+  },
+
+  renderActorSheetEnableInventorySorter(actorSheet: ActorSheet, html, data) {
+    if (!game.settings.get(CONSTANTS.MODULE_NAME, 'enableInventorySorter')) {
+      return;
+    }
+    if (actorSheet?.isEditable) {
+      const actor = actorSheet?.actor;
+      if (!sortedActors.has(actor.id)) {
+        delayedSort(actor);
       }
     }
   },

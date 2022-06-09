@@ -42,6 +42,24 @@ This module uses the [libWrapper](https://github.com/ruipin/fvtt-lib-wrapper) li
 
 This module allows you to create custom inventory categories and sort items into them and the default categories. You can also order the categories around and even disable weight tracking on a per category basis.
 
+## Features
+
+Due to collisions, code maintenance problems and **reduction in the number of modules** I have rewritten for the inherent use of the module some features of other modules, mentioned in the _credits_ of this document. I invite you to support these authors in their various kofis and patreons. Each feature is non-blocking with the other modules and can be activated / deactivated from a specific module setting, which we list below
+
+**Feature: Enable item transfer:** Even if it's the main feature of this module you can still disable item transfer. Know that you can temporarily disable the transfer feature by pressing the alt key while you move the item.
+
+**[Only with 'Feature: Enable item transfer' enabled] Enable currency transfer:** When moving an object named \"Currency\" is transfered it will open a dialog to transfer money instead of transfering the actual item.",
+
+**[Only with 'Feature: Enable item transfer' enabled] Enable for actors of the same type**: If disabled you will have to rely on the pairs you can define by hand.
+
+**[Only with 'Feature: Enable item transfer' enabled] Compatible Actor Types:** The body of a JSON map of compatible actor type key-value pairs allowing transfer. By default this module only works between actor sheets of the same type, but some game systems may have other combinations that work. Example 1: \"character\":\"synthetic\",\"synthetic\":\"vehicles\",\"vehicles\":\"character\". Example 2 (for DnD5e): \"character\":\"vehicle\",\"vehicle\":\"character\" that would enable moving item between characters and vehicles. You can also have multiple actor types as value, example 3: \"character\":[\"vehicle\", \"character\"],\"vehicle\":\"character\" would enable transfer from character to vehicle, from character to character and from vehicle to character but NOT from vehicle to vehicle (providing that the \"actors of the same type\" checkbox is unchecked).",
+
+**Feature: Enable inventory sorter:** Automatically sorts all actors' items (inventory, features, and spells) alphabetically (within each category).
+
+**Feature: Equipment Multiplier:** Apply a weight multiplier to equipped items
+
+**[Only with 'Feature: Equipment Multiplier' enabled] Equipment Multiplier value:** What weight multiplier to apply to equipped items
+
 ## API
 
 ### game.modules.get('inventory-plus').api.calculateWeightFromActor(actorIdOrName:string) ⇒ <code>number</code>

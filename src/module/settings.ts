@@ -64,6 +64,37 @@ export const registerSettings = function (): void {
   // INTEGRATION SORTER 5E
   // =================================
 
+  game.settings.register(CONSTANTS.MODULE_NAME, 'enableInventorySorter', {
+    name: `${CONSTANTS.MODULE_NAME}.setting.enableInventorySorter.name`,
+    hint: `${CONSTANTS.MODULE_NAME}.setting.enableInventorySorter.hint`,
+    scope: 'client',
+    config: true,
+    default: false,
+    type: Boolean,
+  });
+
+  // =====================================
+  // ENCUMBRANCE EQUIPPED MUTLIPLIER
+  // ======================================
+
+  game.settings.register(CONSTANTS.MODULE_NAME, 'enableEquipmentMultiplier', {
+    name: `${CONSTANTS.MODULE_NAME}.setting.enableEquipmentMultiplier.name`,
+    hint: `${CONSTANTS.MODULE_NAME}.setting.enableEquipmentMultiplier.hint`,
+    scope: 'client',
+    config: true,
+    default: false,
+    type: Boolean,
+  });
+
+  game.settings.register(CONSTANTS.MODULE_NAME, 'equipmentMultiplier', {
+    name: `${CONSTANTS.MODULE_NAME}.setting.equipmentMultiplier.name`,
+    hint: `${CONSTANTS.MODULE_NAME}.setting.equipmentMultiplier.hint`,
+    scope: 'client',
+    config: true,
+    default: 1,
+    type: Number,
+  });
+
   // ===================================================================
 
   game.settings.register(CONSTANTS.MODULE_NAME, 'debug', {

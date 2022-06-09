@@ -109,7 +109,14 @@ const API = {
             }
           }
         }
-        const appliedWeight = itemQuantity * itemWeight;
+        let eqpMultiplyer = 1;
+        if (game.settings.get(CONSTANTS.MODULE_NAME, 'enableEquipmentMultiplier')) {
+          eqpMultiplyer = <number>game.settings.get(CONSTANTS.MODULE_NAME, 'equipmentMultiplier') || 1;
+        }
+        //@ts-ignore
+        const e = <number>item.data.data.equipped ? eqpMultiplyer : 1;
+
+        const appliedWeight = itemQuantity * itemWeight * e;
         return weight + appliedWeight;
       }
     }, 0);
@@ -150,8 +157,14 @@ const API = {
       if (section.ignoreWeight !== true) {
         for (const i of <ItemData[]>section.items) {
           debug(i);
+          let eqpMultiplyer = 1;
+          if (game.settings.get(CONSTANTS.MODULE_NAME, 'enableEquipmentMultiplier')) {
+            eqpMultiplyer = <number>game.settings.get(CONSTANTS.MODULE_NAME, 'equipmentMultiplier') || 1;
+          }
           //@ts-ignore
-          customWeight += i.totalWeight;
+          const e = <number>i.data.equipped ? eqpMultiplyer : 1;
+          //@ts-ignore
+          customWeight += i.totalWeight * e;
         }
       }
       if (Number(section.ownWeight) > 0) {

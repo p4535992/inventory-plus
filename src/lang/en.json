@@ -10,10 +10,18 @@
   "inventory-plus.setting.enableItemTransfer.hint": "Even if it's the main feature of this module you can still disable item transfer. Know that you can temporarily disable the transfer feature by pressing the alt key while you move the item.",
   "inventory-plus.setting.enableCurrencyTransfer.name": "[Only with 'Feature: Enable item transfer' enabled] Enable currency transfer",
   "inventory-plus.setting.enableCurrencyTransfer.hint": "When moving an object named \"Currency\" is transfered it will open a dialog to transfer money instead of transfering the actual item.",
-  "inventory-plus.setting.actorTransferSame.name": "[Only with 'Feature: Enable item transfer' enabled]  Enable for actors of the same type",
+  "inventory-plus.setting.actorTransferSame.name": "[Only with 'Feature: Enable item transfer' enabled] Enable for actors of the same type",
   "inventory-plus.setting.actorTransferSame.hint": "If disabled you will have to rely on the pairs you can define by hand.",
-  "inventory-plus.setting.actorTransferPairs.name": "[Only with 'Feature: Enable item transfer' enabled]  Compatible Actor Types:",
+  "inventory-plus.setting.actorTransferPairs.name": "[Only with 'Feature: Enable item transfer' enabled] Compatible Actor Types:",
   "inventory-plus.setting.actorTransferPairs.hint": "The body of a JSON map of compatible actor type key-value pairs allowing transfer. By default this module only works between actor sheets of the same type, but some game systems may have other combinations that work. Example 1: \"character\":\"synthetic\",\"synthetic\":\"vehicles\",\"vehicles\":\"character\". Example 2 (for DnD5e): \"character\":\"vehicle\",\"vehicle\":\"character\" that would enable moving item between characters and vehicles. You can also have multiple actor types as value, example 3: \"character\":[\"vehicle\", \"character\"],\"vehicle\":\"character\" would enable transfer from character to vehicle, from character to character and from vehicle to character but NOT from vehicle to vehicle (providing that the \"actors of the same type\" checkbox is unchecked).",
+
+  "inventory-plus.setting.enableInventorySorter.name": "Feature: Enable inventory sorter",
+  "inventory-plus.setting.enableInventorySorter.hint": "Automatically sorts all actors' items (inventory, features, and spells) alphabetically (within each category).",
+
+  "inventory-plus.setting.enableEquipmentMultiplier.name": "Feature: Equipment Multiplier",
+  "inventory-plus.setting.enableEquipmentMultiplier.hint": "Apply a weight multiplier to equipped items",
+  "inventory-plus.setting.equipmentMultiplier.name": "[Only with 'Feature: Equipment Multiplier' enabled] Equipment Multiplier value",
+  "inventory-plus.setting.equipmentMultiplier.hint": "What weight multiplier to apply to equipped items",
 
   "inventory-plus.dialogs.resetsettings.title": "Reset Module Settings",
   "inventory-plus.dialogs.resetsettings.content": "Are you sure you want to reset all of the module settings to the current system's defaults? <strong>THIS CANNOT BE UNDONE!</strong>",
