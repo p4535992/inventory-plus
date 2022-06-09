@@ -4,7 +4,17 @@ import API from './api';
 import CONSTANTS from './constants';
 import { InventoryPlus } from './inventory-plus';
 import { InventoryPlusFlags } from './inventory-plus-models';
-import { getCSSName, i18n, warn, i18nFormat, retrieveItemFromData } from './lib/lib';
+import {
+  getCSSName,
+  i18n,
+  warn,
+  i18nFormat,
+  retrieveItemFromData,
+  checkCompatible,
+  showCurrencyTransferDialog,
+  isAlt,
+  showItemTransferDialog,
+} from './lib/lib';
 
 export const initHooks = async (): Promise<void> => {
   // registerSettings();
@@ -83,7 +93,7 @@ export const readyHooks = async (): Promise<void> => {
         return;
       }
 
-      const itemCurrent = await retrieveItemFromData(actor, itemId, '', data.pack);
+      const itemCurrent = await retrieveItemFromData(actor, itemId, '', data.pack, data.actorId);
       if (!itemCurrent) {
         warn(i18n(`${CONSTANTS.MODULE_NAME}.dialogs.warn.itemcurrent`));
         return;
@@ -332,6 +342,9 @@ export const readyHooks = async (): Promise<void> => {
     // app.inventoryPlus.addInventoryFunctions(html);
     module.renderActorSheet5eCharacter(app, html, data);
   });
+  Hooks.on('dropActorSheetData', (targetActor, targetSheet, futureItem) => {
+    module.dropActorSheetData(targetActor, targetSheet, futureItem);
+  });
 };
 
 const module = {
@@ -343,5 +356,51 @@ const module = {
       app.inventoryPlus.init(actorEntityTmp);
     }
     app.inventoryPlus.addInventoryFunctions(html);
+  },
+  dropActorSheetData(targetActor, targetSheet, futureItem) {
+    if (isAlt()) {
+      return; // ignore when Alt is pressed to drop.
+    }
+
+    if (targetActor.permission != 3) {
+      ui.notifications.error("TransferStuff | You don't have the permissions to transfer items here");
+      return;
+    }
+
+    if (futureItem.type == 'Item' && futureItem.actorId) {
+      if (!targetActor.data._id) {
+        warn('target has no data._id?', targetActor);
+        return;
+      }
+      if (targetActor.data._id == futureItem.actorId) {
+        return; // ignore dropping on self
+      }
+      let sourceSheet: any;
+      if (futureItem.tokenId != null) {
+        //game.scenes.get("hyfUtn3VVPnVUpJe").tokens.get("OYwRVJ7crDyid19t").sheet.actor.items
+        sourceSheet = game.scenes?.get(futureItem.sceneId)!.tokens.get(futureItem.tokenId)!.sheet;
+      } else {
+        sourceSheet = game.actors?.get(futureItem.actorId)!.sheet;
+      }
+      const sourceActor = game.actors?.get(futureItem.actorId);
+      if (sourceActor) {
+        /* if both source and target have the same type then allow deleting original item. this is a safety check because some game systems may allow dropping on targets that don't actually allow the GM or player to see the inventory, making the item inaccessible. */
+        if (checkCompatible(sourceActor.data.type, targetActor.data.type, futureItem)) {
+          const originalQuantity = futureItem.data.data.quantity;
+          const targetActorId = targetActor.data._id;
+          const sourceActorId = futureItem.actorId;
+          if (
+            game.settings.get(CONSTANTS.MODULE_NAME, 'enableCurrencyTransfer') &&
+            futureItem.data.name === 'Currency'
+          ) {
+            showCurrencyTransferDialog(sourceSheet, targetSheet);
+            return false;
+          } else if (game.settings.get(CONSTANTS.MODULE_NAME, 'enableItemTransfer') && originalQuantity >= 1) {
+            showItemTransferDialog(originalQuantity, sourceSheet, targetSheet, futureItem.data._id, futureItem);
+            return false;
+          }
+        }
+      }
+    }
   },
 };
