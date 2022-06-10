@@ -1,3 +1,6 @@
+### 0.5.5
+
+- Everyone tell me there is bug , but nobody has the energy to click F12 and show me the web console error ???
 ### 0.5.4
 
 - Added some features

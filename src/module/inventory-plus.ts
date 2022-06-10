@@ -437,9 +437,10 @@ export class InventoryPlus {
     if (type === undefined || this.customCategorys[type] === undefined) {
       type = item.type;
     }
-    if (this.customCategorys[type] && this.customCategorys[type]?.dataset.type != item.type) {
-      return item.type;
-    }
+    // 0.5.4 only thing i touched
+    //if (this.customCategorys[type] && this.customCategorys[type]?.dataset.type != item.type) {
+    //  return item.type;
+    //}
     return type;
   }
 

@@ -360,8 +360,8 @@ export function isAlt() {
 }
 
 export function checkCompatible(actorTypeName1: string, actorTypeName2: string, item: Item) {
-  console.info(
-    'TransferStuff | Check Compatibility: Dragging Item:"' +
+  info(
+    'Check Compatibility: Dragging Item:"' +
       String(item.data.type) +
       '" from sourceActor.data.type:"' +
       String(actorTypeName1) +
@@ -489,29 +489,29 @@ export function showItemTransferDialog(
   createdItem: Item,
 ) {
   const contentDialog = `
-  <form class="transferstuff item">
+  <form class="inventory-plus item">
     <div class="form-group">
-      <input type="number" 
-        class="transferedQuantity" 
-        value="${originalQuantity}" 
-        min="0" 
+      <input type="number"
+        class="transferedQuantity"
+        value="${originalQuantity}"
+        min="0"
         max="${originalQuantity}" />
       <button onclick="this.parentElement.querySelector('.transferedQuantity').value = '1'"
         >${i18n(CONSTANTS.MODULE_NAME + '.one')}
       </button>
-      <button 
+      <button
         onclick="this.parentElement.querySelector('.transferedQuantity').value = '${Math.round(originalQuantity / 2)}'"
         >${i18n(CONSTANTS.MODULE_NAME + '.half')}
       </button>
-      <button 
+      <button
         onclick="this.parentElement.querySelector('.transferedQuantity').value = '${originalQuantity}'"
         >${i18n(CONSTANTS.MODULE_NAME + '.max')}
       </button>
       <label style="flex: none;">
-        <input style="vertical-align: middle;" 
-          type="checkbox" 
-          class="stack" 
-          checked="checked" 
+        <input style="vertical-align: middle;"
+          type="checkbox"
+          class="stack"
+          checked="checked"
           />${i18n(CONSTANTS.MODULE_NAME + '.stackItems')}
       </label>
     </div>
@@ -563,46 +563,46 @@ export function showCurrencyTransferDialog(sourceSheet: ActorSheet, targetSheet:
   const cp = sourceSheet.actor?.data.data.currency.cp;
 
   const contentDialog = `
-  <form class="transferstuff currency">
+  <form class="inventory-plus currency">
     <div class="form-group">
       <span class="currency pp">
         <i class="fas fa-coins"></i>
         <span>Platinum: </span>
-        <input type="number" 
-        value="0" 
-        min="0" ${disabledIfZero(pp)} 
+        <input type="number"
+        value="0"
+        min="0" ${disabledIfZero(pp)}
         max="${pp}" />
       </span>
       <span class="currency gp">
         <i class="fas fa-coins"></i>
         <span>Gold: </span>
-        <input type="number" 
-        value="0" 
-        min="0" ${disabledIfZero(gp)} 
+        <input type="number"
+        value="0"
+        min="0" ${disabledIfZero(gp)}
         max="${gp}" />
       </span>
       <span class="currency ep">
         <i class="fas fa-coins"></i>
         <span>Electrum: </span>
-        <input type="number" 
-        value="0" 
-        min="0" ${disabledIfZero(ep)} 
+        <input type="number"
+        value="0"
+        min="0" ${disabledIfZero(ep)}
         max="${ep}" />
       </span>
       <span class="currency sp">
         <i class="fas fa-coins"></i>
         <span>Silver: </span>
-        <input type="number" 
-        value="0" 
-        min="0" ${disabledIfZero(sp)} 
+        <input type="number"
+        value="0"
+        min="0" ${disabledIfZero(sp)}
         max="${sp}" />
       </span>
       <span class="currency cp">
         <i class="fas fa-coins"></i>
         <span>Copper: </span>
-        <input type="number" 
+        <input type="number"
         value="0"
-        min="0" ${disabledIfZero(cp)} 
+        min="0" ${disabledIfZero(cp)}
         max="${cp}" />
       </span>
     </div>
