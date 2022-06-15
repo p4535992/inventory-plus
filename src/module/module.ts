@@ -3,7 +3,7 @@ import { getApi, setApi } from '../main';
 import API from './api';
 import CONSTANTS from './constants';
 import { InventoryPlus } from './inventory-plus';
-import { InventoryPlusFlags } from './inventory-plus-models';
+import { Category, EncumbranceDnd5e, InventoryPlusFlags } from './inventory-plus-models';
 import {
   getCSSName,
   i18n,
@@ -63,7 +63,7 @@ export const readyHooks = async (): Promise<void> => {
       const actor = <Actor>this.actor;
       const newInventory = InventoryPlus.processInventory(this, actor, sheetData.inventory);
       sheetData.inventory = newInventory;
-
+      /*
       sheetData.data.attributes.encumbrance.value = API.calculateWeight(
         sheetData.inventory,
         //@ts-ignore
@@ -71,7 +71,15 @@ export const readyHooks = async (): Promise<void> => {
       );
       sheetData.data.attributes.encumbrance.pct =
         (sheetData.data.attributes.encumbrance.value / sheetData.data.attributes.encumbrance.max) * 100;
-
+      */
+      const encumbrance5e = <EncumbranceDnd5e>API.calculateWeightFromActor(actor);
+      if(game.modules.get('variant-encumbrance-dnd5e')?.active && game.settings.get(CONSTANTS.MODULE_NAME,'enableIntegrationWithVariantEncumbrance')){
+        // DO NOTHING
+      }else{
+        if(!encumbrance5e){
+          sheetData.data.attributes.encumbrance = encumbrance5e;
+        }
+      }
       return sheetData;
     },
     'WRAPPER',
@@ -97,7 +105,7 @@ export const readyHooks = async (): Promise<void> => {
         warn(i18n(`${CONSTANTS.MODULE_NAME}.dialogs.warn.itemid`));
         return;
       }
-
+      const dragAndDropFromCompendium = data.pack ? true : false;
       const itemCurrent = await retrieveItemFromData(actor, itemId, '', data.pack, data.actorId);
       if (!itemCurrent) {
         warn(i18n(`${CONSTANTS.MODULE_NAME}.dialogs.warn.itemcurrent`));
@@ -142,10 +150,12 @@ export const readyHooks = async (): Promise<void> => {
         if (
           game.settings.get(CONSTANTS.MODULE_NAME, 'enableItemTransfer') &&
           !(await this._isFromSameActor(data)) &&
-          !isAlt()
+          !isAlt() &&
+          !dragAndDropFromCompendium
         ) {
           //@ts-ignore
           module.dropActorSheetDataTransferStuff(targetActor, targetActor.sheet, data);
+          return;
         } else {
           return this._onDropItemCreate(itemData);
         }
@@ -163,10 +173,12 @@ export const readyHooks = async (): Promise<void> => {
         if (
           game.settings.get(CONSTANTS.MODULE_NAME, 'enableItemTransfer') &&
           !(await this._isFromSameActor(data)) &&
-          !isAlt()
+          !isAlt() &&
+          !dragAndDropFromCompendium
         ) {
           //@ts-ignore
           module.dropActorSheetDataTransferStuff(targetActor, targetActor.sheet, data);
+          return;
         } else {
           return this._onDropItemCreate(itemData);
         }
@@ -186,10 +198,12 @@ export const readyHooks = async (): Promise<void> => {
         if (
           game.settings.get(CONSTANTS.MODULE_NAME, 'enableItemTransfer') &&
           !(await this._isFromSameActor(data)) &&
-          !isAlt()
+          !isAlt() &&
+          !dragAndDropFromCompendium
         ) {
           //@ts-ignore
           module.dropActorSheetDataTransferStuff(targetActor, targetActor.sheet, data);
+          return;
         } else {
           return this._onDropItemCreate(itemData);
         }
@@ -209,21 +223,55 @@ export const readyHooks = async (): Promise<void> => {
         if (
           game.settings.get(CONSTANTS.MODULE_NAME, 'enableItemTransfer') &&
           !(await this._isFromSameActor(data)) &&
-          !isAlt()
+          !isAlt() &&
+          !dragAndDropFromCompendium
         ) {
           //@ts-ignore
           module.dropActorSheetDataTransferStuff(targetActor, targetActor.sheet, data);
+          return;
         } else {
           return this._onDropItemCreate(itemData);
         }
       }
 
-      const categoryName = <string>i18n(this.inventoryPlus.customCategorys[targetType].label);
+      const categoryRef = <Category>this.inventoryPlus.customCategorys[targetType];
+
+      if (!categoryRef) {
+        error(`Could not retrieve a category with the type '${targetType}'`, true);
+        return;
+      }
+
+      if(!categoryRef.label){
+        error(`Can't find a label on category with the type '${targetType}'`, true);
+        if (!this.actor.isOwner) return false;
+        const item = <Item>await Item.fromDropData(data);
+        const itemData = item.toObject();
+
+        // Handle item sorting within the same Actor
+        if (await this._isFromSameActor(data)) return this._onSortItem(event, itemData);
+
+        // Create the owned item
+        if (
+          game.settings.get(CONSTANTS.MODULE_NAME, 'enableItemTransfer') &&
+          !(await this._isFromSameActor(data)) &&
+          !isAlt() &&
+          !dragAndDropFromCompendium
+        ) {
+          //@ts-ignore
+          module.dropActorSheetDataTransferStuff(targetActor, targetActor.sheet, data);
+          return;
+        } else {
+          return this._onDropItemCreate(itemData);
+        }
+      }
+      const categoryName = <string>i18n(categoryRef.label);
       // const headerElement = $(<HTMLElement>targetLi.parentElement?.parentElement).find(`h3:contains("${categoryName}")`);
+
 
       // dropping new item
       if (actorId !== this.object.id || itemData === undefined) {
         if (!actor.items.get(<string>itemId)) {
+          /*
           // START WEIGHT CONTROL
           // changing item list
           const itemType = this.inventoryPlus.getItemType(itemData); // data.data
@@ -247,6 +295,14 @@ export const readyHooks = async (): Promise<void> => {
               return;
             }
           }
+          */
+          if(API.isCategoryFulled(actor,targetType)){
+            warn(
+              i18nFormat(`${CONSTANTS.MODULE_NAME}.dialogs.warn.exceedsmaxweight`, { categoryName: categoryName }),
+              true,
+            );
+            return;
+          }
           // END WEIGHT CONTROL
           if (!this.actor.isOwner) return false;
           // const item = <Item>await Item.fromDropData(data);
@@ -260,7 +316,8 @@ export const readyHooks = async (): Promise<void> => {
             if (
               game.settings.get(CONSTANTS.MODULE_NAME, 'enableItemTransfer') &&
               !(await this._isFromSameActor(data)) &&
-              !isAlt()
+              !isAlt() &&
+              !dragAndDropFromCompendium
             ) {
               //@ts-ignore
               module.dropActorSheetDataTransferStuff(targetActor, targetActor.sheet, data);
@@ -279,6 +336,7 @@ export const readyHooks = async (): Promise<void> => {
         } else {
           if (!actor.items.get(<string>itemId)) {
             // START WEIGHT CONTROL
+            /*
             // changing item list
             const itemType = this.inventoryPlus.getItemType(itemData); // data.data
             if (itemType !== targetType) {
@@ -301,6 +359,14 @@ export const readyHooks = async (): Promise<void> => {
                 return;
               }
             }
+            */
+            if(API.isCategoryFulled(actor,targetType)){
+              warn(
+                i18nFormat(`${CONSTANTS.MODULE_NAME}.dialogs.warn.exceedsmaxweight`, { categoryName: categoryName }),
+                true,
+              );
+              return;
+            }
             // END WEIGHT CONTROL
             if (!this.actor.isOwner) return false;
             // const item = <Item>await Item.fromDropData(data);
@@ -314,7 +380,8 @@ export const readyHooks = async (): Promise<void> => {
               if (
                 game.settings.get(CONSTANTS.MODULE_NAME, 'enableItemTransfer') &&
                 !(await this._isFromSameActor(data)) &&
-                !isAlt()
+                !isAlt() &&
+                !dragAndDropFromCompendium
               ) {
                 //@ts-ignore
                 module.dropActorSheetDataTransferStuff(targetActor, targetActor.sheet, data);
@@ -424,7 +491,7 @@ export const readyHooks = async (): Promise<void> => {
 
 const module = {
   async manageInventoryPlus(targetActor: Actor, targetSheet: ActorSheet, data: any) {
-    // TODO THE HOOK IS BETTER THE WRAPPER
+    // TODO THE HOOK IS BETTER OF THE WRAPPER INTERCEPTOR...
   },
   async renderActorSheet5eCharacterInventoryPlus(...args) {
     const [app, html, data] = args;

@@ -56,6 +56,11 @@ Hooks.once('setup', function () {
 /* ------------------------------------ */
 Hooks.once('ready', () => {
   // Do anything once the module is ready
+  if (!game.modules.get('lib-wrapper')?.active && game.user?.isGM) {
+    let word = 'install and activate';
+    if (game.modules.get('lib-wrapper')) word = 'activate';
+    throw error(`Requires the 'libWrapper' module. Please ${word} it.`);
+  }
 
   readyHooks();
 });

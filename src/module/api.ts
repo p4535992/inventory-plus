@@ -1,14 +1,33 @@
 import type { ItemData } from '@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/data/module.mjs';
 import CONSTANTS from './constants';
-import { Category, InventoryPlusFlags } from './inventory-plus-models';
+import type { InventoryPlus } from './inventory-plus';
+import { Category, EncumbranceData, EncumbranceDnd5e, InventoryPlusFlags } from './inventory-plus-models';
 import { debug, warn } from './lib/lib';
 
 const API = {
-  calculateWeightFromActor(actorIdOrName: string): number {
+
+  inventoryPlus: <InventoryPlus>{},
+
+  calculateWeightFromActorId(actorIdOrName: string): EncumbranceDnd5e|undefined {
     const actorEntity = game.actors?.get(actorIdOrName) || game.actors?.getName(actorIdOrName);
     if (!actorEntity) {
       warn(`No actor found for id '${actorIdOrName}'`, true);
-      return 0;
+      return undefined;
+    }
+    return this.calculateWeightFromActor(actorEntity);
+  },
+
+  calculateWeightFromActor(actorEntity: Actor): EncumbranceDnd5e|undefined {
+    if (!actorEntity) {
+      warn(`No actor is passed`, true);
+      return undefined;
+    }
+    // Integration with Variant Encumbrance
+    if(game.modules.get('variant-encumbrance-dnd5e')?.active && game.settings.get(CONSTANTS.MODULE_NAME,'enableIntegrationWithVariantEncumbrance')){
+      //@ts-ignore
+      const encumbranceData = <EncumbranceData>game.modules.get('variant-encumbrance-dnd5e')?.api.calculateWeightOnActor(actorEntity);
+      const encumbrane5e = encumbranceData.encumbrance;
+      return encumbrane5e;
     }
 
     const inventoryItems: Item[] = [];
@@ -141,9 +160,18 @@ const API = {
     }
 
     // Compute Encumbrance percentage
-    totalWeight = totalWeight.toNearest(0.1);
+    //totalWeight = totalWeight.toNearest(0.1);
+    //@ts-ignore
+    const pct =  (actorEntity.data.data.attributes.encumbrance.value / actorEntity.data.data.attributes.encumbrance.max) * 100;
 
-    return totalWeight;
+    //@ts-ignore
+    return (<EncumbranceDnd5e>actorEntity.data.data.attributes.encumbrance) = {
+      value: totalWeight.toNearest(0.1),
+      //@ts-ignore
+      max: actorEntity.data.data.attributes.encumbrance.max, // max.toNearest(0.1),
+      pct: pct,
+      encumbered: pct > (200/3)
+    };
   },
 
   calculateWeight(inventory: Category[], currency: number): number {
@@ -191,6 +219,25 @@ const API = {
 
     return customWeight;
   },
+
+  isCategoryFulled(actor:Actor, categoryType:string){
+    //@ts-ignore
+    const inventoryPlus = actor.sheet?.inventoryPlus;
+    const categoryWeight = inventoryPlus.getCategoryItemWeight(categoryType);
+    //@ts-ignore
+    const itemWeight = itemData.data.weight * itemData.data.quantity;
+    const maxWeight = Number(
+      inventoryPlus.customCategorys[categoryType].maxWeight
+        ? inventoryPlus.customCategorys[categoryType].maxWeight
+        : 0,
+    );
+
+    if (isNaN(maxWeight) || maxWeight <= 0 || maxWeight >= categoryWeight + itemWeight) {
+      return false;
+    }else{
+      return true;
+    }
+  }
 };
 
 export default API;

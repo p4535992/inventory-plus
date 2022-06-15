@@ -14,7 +14,7 @@
 
 ### If you want to buy me a coffee [![alt-text](https://img.shields.io/badge/-Patreon-%23ff424d?style=for-the-badge)](https://www.patreon.com/p4535992) or if you want to support the original author with paypal  to felix.mueller.86@web.de
 
-A Foundry VTT module to enhance the dnd5e inventory. Allows to customize your Inventory in various ways.
+A Foundry VTT module to enhance the dnd5e inventory. Allows to customize your Inventory in various ways, transfer items instead duplicate between character sheet, ordering the items, and many other feature hidden under the hood.
 
 ![example](./wiki/preview.jpg)
 
@@ -46,9 +46,9 @@ This module allows you to create custom inventory categories and sort items into
 
 Due to collisions, code maintenance problems, and **reduction in the number of modules** I have rewritten for the inherent use of the module some features of other modules, mentioned in the _credits_ of this document. I invite you to support these authors in their various kofis and patreons. Each feature is non-blocking with the other modules and can be activated / deactivated from a specific module setting, which we list below
 
-**Feature: Enable item transfer:** Even if it's the main feature of this module you can still disable item transfer. Know that you can temporarily disable the transfer feature by pressing the alt key while you move the item.
+**Feature: Enable item transfer:** Know that you can temporarily disable the transfer feature by pressing the alt key while you move the item.
 
-**[Only with 'Feature: Enable item transfer' enabled] Enable currency transfer:** When moving an object named \"Currency\" is transfered it will open a dialog to transfer money instead of transfering the actual item.",
+**[Only with 'Feature: Enable item transfer' enabled] Enable currency transfer:** When moving an object named \"Currency\" is transferer it will open a dialog to transfer money instead of transferring the actual item.",
 
 **[Only with 'Feature: Enable item transfer' enabled] Enable for actors of the same type**: If disabled you will have to rely on the pairs you can define by hand.
 

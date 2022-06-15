@@ -33,5 +33,16 @@
   "inventory-plus.dialogs.warn.itemcurrent": "Nenhum itemCurrent encontrado para o item",
   "inventory-plus.dialogs.warn.itemdata": "Nenhum itemData encontrado para o item",
   "inventory-plus.dialogs.warn.exceedsmaxweight": "O item não pode ser inserido porque excede o peso máximo na categoria '{categoryName}'",
-  "inventory-plus.dialogs.warn.nodroppeditem": "Nenhum item encontrado"
+  "inventory-plus.dialogs.warn.nodroppeditem": "Nenhum item encontrado",
+
+  "inventory-plus.notEnoughCurrency": "You don't have enough of the following currencies",
+  "inventory-plus.howManyItem": "How many items do you want to move?",
+  "inventory-plus.one": "One",
+  "inventory-plus.half": "Half",
+  "inventory-plus.max": "Max",
+  "inventory-plus.stackItems": "Stack items of the same type",
+  "inventory-plus.transfer": "Transfer",
+  "inventory-plus.howMuchCurrency": "How much do you want to move?",
+  "inventory-plus.currency": "Currency",
+  "inventory-plushowmanytimeswanttomove": "How many items do you want to move?"
 }

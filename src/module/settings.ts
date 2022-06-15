@@ -13,6 +13,19 @@ export const registerSettings = function (): void {
   // ===================================================================
 
   // =================================
+  // INTEGRATION VARIANT ENCUMBRANCE
+  // =================================
+
+  game.settings.register(CONSTANTS.MODULE_NAME, 'enableIntegrationWithVariantEncumbrance', {
+    name: `${CONSTANTS.MODULE_NAME}.setting.enableIntegrationWithVariantEncumbrance.name`,
+    hint: `${CONSTANTS.MODULE_NAME}.setting.enableIntegrationWithVariantEncumbrance.hint`,
+    scope: 'world',
+    config: true,
+    type: Boolean,
+    default: true,
+  });
+
+  // =================================
   // INTEGRATION TRANSFER STUFF
   // =================================
 

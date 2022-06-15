@@ -517,7 +517,7 @@ export function showItemTransferDialog(
     </div>
   </form>`;
   const transferDialog = new Dialog({
-    title: 'How many items do you want to move?',
+    title: i18n(`${CONSTANTS.MODULE_NAME}.howmanytimeswanttomove`),
     content: contentDialog,
     buttons: {
       transfer: {

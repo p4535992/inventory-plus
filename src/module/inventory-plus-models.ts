@@ -15,3 +15,27 @@ export enum InventoryPlusFlags {
   CATEGORYS = 'categorys',
   CATEGORY = 'category',
 }
+
+export class EncumbranceDnd5e {
+  value: number;
+  max: number;
+  pct: number;
+  encumbered?: boolean; //Vehicle not have this
+}
+
+export class EncumbranceData {
+  totalWeight: number;
+  totalWeightToDisplay: number;
+  lightMax: number;
+  mediumMax: number;
+  heavyMax: number;
+  encumbranceTier: number;
+  speedDecrease: number;
+  unit: string;
+  encumbrance:EncumbranceDnd5e;
+}
+
+export class EncumbranceBulkData extends EncumbranceData {
+  inventorySlot: number;
+  minimumBulk: number;
+}
