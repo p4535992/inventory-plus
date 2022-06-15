@@ -73,10 +73,13 @@ export const readyHooks = async (): Promise<void> => {
         (sheetData.data.attributes.encumbrance.value / sheetData.data.attributes.encumbrance.max) * 100;
       */
       const encumbrance5e = <EncumbranceDnd5e>API.calculateWeightFromActor(actor);
-      if(game.modules.get('variant-encumbrance-dnd5e')?.active && game.settings.get(CONSTANTS.MODULE_NAME,'enableIntegrationWithVariantEncumbrance')){
+      if (
+        game.modules.get('variant-encumbrance-dnd5e')?.active &&
+        game.settings.get(CONSTANTS.MODULE_NAME, 'enableIntegrationWithVariantEncumbrance')
+      ) {
         // DO NOTHING
-      }else{
-        if(!encumbrance5e){
+      } else {
+        if (!encumbrance5e) {
           sheetData.data.attributes.encumbrance = encumbrance5e;
         }
       }
@@ -241,7 +244,7 @@ export const readyHooks = async (): Promise<void> => {
         return;
       }
 
-      if(!categoryRef.label){
+      if (!categoryRef.label) {
         error(`Can't find a label on category with the type '${targetType}'`, true);
         if (!this.actor.isOwner) return false;
         const item = <Item>await Item.fromDropData(data);
@@ -266,7 +269,6 @@ export const readyHooks = async (): Promise<void> => {
       }
       const categoryName = <string>i18n(categoryRef.label);
       // const headerElement = $(<HTMLElement>targetLi.parentElement?.parentElement).find(`h3:contains("${categoryName}")`);
-
 
       // dropping new item
       if (actorId !== this.object.id || itemData === undefined) {
@@ -296,7 +298,7 @@ export const readyHooks = async (): Promise<void> => {
             }
           }
           */
-          if(API.isCategoryFulled(actor,targetType)){
+          if (API.isCategoryFulled(actor, targetType, itemData)) {
             warn(
               i18nFormat(`${CONSTANTS.MODULE_NAME}.dialogs.warn.exceedsmaxweight`, { categoryName: categoryName }),
               true,
@@ -360,7 +362,7 @@ export const readyHooks = async (): Promise<void> => {
               }
             }
             */
-            if(API.isCategoryFulled(actor,targetType)){
+            if (API.isCategoryFulled(actor, targetType, itemData)) {
               warn(
                 i18nFormat(`${CONSTANTS.MODULE_NAME}.dialogs.warn.exceedsmaxweight`, { categoryName: categoryName }),
                 true,

@@ -5,10 +5,9 @@ import { Category, EncumbranceData, EncumbranceDnd5e, InventoryPlusFlags } from 
 import { debug, warn } from './lib/lib';
 
 const API = {
-
   inventoryPlus: <InventoryPlus>{},
 
-  calculateWeightFromActorId(actorIdOrName: string): EncumbranceDnd5e|undefined {
+  calculateWeightFromActorId(actorIdOrName: string): EncumbranceDnd5e | undefined {
     const actorEntity = game.actors?.get(actorIdOrName) || game.actors?.getName(actorIdOrName);
     if (!actorEntity) {
       warn(`No actor found for id '${actorIdOrName}'`, true);
@@ -17,15 +16,18 @@ const API = {
     return this.calculateWeightFromActor(actorEntity);
   },
 
-  calculateWeightFromActor(actorEntity: Actor): EncumbranceDnd5e|undefined {
+  calculateWeightFromActor(actorEntity: Actor): EncumbranceDnd5e | undefined {
     if (!actorEntity) {
       warn(`No actor is passed`, true);
       return undefined;
     }
     // Integration with Variant Encumbrance
-    if(game.modules.get('variant-encumbrance-dnd5e')?.active && game.settings.get(CONSTANTS.MODULE_NAME,'enableIntegrationWithVariantEncumbrance')){
-      //@ts-ignore
-      const encumbranceData = <EncumbranceData>game.modules.get('variant-encumbrance-dnd5e')?.api.calculateWeightOnActor(actorEntity);
+    if (
+      game.modules.get('variant-encumbrance-dnd5e')?.active &&
+      game.settings.get(CONSTANTS.MODULE_NAME, 'enableIntegrationWithVariantEncumbrance')
+    ) {
+      const encumbranceData = <EncumbranceData>//@ts-ignore
+      game.modules.get('variant-encumbrance-dnd5e')?.api.calculateWeightOnActor(actorEntity);
       const encumbrane5e = encumbranceData.encumbrance;
       return encumbrane5e;
     }
@@ -161,17 +163,18 @@ const API = {
 
     // Compute Encumbrance percentage
     //totalWeight = totalWeight.toNearest(0.1);
-    //@ts-ignore
-    const pct =  (actorEntity.data.data.attributes.encumbrance.value / actorEntity.data.data.attributes.encumbrance.max) * 100;
+    const pct =
+      //@ts-ignore
+      (actorEntity.data.data.attributes.encumbrance.value / actorEntity.data.data.attributes.encumbrance.max) * 100;
 
     //@ts-ignore
-    return (<EncumbranceDnd5e>actorEntity.data.data.attributes.encumbrance) = {
+    return ((<EncumbranceDnd5e>actorEntity.data.data.attributes.encumbrance) = {
       value: totalWeight.toNearest(0.1),
       //@ts-ignore
       max: actorEntity.data.data.attributes.encumbrance.max, // max.toNearest(0.1),
       pct: pct,
-      encumbered: pct > (200/3)
-    };
+      encumbered: pct > 200 / 3,
+    });
   },
 
   calculateWeight(inventory: Category[], currency: number): number {
@@ -220,24 +223,22 @@ const API = {
     return customWeight;
   },
 
-  isCategoryFulled(actor:Actor, categoryType:string){
+  isCategoryFulled(actor: Actor, categoryType: string, itemData: ItemData): boolean {
     //@ts-ignore
     const inventoryPlus = actor.sheet?.inventoryPlus;
     const categoryWeight = inventoryPlus.getCategoryItemWeight(categoryType);
     //@ts-ignore
     const itemWeight = itemData.data.weight * itemData.data.quantity;
     const maxWeight = Number(
-      inventoryPlus.customCategorys[categoryType].maxWeight
-        ? inventoryPlus.customCategorys[categoryType].maxWeight
-        : 0,
+      inventoryPlus.customCategorys[categoryType].maxWeight ? inventoryPlus.customCategorys[categoryType].maxWeight : 0,
     );
 
     if (isNaN(maxWeight) || maxWeight <= 0 || maxWeight >= categoryWeight + itemWeight) {
       return false;
-    }else{
+    } else {
       return true;
     }
-  }
+  },
 };
 
 export default API;

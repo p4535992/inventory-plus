@@ -1,6 +1,11 @@
+### 0.5.6
+
+- Buf ifx again : [[BUG] Can't transfer items from compendiums to character sheet DnD5e](https://github.com/p4535992/inventory-plus/issues/1)
+
 ### 0.5.5
 
 - Everyone tell me there is bug , but nobody has the energy to click F12 and show me the web console error ???
+
 ### 0.5.4
 
 - Added some features

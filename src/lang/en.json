@@ -23,8 +23,8 @@
   "inventory-plus.setting.equipmentMultiplier.name": "[Only with 'Feature: Equipment Multiplier' enabled] Equipment Multiplier value",
   "inventory-plus.setting.equipmentMultiplier.hint": "What weight multiplier to apply to equipped items",
 
-  "inventory-plus.setting.enableIntegrationWithVariantEncumbrance.name":"Variant Encumbrance",
-  "inventory-plus.setting.enableIntegrationWithVariantEncumbrance.hint":"If enabled it will calculate the weight with the API of the module 'VariantEncumbrance' for a better and smarter calculation of the weight, if the module is present and active",
+  "inventory-plus.setting.enableIntegrationWithVariantEncumbrance.name": "Variant Encumbrance",
+  "inventory-plus.setting.enableIntegrationWithVariantEncumbrance.hint": "If enabled it will calculate the weight with the API of the module 'VariantEncumbrance' for a better and smarter calculation of the weight, if the module is present and active",
 
   "inventory-plus.dialogs.resetsettings.title": "Reset Module Settings",
   "inventory-plus.dialogs.resetsettings.content": "Are you sure you want to reset all of the module settings to the current system's defaults? <strong>THIS CANNOT BE UNDONE!</strong>",

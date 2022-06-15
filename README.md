@@ -70,9 +70,26 @@ A method to calculate the weight (the one from the module filters) on the actor
 
 | Param | Type | Description | Default |
 | --- | --- | --- | --- |
-| actorIdOrName | <code>string</code> | The actro id or name (if founded) | <code>undefined</code> |
+| actorIdOrName | <code>string</code> | The actor id or name (if founded) | <code>undefined</code> |
 
 ### game.modules.get('inventory-plus').api.calculateWeight(inventory: Category[], currency: number) ⇒ <code>number</code>
+
+**Returns**: <code>number</code>
+
+| Param | Type | Description | Default |
+| --- | --- | --- | --- |
+| inventory | <code>Category[]</code> | Array of categories | <code>undefined</code> |
+| currency | <code>number</code> | Total weigth currency | <code>undefined</code> |
+
+### game.modules.get('inventory-plus').api.isCategoryFulled(actor: Actor, categoryType: string, itemData:ItemData) ⇒ <code>boolean</code>
+
+**Returns**: <code>boolean</code>
+
+| Param | Type | Description | Default |
+| --- | --- | --- | --- |
+| actor | <code>Actor</code> | The actor | <code>undefined</code> |
+| categoryType | <code>string</code> | The id of the category | <code>undefined</code> |
+| itemData | <code>ItemData</code> | The item data to drop on the invetory with specific category type | <code>undefined</code> |
 
 A method to calculate the weight (the one from the module filters) on inventory array and the current currency present on the actor
 
