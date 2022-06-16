@@ -801,15 +801,22 @@ export function calculateEncumbranceWithEquippedMultiplier(actorData) {
   if (this.getFlag('dnd5e', 'powerfulBuild')) mod = Math.min(mod * 2, 8);
 
   // Compute Encumbrance percentage
-  weight = weight.toNearest(0.1);
+  weight = weight && is_real_number(weight) ? weight.toNearest(0.1) : 0;
 
-  const strengthMultiplier = game.settings.get('dnd5e', 'metricWeightUnits')
+  let strengthMultiplier = game.settings.get('dnd5e', 'metricWeightUnits')
     ? //@ts-ignore
       CONFIG.DND5E.encumbrance.strMultiplier.metric
     : //@ts-ignore
       CONFIG.DND5E.encumbrance.strMultiplier.imperial;
 
-  const max = (actorData.data.abilities.str.value * strengthMultiplier * mod).toNearest(0.1);
+  if(!strengthMultiplier || !is_real_number(strengthMultiplier)){
+    strengthMultiplier = 1;
+  }
+
+  const modStr = actorData.data.abilities.str.value && is_real_number(actorData.data.abilities.str.value) ? actorData.data.abilities.str.value : 1;
+  const maxValue = (modStr * strengthMultiplier * mod)
+  //@ts-ignore
+  const max = maxValue && is_real_number(maxValue) ? maxValue.toNearest(0.1) : actorEntity.data.data.attributes.encumbrance.max;
   const pct = Math.clamped((weight * 100) / max, 0, 100);
-  return { value: weight.toNearest(0.1), max, pct, encumbered: pct > 200 / 3 };
+  return { value: weight, max, pct, encumbered: pct > 200 / 3 };
 }

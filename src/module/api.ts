@@ -2,7 +2,7 @@ import type { ItemData } from '@league-of-foundry-developers/foundry-vtt-types/s
 import CONSTANTS from './constants';
 import type { InventoryPlus } from './inventory-plus';
 import { Category, EncumbranceData, EncumbranceDnd5e, InventoryPlusFlags } from './inventory-plus-models';
-import { debug, warn } from './lib/lib';
+import { debug, is_real_number, warn } from './lib/lib';
 
 const API = {
   inventoryPlus: <InventoryPlus>{},
@@ -162,16 +162,15 @@ const API = {
     }
 
     // Compute Encumbrance percentage
-    //totalWeight = totalWeight.toNearest(0.1);
     const pct =
       //@ts-ignore
       (actorEntity.data.data.attributes.encumbrance.value / actorEntity.data.data.attributes.encumbrance.max) * 100;
 
     //@ts-ignore
     return ((<EncumbranceDnd5e>actorEntity.data.data.attributes.encumbrance) = {
-      value: totalWeight.toNearest(0.1),
+      value: totalWeight && is_real_number(totalWeight) ? totalWeight.toNearest(0.1) : 0,
       //@ts-ignore
-      max: actorEntity.data.data.attributes.encumbrance.max, // max.toNearest(0.1),
+      max: actorEntity.data.data.attributes.encumbrance.max,
       pct: pct,
       encumbered: pct > 200 / 3,
     });
