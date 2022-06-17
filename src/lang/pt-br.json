@@ -21,9 +21,9 @@
   "inventory-plus.setting.enableEquipmentMultiplier.name": "Recurso: Multiplicador de Equipamento",
   "inventory-plus.setting.enableEquipmentMultiplier.hint": "Aplique um multiplicador de peso aos itens equipados",
   "inventory-plus.setting.equipmentMultiplier.name": "[Somente com 'Recurso: Multiplicador de Equipamento' ativado] Valor do Multiplicador de Equipamento",
-  "inventory-plus.setting.equipmentMultiplier.hint": "Qual multiplicador de peso aplicar aos itens equipados",
+  "inventory-plus.setting.equipmentMultiplier.hint": "Qual multiplicador de peso aplicar aos itens equipados. ATENÇÃO: Se o módulo 'Variant Ônus' estiver presente e ativo, este recurso é desabilitado por padrão se as configurações do módulo 'Recurso: Integração com Variant Ônus' estiverem habilitadas",
 
-  "inventory-plus.setting.enableIntegrationWithVariantEncumbrance.name": "Sobrecarga Variante",
+  "inventory-plus.setting.enableIntegrationWithVariantEncumbrance.name": "Recurso: Sobrecarga Variante",
   "inventory-plus.setting.enableIntegrationWithVariantEncumbrance.hint": "Se habilitado, calculará o peso com a API do módulo 'VariantEncumbrance' para um cálculo melhor e mais inteligente do peso, caso o módulo esteja presente e ativo",
 
   "inventory-plus.dialogs.resetsettings.title": "Redefinir Configurações do Módulo",
@@ -39,6 +39,7 @@
   "inventory-plus.inv-plus-dialog.ignoreweightdescription": "Se marcado, o peso dos itens nesta categoria não serão calculados em sua Capacidade de Carga.",
   "inventory-plus.inv-plus-dialog.ignoreweightprefix": "Ignorar Peso dos Itens:",
 
+  "inventory-plus.inv-plus-dialog.editinventorycategory": "Editar categoria de inventário",
   "inventory-plus.inv-plus-dialog.addcustomcategory": "Adicionar Categoria Personalizada",
   "inventory-plus.inv-plus-dialog.creatingnewinventorycategory": "Criando Nova Categoria de Inventário",
   "inventory-plus.inv-plus-dialog.accept": "Aceitar",
@@ -54,6 +55,7 @@
   "inventory-plus.dialogs.warn.itemdata": "Nenhum itemData encontrado para o item",
   "inventory-plus.dialogs.warn.exceedsmaxweight": "O item não pode ser inserido porque excede o peso máximo na categoria '{categoryName}'",
   "inventory-plus.dialogs.warn.nodroppeditem": "Nenhum item encontrado",
+  "inventory-plus.dialogs.warn.nocategoryfoundbytype": "Nenhuma categoria fundada para o tipo '{type}', talvez você precise criar uma categoria para isso?",
 
   "inventory-plus.notEnoughCurrency": "Você não tem o suficiente das seguintes moedas",
   "inventory-plus.howManyItem": "Quantos itens você deseja mover?",

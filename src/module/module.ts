@@ -109,6 +109,7 @@ export const readyHooks = async (): Promise<void> => {
         return;
       }
       const dragAndDropFromCompendium = data.pack ? true : false;
+      const dragAndDropFromActorSource = data.actorId ? true : false;
       const itemCurrent = await retrieveItemFromData(actor, itemId, '', data.pack, data.actorId);
       if (!itemCurrent) {
         warn(i18n(`${CONSTANTS.MODULE_NAME}.dialogs.warn.itemcurrent`));
@@ -154,7 +155,8 @@ export const readyHooks = async (): Promise<void> => {
           game.settings.get(CONSTANTS.MODULE_NAME, 'enableItemTransfer') &&
           !(await this._isFromSameActor(data)) &&
           !isAlt() &&
-          !dragAndDropFromCompendium
+          !dragAndDropFromCompendium &&
+          dragAndDropFromActorSource
         ) {
           //@ts-ignore
           module.dropActorSheetDataTransferStuff(targetActor, targetActor.sheet, data);
@@ -177,7 +179,8 @@ export const readyHooks = async (): Promise<void> => {
           game.settings.get(CONSTANTS.MODULE_NAME, 'enableItemTransfer') &&
           !(await this._isFromSameActor(data)) &&
           !isAlt() &&
-          !dragAndDropFromCompendium
+          !dragAndDropFromCompendium &&
+          dragAndDropFromActorSource
         ) {
           //@ts-ignore
           module.dropActorSheetDataTransferStuff(targetActor, targetActor.sheet, data);
@@ -202,7 +205,8 @@ export const readyHooks = async (): Promise<void> => {
           game.settings.get(CONSTANTS.MODULE_NAME, 'enableItemTransfer') &&
           !(await this._isFromSameActor(data)) &&
           !isAlt() &&
-          !dragAndDropFromCompendium
+          !dragAndDropFromCompendium &&
+          dragAndDropFromActorSource
         ) {
           //@ts-ignore
           module.dropActorSheetDataTransferStuff(targetActor, targetActor.sheet, data);
@@ -227,7 +231,8 @@ export const readyHooks = async (): Promise<void> => {
           game.settings.get(CONSTANTS.MODULE_NAME, 'enableItemTransfer') &&
           !(await this._isFromSameActor(data)) &&
           !isAlt() &&
-          !dragAndDropFromCompendium
+          !dragAndDropFromCompendium &&
+          dragAndDropFromActorSource
         ) {
           //@ts-ignore
           module.dropActorSheetDataTransferStuff(targetActor, targetActor.sheet, data);
@@ -258,7 +263,8 @@ export const readyHooks = async (): Promise<void> => {
           game.settings.get(CONSTANTS.MODULE_NAME, 'enableItemTransfer') &&
           !(await this._isFromSameActor(data)) &&
           !isAlt() &&
-          !dragAndDropFromCompendium
+          !dragAndDropFromCompendium &&
+          dragAndDropFromActorSource
         ) {
           //@ts-ignore
           module.dropActorSheetDataTransferStuff(targetActor, targetActor.sheet, data);
@@ -319,7 +325,8 @@ export const readyHooks = async (): Promise<void> => {
               game.settings.get(CONSTANTS.MODULE_NAME, 'enableItemTransfer') &&
               !(await this._isFromSameActor(data)) &&
               !isAlt() &&
-              !dragAndDropFromCompendium
+              !dragAndDropFromCompendium &&
+              dragAndDropFromActorSource
             ) {
               //@ts-ignore
               module.dropActorSheetDataTransferStuff(targetActor, targetActor.sheet, data);
@@ -383,7 +390,8 @@ export const readyHooks = async (): Promise<void> => {
                 game.settings.get(CONSTANTS.MODULE_NAME, 'enableItemTransfer') &&
                 !(await this._isFromSameActor(data)) &&
                 !isAlt() &&
-                !dragAndDropFromCompendium
+                !dragAndDropFromCompendium &&
+                dragAndDropFromActorSource
               ) {
                 //@ts-ignore
                 module.dropActorSheetDataTransferStuff(targetActor, targetActor.sheet, data);

@@ -5,7 +5,7 @@
 import type { ItemData } from '@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/data/module.mjs';
 import CONSTANTS from './constants';
 import { Category, InventoryPlusFlags } from './inventory-plus-models';
-import { debug, duplicateExtended, error, getCSSName, i18n, info, is_real_number, warn } from './lib/lib';
+import { debug, duplicateExtended, error, getCSSName, i18n, i18nFormat, info, is_real_number, warn } from './lib/lib';
 // import ActorSheet5eCharacter from "../../systems/dnd5e/module/actor/sheets/character.js";
 
 export class InventoryPlus {
@@ -30,7 +30,7 @@ export class InventoryPlus {
     const actorFlag = this.actor.getFlag(CONSTANTS.MODULE_NAME, InventoryPlusFlags.CATEGORYS);
     if (actorFlag === undefined) {
       this.customCategorys = {
-        weapon: {
+        weapon: <Category>{
           label: 'DND5E.ItemTypeWeaponPl',
           dataset: { type: 'weapon' },
           sortFlag: 1000,
@@ -40,7 +40,7 @@ export class InventoryPlus {
           collapsed: false,
           items: [],
         },
-        equipment: {
+        equipment: <Category>{
           label: 'DND5E.ItemTypeEquipmentPl',
           dataset: { type: 'equipment' },
           sortFlag: 2000,
@@ -50,7 +50,7 @@ export class InventoryPlus {
           collapsed: false,
           items: [],
         },
-        consumable: {
+        consumable: <Category>{
           label: 'DND5E.ItemTypeConsumablePl',
           dataset: { type: 'consumable' },
           sortFlag: 3000,
@@ -60,7 +60,7 @@ export class InventoryPlus {
           collapsed: false,
           items: [],
         },
-        tool: {
+        tool: <Category>{
           label: 'DND5E.ItemTypeToolPl',
           dataset: { type: 'tool' },
           sortFlag: 4000,
@@ -70,7 +70,7 @@ export class InventoryPlus {
           collapsed: false,
           items: [],
         },
-        backpack: {
+        backpack: <Category>{
           label: 'DND5E.ItemTypeContainerPl',
           dataset: { type: 'backpack' },
           sortFlag: 5000,
@@ -80,7 +80,7 @@ export class InventoryPlus {
           collapsed: false,
           items: [],
         },
-        loot: {
+        loot: <Category>{
           label: 'DND5E.ItemTypeLootPl',
           dataset: { type: 'loot' },
           sortFlag: 6000,
@@ -102,9 +102,9 @@ export class InventoryPlus {
      *  create custom category
      */
     const addCategoryBtn = $(
-      `<a class="custom-category"><i class="fas fa-plus">${i18n(
+      `<a class="custom-category"><i class="fas fa-plus"></i>${i18n(
         `${CONSTANTS.MODULE_NAME}.inv-plus-dialog.addcustomcategory`,
-      )}</i></a>`,
+      )}</a>`,
     ).click(async (ev) => {
       const template = await renderTemplate(`modules/${CONSTANTS.MODULE_NAME}/templates/categoryDialog.hbs`, {});
       const d = new Dialog({
@@ -168,6 +168,7 @@ export class InventoryPlus {
       header.find('h3').after(extraStuff);
 
       if (this.customCategorys[type] === undefined) {
+        warn(i18nFormat(`${CONSTANTS.MODULE_NAME}.dialogs.warn.nocategoryfoundbytype`,{type:type}))
         return;
       }
 
@@ -203,12 +204,12 @@ export class InventoryPlus {
             currentCategory,
           );
           const d = new Dialog({
-            title: 'Edit Inventory Category',
+            title: i18n(`${CONSTANTS.MODULE_NAME}.inv-plus-dialog.editinventorycategory`),
             content: template,
             buttons: {
               accept: {
                 icon: '<i class="fas fa-check"></i>',
-                label: 'Accept',
+                label: i18n(`${CONSTANTS.MODULE_NAME}.inv-plus-dialog.accept`),
                 callback: async (html: JQuery<HTMLElement>) => {
                   const inputs = html.find('input');
                   for (const input of inputs) {
@@ -225,7 +226,7 @@ export class InventoryPlus {
               },
               cancle: {
                 icon: '<i class="fas fa-times"></i>',
-                label: 'Cancel',
+                label: i18n(`${CONSTANTS.MODULE_NAME}.inv-plus-dialog.cancel`),
               },
             },
             default: 'accept',
@@ -437,7 +438,7 @@ export class InventoryPlus {
     if (type === undefined || this.customCategorys[type] === undefined) {
       type = item.type;
     }
-    // 0.5.4 only thing i touched
+    // 0.5.4 only thing i touched, this broke everything ????
     //if (this.customCategorys[type] && this.customCategorys[type]?.dataset.type != item.type) {
     //  return item.type;
     //}
