@@ -1,10 +1,14 @@
+### 0.5.8
+
+- Bug fix: apply internationalization languages
+
 ### 0.5.7
 
 - BUg fix (not sure): [[BUG] Unable to open PC actor when Inventory+ is enabled](https://github.com/p4535992/inventory-plus/issues/4)
 
 ### 0.5.6
 
-- Buf ifx again : [[BUG] Can't transfer items from compendiums to character sheet DnD5e](https://github.com/p4535992/inventory-plus/issues/1)
+- Buf fix again : [[BUG] Can't transfer items from compendiums to character sheet DnD5e](https://github.com/p4535992/inventory-plus/issues/1)
 
 ### 0.5.5
 

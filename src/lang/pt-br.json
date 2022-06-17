@@ -6,6 +6,26 @@
   "inventory-plus.setting.debug.label": "Mostra mensagens de depuração no console",
   "inventory-plus.setting.debug.hint": " ",
 
+  "inventory-plus.setting.enableItemTransfer.name": "Recurso: Ativar transferência de itens",
+  "inventory-plus.setting.enableItemTransfer.hint": "Mesmo que seja o recurso principal deste módulo, você ainda pode desativar a transferência de itens. Saiba que você pode desativar temporariamente o recurso de transferência pressionando a tecla ALT enquanto move o item.",
+  "inventory-plus.setting.enableCurrencyTransfer.name": "[Somente com 'Recurso: Ativar transferência de itens' ativado] Ativar transferência de moeda",
+  "inventory-plus.setting.enableCurrencyTransfer.hint": "Ao mover um objeto chamado \"Moeda\" será aberta uma caixa de diálogo para transferir dinheiro em vez de transferir o item real.",
+  "inventory-plus.setting.actorTransferSame.name": "[Somente com 'Recurso: Ativar transferência de item' ativado] Ativar para atores do mesmo tipo",
+  "inventory-plus.setting.actorTransferSame.hint": "Se estiver desativado, você terá que confiar nos pares que você pode definir manualmente.",
+  "inventory-plus.setting.actorTransferPairs.name": "[Somente com 'Recurso: Ativar transferência de itens' ativado] Tipos de atores compatíveis:",
+  "inventory-plus.setting.actorTransferPairs.hint": "O corpo de um mapa JSON de pares de valor chave de tipo de atores compatíveis que permitem a transferência. Por padrão, este módulo só funciona entre folhas de atores do mesmo tipo, mas alguns sistemas podem ter outras combinações que funcionam. Exemplo 1: \"character\":\"synthetic\",\"synthetic\":\"vehicles\",\"vehicles\":\"character\". Exemplo 2 (para DnD5e): \"character\":\"vehicle\",\"vehicle\":\"character\" que permitiria mover itens entre personagens e veículos. Você também pode ter vários tipos de ator como valor, exemplo 3: \"character\":[\"vehicle\", \"character\"],\"vehicle\":\"character\" permitiria a transferência de personagem para veículo, de personagem para personagem e de veículo para personagem, mas NÃO de veículo para veículo (desde que a caixa de seleção \"atores do mesmo tipo\" esteja desmarcada).",
+
+  "inventory-plus.setting.enableInventorySorter.name": "Recurso: Ativar ordenador de inventário",
+  "inventory-plus.setting.enableInventorySorter.hint": "Ordena automaticamente todos os itens dos atores (inventário, recursos e magias) em ordem alfabética (dentro de cada categoria).",
+
+  "inventory-plus.setting.enableEquipmentMultiplier.name": "Recurso: Multiplicador de Equipamento",
+  "inventory-plus.setting.enableEquipmentMultiplier.hint": "Aplique um multiplicador de peso aos itens equipados",
+  "inventory-plus.setting.equipmentMultiplier.name": "[Somente com 'Recurso: Multiplicador de Equipamento' ativado] Valor do Multiplicador de Equipamento",
+  "inventory-plus.setting.equipmentMultiplier.hint": "Qual multiplicador de peso aplicar aos itens equipados",
+
+  "inventory-plus.setting.enableIntegrationWithVariantEncumbrance.name": "Sobrecarga Variante",
+  "inventory-plus.setting.enableIntegrationWithVariantEncumbrance.hint": "Se habilitado, calculará o peso com a API do módulo 'VariantEncumbrance' para um cálculo melhor e mais inteligente do peso, caso o módulo esteja presente e ativo",
+
   "inventory-plus.dialogs.resetsettings.title": "Redefinir Configurações do Módulo",
   "inventory-plus.dialogs.resetsettings.content": "Tem certeza de que deseja redefinir todas as configurações do módulo para os padrões do sistema atual? <strong>ISTO NÃO PODE SER DESFEITO!</strong>",
   "inventory-plus.dialogs.resetsettings.confirm": "Redefinir",
@@ -35,14 +55,14 @@
   "inventory-plus.dialogs.warn.exceedsmaxweight": "O item não pode ser inserido porque excede o peso máximo na categoria '{categoryName}'",
   "inventory-plus.dialogs.warn.nodroppeditem": "Nenhum item encontrado",
 
-  "inventory-plus.notEnoughCurrency": "You don't have enough of the following currencies",
-  "inventory-plus.howManyItem": "How many items do you want to move?",
-  "inventory-plus.one": "One",
-  "inventory-plus.half": "Half",
-  "inventory-plus.max": "Max",
-  "inventory-plus.stackItems": "Stack items of the same type",
-  "inventory-plus.transfer": "Transfer",
-  "inventory-plus.howMuchCurrency": "How much do you want to move?",
-  "inventory-plus.currency": "Currency",
-  "inventory-plushowmanytimeswanttomove": "How many items do you want to move?"
+  "inventory-plus.notEnoughCurrency": "Você não tem o suficiente das seguintes moedas",
+  "inventory-plus.howManyItem": "Quantos itens você deseja mover?",
+  "inventory-plus.one": "Um",
+  "inventory-plus.half": "Metade",
+  "inventory-plus.max": "Máximo",
+  "inventory-plus.stackItems": "Juntar itens do mesmo tipo",
+  "inventory-plus.transfer": "Transferir",
+  "inventory-plus.howMuchCurrency": "Quanto você quer mover?",
+  "inventory-plus.currency": "Moeda",
+  "inventory-plus.howmanytimeswanttomove": "Quantos itens você deseja mover?"
 }
