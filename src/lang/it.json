@@ -65,5 +65,8 @@
   "inventory-plus.transfer": "Trasferimento",
   "inventory-plus.howMuchCurrency": "Quanto vuoi spostare?",
   "inventory-plus.currency": "Valuta",
-  "inventory-plus.howmanytimeswanttomove": "Quanti oggetti vuoi spostare?"
+  "inventory-plus.howmanytimeswanttomove": "Quanti oggetti vuoi spostare?",
+
+  "inventory-plus.inv-plus-dialog.reenabledefaultcategories": "Ri-abilita Def. Cat.",
+  "inventory-plus.inv-plus-dialog.removedefaultcategories": "Disabilita Def. Cat."
 }

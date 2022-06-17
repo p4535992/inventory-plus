@@ -66,5 +66,8 @@
   "inventory-plus.transfer": "Transferir",
   "inventory-plus.howMuchCurrency": "Quanto você quer mover?",
   "inventory-plus.currency": "Moeda",
-  "inventory-plus.howmanytimeswanttomove": "Quantos itens você deseja mover?"
+  "inventory-plus.howmanytimeswanttomove": "Quantos itens você deseja mover?",
+
+  "inventory-plus.inv-plus-dialog.reenabledefaultcategories": "Reativar Def. Cat.",
+  "inventory-plus.inv-plus-dialog.removedefaultcategories": "Desativar Def. Cat."
 }

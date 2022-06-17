@@ -166,7 +166,7 @@ export const readyHooks = async (): Promise<void> => {
         }
       }
 
-      if (targetType == 'feat' || targetType == 'spell' || targetType == 'class') {
+      if (targetType == 'feat' || targetType == 'spell' || targetType == 'class' || targetType == 'subclass') {
         if (!this.actor.isOwner) return false;
         const item = <Item>await Item.fromDropData(data);
         const itemData = item.toObject();

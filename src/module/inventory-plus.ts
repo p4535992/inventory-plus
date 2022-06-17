@@ -4,8 +4,8 @@
 
 import type { ItemData } from '@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/data/module.mjs';
 import CONSTANTS from './constants';
-import { Category, InventoryPlusFlags } from './inventory-plus-models';
-import { debug, duplicateExtended, error, getCSSName, i18n, i18nFormat, info, is_real_number, warn } from './lib/lib';
+import { Category, InventoryPlusFlags, inventoryPlusItemType } from './inventory-plus-models';
+import { debug, duplicateExtended, error, getCSSName, i18n, i18nFormat, info, isStringEquals, is_real_number, warn } from './lib/lib';
 // import ActorSheet5eCharacter from "../../systems/dnd5e/module/actor/sheets/character.js";
 
 export class InventoryPlus {
@@ -27,9 +27,11 @@ export class InventoryPlus {
   }
 
   initCategorys() {
-    const actorFlag = this.actor.getFlag(CONSTANTS.MODULE_NAME, InventoryPlusFlags.CATEGORYS);
-    if (actorFlag === undefined) {
-      this.customCategorys = {
+    let flagCategorys = <Record<string, Category>>this.actor.getFlag(CONSTANTS.MODULE_NAME, InventoryPlusFlags.CATEGORYS);
+    const flagDisableDefaultCategories = <boolean>this.actor.getFlag(CONSTANTS.MODULE_NAME, InventoryPlusFlags.DISABLE_DEFAULT_CATEGORIES);
+    if (flagCategorys === undefined && !flagDisableDefaultCategories) {
+      debug(`flagCategory=false && flagDisableDefaultCategories=false`);
+      flagCategorys = {
         weapon: <Category>{
           label: 'DND5E.ItemTypeWeaponPl',
           dataset: { type: 'weapon' },
@@ -39,6 +41,7 @@ export class InventoryPlus {
           ownWeight: 0,
           collapsed: false,
           items: [],
+          explicitType: '',
         },
         equipment: <Category>{
           label: 'DND5E.ItemTypeEquipmentPl',
@@ -49,6 +52,7 @@ export class InventoryPlus {
           ownWeight: 0,
           collapsed: false,
           items: [],
+          explicitType: '',
         },
         consumable: <Category>{
           label: 'DND5E.ItemTypeConsumablePl',
@@ -59,6 +63,7 @@ export class InventoryPlus {
           ownWeight: 0,
           collapsed: false,
           items: [],
+          explicitType: '',
         },
         tool: <Category>{
           label: 'DND5E.ItemTypeToolPl',
@@ -69,6 +74,7 @@ export class InventoryPlus {
           ownWeight: 0,
           collapsed: false,
           items: [],
+          explicitType: '',
         },
         backpack: <Category>{
           label: 'DND5E.ItemTypeContainerPl',
@@ -79,6 +85,7 @@ export class InventoryPlus {
           ownWeight: 0,
           collapsed: false,
           items: [],
+          explicitType: '',
         },
         loot: <Category>{
           label: 'DND5E.ItemTypeLootPl',
@@ -89,15 +96,187 @@ export class InventoryPlus {
           ownWeight: 0,
           collapsed: false,
           items: [],
+          explicitType: '',
         },
       };
+    } else if(flagCategorys && !flagDisableDefaultCategories) {
+      debug(`flagCategory=true && flagDisableDefaultCategories=false`);
+      const categoryWeapon = flagCategorys['weapon'];
+      if(!categoryWeapon){
+        flagCategorys['weapon'] =
+          <Category>{
+            label: 'DND5E.ItemTypeWeaponPl',
+            dataset: { type: 'weapon' },
+            sortFlag: 1000,
+            ignoreWeight: false,
+            maxWeight: 0,
+            ownWeight: 0,
+            collapsed: false,
+            items: [],
+            explicitType: '',
+          }
+      }
+      const categoryEquipment = flagCategorys['equipment'];
+      if(!categoryEquipment){
+        flagCategorys['equipment'] =
+          <Category>{
+            label: 'DND5E.ItemTypeEquipmentPl',
+            dataset: { type: 'equipment' },
+            sortFlag: 2000,
+            ignoreWeight: false,
+            maxWeight: 0,
+            ownWeight: 0,
+            collapsed: false,
+            items: [],
+            explicitType: '',
+          }
+      }
+      const categoryConsumable = flagCategorys['consumable'];
+      if(!categoryConsumable){
+        flagCategorys['consumable'] =
+          <Category>{
+            label: 'DND5E.ItemTypeConsumablePl',
+            dataset: { type: 'consumable' },
+            sortFlag: 3000,
+            ignoreWeight: false,
+            maxWeight: 0,
+            ownWeight: 0,
+            collapsed: false,
+            items: [],
+            explicitType: '',
+          }
+      }
+      const categoryTool = flagCategorys['tool'];
+      if(!categoryTool){
+        flagCategorys['tool'] =
+          <Category>{
+            label: 'DND5E.ItemTypeToolPl',
+            dataset: { type: 'tool' },
+            sortFlag: 4000,
+            ignoreWeight: false,
+            maxWeight: 0,
+            ownWeight: 0,
+            collapsed: false,
+            items: [],
+            explicitType: '',
+          }
+      }
+      const categoryBackpack = flagCategorys['backpack'];
+      if(!categoryBackpack){
+        flagCategorys['backpack'] =
+          <Category>{
+            label: 'DND5E.ItemTypeContainerPl',
+            dataset: { type: 'backpack' },
+            sortFlag: 5000,
+            ignoreWeight: false,
+            maxWeight: 0,
+            ownWeight: 0,
+            collapsed: false,
+            items: [],
+            explicitType: '',
+          }
+      }
+      const categoryLoot = flagCategorys['loot'];
+      if(!categoryLoot){
+        flagCategorys['loot'] =
+          <Category>{
+            label: 'DND5E.ItemTypeLootPl',
+            dataset: { type: 'loot' },
+            sortFlag: 6000,
+            ignoreWeight: false,
+            maxWeight: 0,
+            ownWeight: 0,
+            collapsed: false,
+            items: [],
+            explicitType: '',
+          }
+      }
+    } else if(flagCategorys && flagDisableDefaultCategories){
+      debug(`flagCategory=true && flagDisableDefaultCategories=true`);
+      for (const key in flagCategorys) {
+          const category = <Category>flagCategorys[key];
+          if(category && !category?.label){
+            continue;
+          }
+          if(isStringEquals(i18n(category?.label), i18n('DND5E.ItemTypeWeaponPl'))){
+            delete flagCategorys[key];
+          }
+          if(isStringEquals(i18n(category?.label), i18n('DND5E.ItemTypeEquipmentPl'))){
+            delete flagCategorys[key];
+          }
+          if(isStringEquals(i18n(category?.label), i18n('DND5E.ItemTypeConsumablePl'))){
+            delete flagCategorys[key];
+          }
+          if(isStringEquals(i18n(category?.label), i18n('DND5E.ItemTypeToolPl'))){
+            delete flagCategorys[key];
+          }
+          if(isStringEquals(i18n(category?.label), i18n('DND5E.ItemTypeContainerPl'))){
+            delete flagCategorys[key];
+          }
+          if(isStringEquals(i18n(category?.label), i18n('DND5E.ItemTypeLootPl'))){
+            delete flagCategorys[key];
+          }
+      }
     } else {
-      this.customCategorys = <Record<string, Category>>duplicate(actorFlag);
-      this.applySortKey();
+      debug(`flagCategory=false && flagDisableDefaultCategories=true`);
+      if(!flagCategorys){
+        flagCategorys = {};
+      }
     }
+
+    // Little trick for filter the undefined values
+    // https://stackoverflow.com/questions/51624641/how-to-filter-records-based-on-the-status-value-in-javascript-object
+    const filterJSON = Object.keys(flagCategorys).filter(function (key) {
+        const entry = flagCategorys[key];
+        return entry != undefined && entry != null && entry.label;
+    }).reduce( (res, key) => (res[key] = flagCategorys[key], res), {} );
+
+    this.customCategorys = duplicateExtended(filterJSON);
+    this.applySortKey();
   }
 
   addInventoryFunctions(html: JQuery<HTMLElement>) {
+    /*
+     *  add remove default categories
+     */
+    const flagDisableDefaultCategories = this.actor.getFlag(CONSTANTS.MODULE_NAME, InventoryPlusFlags.DISABLE_DEFAULT_CATEGORIES);
+    const labelDialogDisableDefaultCategories = flagDisableDefaultCategories
+      ? i18n(`${CONSTANTS.MODULE_NAME}.inv-plus-dialog.reenabledefaultcategories`)
+      : i18n(`${CONSTANTS.MODULE_NAME}.inv-plus-dialog.removedefaultcategories`);
+
+    const iconClass = flagDisableDefaultCategories
+      ? `fa-plus-square`
+      : `fa-minus-square`;
+    const removeDefaultCategoriesBtn = $(
+      `<a class="custom-category"><i class="fas ${iconClass}"></i>${labelDialogDisableDefaultCategories}</a>`,
+    ).click(async (ev) => {
+
+      const template = await renderTemplate(`modules/${CONSTANTS.MODULE_NAME}/templates/removeDefaultCategoriesDialog.hbs`, {
+        flagDisableDefaultCategories: flagDisableDefaultCategories
+      });
+      const d = new Dialog({
+        title: i18n(`${CONSTANTS.MODULE_NAME}.inv-plus-dialog.removedefaultcategories`),
+        content: template,
+        buttons: {
+          accept: {
+            icon: '<i class="fas fa-check"></i>',
+            label: i18n(`${CONSTANTS.MODULE_NAME}.inv-plus-dialog.accept`),
+            callback: async (html: JQuery<HTMLElement>) => {
+              const f = flagDisableDefaultCategories && String(flagDisableDefaultCategories)  === 'true' ? true : false;
+              await this.actor.setFlag(CONSTANTS.MODULE_NAME, InventoryPlusFlags.DISABLE_DEFAULT_CATEGORIES, !f);
+            },
+          },
+          cancel: {
+            icon: '<i class="fas fa-times"></i>',
+            label: i18n(`${CONSTANTS.MODULE_NAME}.inv-plus-dialog.cancel`),
+          },
+        },
+        default: 'cancel',
+      });
+      d.render(true);
+    });
+    html.find('.inventory .filter-list').prepend(removeDefaultCategoriesBtn);
+
     /*
      *  create custom category
      */
@@ -140,12 +319,10 @@ export class InventoryPlus {
       if (['weapon', 'equipment', 'consumable', 'tool', 'backpack', 'loot'].indexOf(type) === -1) {
         const parent = <ParentNode>createBtn.parentNode;
         const removeCategoryBtn = $(
-          `<a class="item-control remove-category" title="${i18n(
-            `${CONSTANTS.MODULE_NAME}.inv-plus-dialog.deletecategory`,
-          )}"
-            data-type="${type}"><i class="fas fa-minus"></i>${i18n(
-            `${CONSTANTS.MODULE_NAME}.inv-plus-dialog.deletecategoryprefix`,
-          )}</a>`,
+          `<a class="item-control remove-category"
+            title="${i18n(`${CONSTANTS.MODULE_NAME}.inv-plus-dialog.deletecategory`)}"
+            data-type="${type}">
+            <i class="fas fa-minus"></i>${i18n(`${CONSTANTS.MODULE_NAME}.inv-plus-dialog.deletecategoryprefix`)}</a>`,
         );
         removeCategoryBtn.click((ev) => this.removeCategory(ev));
         //@ts-ignore
@@ -196,12 +373,24 @@ export class InventoryPlus {
         extraStuff.append(downBtn);
       }
 
+      const currentType = currentCategory.dataset.type || '';
+      const types:any[] = [];
+      for(const type of inventoryPlusItemType){
+        if(isStringEquals(type.id, currentType)){
+          type.isSelected = true;
+        }
+        types.push(type);
+      }
+
+      const currentCategoryTmp =<any>currentCategory;
+      currentCategoryTmp.types = types;
+
       // edit category
       const editCategoryBtn = $(`<a class="inv-plus-stuff customize-category"><i class="fas fa-edit"></i></a>`).click(
         async (ev) => {
           const template = await renderTemplate(
             `modules/${CONSTANTS.MODULE_NAME}/templates/categoryDialog.hbs`,
-            currentCategory,
+            currentCategoryTmp,
           );
           const d = new Dialog({
             title: i18n(`${CONSTANTS.MODULE_NAME}.inv-plus-dialog.editinventorycategory`),
@@ -221,15 +410,17 @@ export class InventoryPlus {
                       currentCategory[input.name] = value;
                     }
                   }
+                  const currentTypeSelected = <string>$(<HTMLElement>html.find('select.explicitType')[0])?.val();
+                  currentCategory.explicitType = currentTypeSelected || '';
                   this.saveCategorys();
                 },
               },
-              cancle: {
+              cancel: {
                 icon: '<i class="fas fa-times"></i>',
                 label: i18n(`${CONSTANTS.MODULE_NAME}.inv-plus-dialog.cancel`),
               },
             },
-            default: 'accept',
+            default: 'cancel',
           });
           d.render(true);
         },
@@ -249,6 +440,15 @@ export class InventoryPlus {
       } else {
         icon = `<i class="fas fa-balance-scale-right"></i>`;
       }
+
+      // TODO show type of category
+      // weapon // <i class="fas fa-bomb"></i>
+      // equipment // <i class="fas fa-vest"></i>
+      // consumable // <i class="fas fa-hamburger"></i>
+      // tool // <i class="fas fa-scroll"></i>
+      // backpack // <i class="fas fa-toolbox"></i>
+      // loot // <i class="fas fa-box"></i>
+      // armorset // <i class="fas fa-tools"></i>
 
       if (currentCategory.maxWeight > 0) {
         const weight = <number>this.getCategoryItemWeight(type);
@@ -337,7 +537,7 @@ export class InventoryPlus {
 
     delete this.customCategorys[catType];
     const deleteKey = `-=${catType}`;
-    this.actor.setFlag(CONSTANTS.MODULE_NAME, InventoryPlusFlags.CATEGORYS, { [deleteKey]: null });
+    await this.actor.setFlag(CONSTANTS.MODULE_NAME, InventoryPlusFlags.CATEGORYS, { [deleteKey]: null });
   }
 
   changeCategoryOrder(movedType, up) {
@@ -463,7 +663,7 @@ export class InventoryPlus {
           //@ts-ignore
           totalCategoryWeight += w * q * e;
         } else {
-          info(
+          debug(
             `The item '${i.name}', on category '${type}', on actor ${this.actor?.name} has not valid weight or quantity `,
           );
         }
