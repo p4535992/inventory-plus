@@ -4,8 +4,24 @@
 
 import type { ItemData } from '@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/data/module.mjs';
 import CONSTANTS from './constants';
-import { Category, InventoryPlusFlags, InventoryPlusItemType, inventoryPlusItemTypeCollection } from './inventory-plus-models';
-import { debug, duplicateExtended, error, getCSSName, i18n, i18nFormat, info, isStringEquals, is_real_number, warn } from './lib/lib';
+import {
+  Category,
+  InventoryPlusFlags,
+  InventoryPlusItemType,
+  inventoryPlusItemTypeCollection,
+} from './inventory-plus-models';
+import {
+  debug,
+  duplicateExtended,
+  error,
+  getCSSName,
+  i18n,
+  i18nFormat,
+  info,
+  isStringEquals,
+  is_real_number,
+  warn,
+} from './lib/lib';
 // import ActorSheet5eCharacter from "../../systems/dnd5e/module/actor/sheets/character.js";
 
 export class InventoryPlus {
@@ -27,7 +43,9 @@ export class InventoryPlus {
   }
 
   initCategorys() {
-    let flagCategorys = <Record<string, Category>>this.actor.getFlag(CONSTANTS.MODULE_NAME, InventoryPlusFlags.CATEGORYS);
+    let flagCategorys = <Record<string, Category>>(
+      this.actor.getFlag(CONSTANTS.MODULE_NAME, InventoryPlusFlags.CATEGORYS)
+    );
     const flagDisableDefaultCategories = false;
     if (flagCategorys === undefined && !flagDisableDefaultCategories) {
       debug(`flagCategory=false && flagDisableDefaultCategories=false`);
@@ -111,149 +129,145 @@ export class InventoryPlus {
           }),
         },
       };
-    } else if(flagCategorys && !flagDisableDefaultCategories) {
+    } else if (flagCategorys && !flagDisableDefaultCategories) {
       debug(`flagCategory=true && flagDisableDefaultCategories=false`);
       const categoryWeapon = flagCategorys['weapon'];
-      if(!categoryWeapon){
-        flagCategorys['weapon'] =
-          <Category>{
-            label: 'DND5E.ItemTypeWeaponPl',
-            dataset: { type: 'weapon' },
-            sortFlag: 1000,
-            ignoreWeight: false,
-            maxWeight: 0,
-            ownWeight: 0,
-            collapsed: false,
-            items: [],
-            explicitTypes: inventoryPlusItemTypeCollection.filter((t) => {
-              return t.isInventory;
-            }),
-          }
+      if (!categoryWeapon) {
+        flagCategorys['weapon'] = <Category>{
+          label: 'DND5E.ItemTypeWeaponPl',
+          dataset: { type: 'weapon' },
+          sortFlag: 1000,
+          ignoreWeight: false,
+          maxWeight: 0,
+          ownWeight: 0,
+          collapsed: false,
+          items: [],
+          explicitTypes: inventoryPlusItemTypeCollection.filter((t) => {
+            return t.isInventory;
+          }),
+        };
       }
       const categoryEquipment = flagCategorys['equipment'];
-      if(!categoryEquipment){
-        flagCategorys['equipment'] =
-          <Category>{
-            label: 'DND5E.ItemTypeEquipmentPl',
-            dataset: { type: 'equipment' },
-            sortFlag: 2000,
-            ignoreWeight: false,
-            maxWeight: 0,
-            ownWeight: 0,
-            collapsed: false,
-            items: [],
-            explicitTypes: inventoryPlusItemTypeCollection.filter((t) => {
-              return t.isInventory;
-            }),
-          }
+      if (!categoryEquipment) {
+        flagCategorys['equipment'] = <Category>{
+          label: 'DND5E.ItemTypeEquipmentPl',
+          dataset: { type: 'equipment' },
+          sortFlag: 2000,
+          ignoreWeight: false,
+          maxWeight: 0,
+          ownWeight: 0,
+          collapsed: false,
+          items: [],
+          explicitTypes: inventoryPlusItemTypeCollection.filter((t) => {
+            return t.isInventory;
+          }),
+        };
       }
       const categoryConsumable = flagCategorys['consumable'];
-      if(!categoryConsumable){
-        flagCategorys['consumable'] =
-          <Category>{
-            label: 'DND5E.ItemTypeConsumablePl',
-            dataset: { type: 'consumable' },
-            sortFlag: 3000,
-            ignoreWeight: false,
-            maxWeight: 0,
-            ownWeight: 0,
-            collapsed: false,
-            items: [],
-            explicitTypes: inventoryPlusItemTypeCollection.filter((t) => {
-              return t.isInventory;
-            }),
-          }
+      if (!categoryConsumable) {
+        flagCategorys['consumable'] = <Category>{
+          label: 'DND5E.ItemTypeConsumablePl',
+          dataset: { type: 'consumable' },
+          sortFlag: 3000,
+          ignoreWeight: false,
+          maxWeight: 0,
+          ownWeight: 0,
+          collapsed: false,
+          items: [],
+          explicitTypes: inventoryPlusItemTypeCollection.filter((t) => {
+            return t.isInventory;
+          }),
+        };
       }
       const categoryTool = flagCategorys['tool'];
-      if(!categoryTool){
-        flagCategorys['tool'] =
-          <Category>{
-            label: 'DND5E.ItemTypeToolPl',
-            dataset: { type: 'tool' },
-            sortFlag: 4000,
-            ignoreWeight: false,
-            maxWeight: 0,
-            ownWeight: 0,
-            collapsed: false,
-            items: [],
-            explicitTypes: inventoryPlusItemTypeCollection.filter((t) => {
-              return t.isInventory;
-            }),
-          }
+      if (!categoryTool) {
+        flagCategorys['tool'] = <Category>{
+          label: 'DND5E.ItemTypeToolPl',
+          dataset: { type: 'tool' },
+          sortFlag: 4000,
+          ignoreWeight: false,
+          maxWeight: 0,
+          ownWeight: 0,
+          collapsed: false,
+          items: [],
+          explicitTypes: inventoryPlusItemTypeCollection.filter((t) => {
+            return t.isInventory;
+          }),
+        };
       }
       const categoryBackpack = flagCategorys['backpack'];
-      if(!categoryBackpack){
-        flagCategorys['backpack'] =
-          <Category>{
-            label: 'DND5E.ItemTypeContainerPl',
-            dataset: { type: 'backpack' },
-            sortFlag: 5000,
-            ignoreWeight: false,
-            maxWeight: 0,
-            ownWeight: 0,
-            collapsed: false,
-            items: [],
-            explicitTypes: inventoryPlusItemTypeCollection.filter((t) => {
-              return t.isInventory;
-            }),
-          }
+      if (!categoryBackpack) {
+        flagCategorys['backpack'] = <Category>{
+          label: 'DND5E.ItemTypeContainerPl',
+          dataset: { type: 'backpack' },
+          sortFlag: 5000,
+          ignoreWeight: false,
+          maxWeight: 0,
+          ownWeight: 0,
+          collapsed: false,
+          items: [],
+          explicitTypes: inventoryPlusItemTypeCollection.filter((t) => {
+            return t.isInventory;
+          }),
+        };
       }
       const categoryLoot = flagCategorys['loot'];
-      if(!categoryLoot){
-        flagCategorys['loot'] =
-          <Category>{
-            label: 'DND5E.ItemTypeLootPl',
-            dataset: { type: 'loot' },
-            sortFlag: 6000,
-            ignoreWeight: false,
-            maxWeight: 0,
-            ownWeight: 0,
-            collapsed: false,
-            items: [],
-            explicitTypes: inventoryPlusItemTypeCollection.filter((t) => {
-              return t.isInventory;
-            }),
-          }
+      if (!categoryLoot) {
+        flagCategorys['loot'] = <Category>{
+          label: 'DND5E.ItemTypeLootPl',
+          dataset: { type: 'loot' },
+          sortFlag: 6000,
+          ignoreWeight: false,
+          maxWeight: 0,
+          ownWeight: 0,
+          collapsed: false,
+          items: [],
+          explicitTypes: inventoryPlusItemTypeCollection.filter((t) => {
+            return t.isInventory;
+          }),
+        };
       }
-    } else if(flagCategorys && flagDisableDefaultCategories){
+    } else if (flagCategorys && flagDisableDefaultCategories) {
       debug(`flagCategory=true && flagDisableDefaultCategories=true`);
       for (const key in flagCategorys) {
-          const category = <Category>flagCategorys[key];
-          if(category && !category?.label){
-            continue;
-          }
-          if(isStringEquals(i18n(category?.label), i18n('DND5E.ItemTypeWeaponPl'))){
-            delete flagCategorys[key];
-          }
-          if(isStringEquals(i18n(category?.label), i18n('DND5E.ItemTypeEquipmentPl'))){
-            delete flagCategorys[key];
-          }
-          if(isStringEquals(i18n(category?.label), i18n('DND5E.ItemTypeConsumablePl'))){
-            delete flagCategorys[key];
-          }
-          if(isStringEquals(i18n(category?.label), i18n('DND5E.ItemTypeToolPl'))){
-            delete flagCategorys[key];
-          }
-          if(isStringEquals(i18n(category?.label), i18n('DND5E.ItemTypeContainerPl'))){
-            delete flagCategorys[key];
-          }
-          if(isStringEquals(i18n(category?.label), i18n('DND5E.ItemTypeLootPl'))){
-            delete flagCategorys[key];
-          }
+        const category = <Category>flagCategorys[key];
+        if (category && !category?.label) {
+          continue;
+        }
+        if (isStringEquals(i18n(category?.label), i18n('DND5E.ItemTypeWeaponPl'))) {
+          delete flagCategorys[key];
+        }
+        if (isStringEquals(i18n(category?.label), i18n('DND5E.ItemTypeEquipmentPl'))) {
+          delete flagCategorys[key];
+        }
+        if (isStringEquals(i18n(category?.label), i18n('DND5E.ItemTypeConsumablePl'))) {
+          delete flagCategorys[key];
+        }
+        if (isStringEquals(i18n(category?.label), i18n('DND5E.ItemTypeToolPl'))) {
+          delete flagCategorys[key];
+        }
+        if (isStringEquals(i18n(category?.label), i18n('DND5E.ItemTypeContainerPl'))) {
+          delete flagCategorys[key];
+        }
+        if (isStringEquals(i18n(category?.label), i18n('DND5E.ItemTypeLootPl'))) {
+          delete flagCategorys[key];
+        }
       }
     } else {
       debug(`flagCategory=false && flagDisableDefaultCategories=true`);
-      if(!flagCategorys){
+      if (!flagCategorys) {
         flagCategorys = {};
       }
     }
 
     // Little trick for filter the undefined values
     // https://stackoverflow.com/questions/51624641/how-to-filter-records-based-on-the-status-value-in-javascript-object
-    const filterJSON = Object.keys(flagCategorys).filter(function (key) {
+    const filterJSON = Object.keys(flagCategorys)
+      .filter(function (key) {
         const entry = flagCategorys[key];
         return entry != undefined && entry != null && entry.label;
-    }).reduce( (res, key) => (res[key] = flagCategorys[key], res), {} );
+      })
+      .reduce((res, key) => ((res[key] = flagCategorys[key]), res), {});
 
     this.customCategorys = duplicateExtended(filterJSON);
     this.applySortKey();
@@ -268,23 +282,24 @@ export class InventoryPlus {
       ? i18n(`${CONSTANTS.MODULE_NAME}.inv-plus-dialog.reenabledefaultcategories`)
       : i18n(`${CONSTANTS.MODULE_NAME}.inv-plus-dialog.removedefaultcategories`);
 
-    const iconClass = flagDisableDefaultCategories
-      ? `fa-plus-square`
-      : `fa-minus-square`;
+    const iconClass = flagDisableDefaultCategories ? `fa-plus-square` : `fa-minus-square`;
 
     // ONly gm can do this
-    
-    if(game.user?.isGM){
-      const status = flagDisableDefaultCategories 
-        ? i18n(`inventory-plus.inv-plus-dialog.removedefaulcategorieswarnmessagereenable`) 
-        : i18n(`inventory-plus.inv-plus-dialog.removedefaulcategorieswarnmessagedisable`) ;
-      const msg = i18nFormat(`inventory-plus.inv-plus-dialog.removedefaulcategorieswarnmessage`,{status:status});
+
+    if (game.user?.isGM) {
+      const status = flagDisableDefaultCategories
+        ? i18n(`inventory-plus.inv-plus-dialog.removedefaulcategorieswarnmessagereenable`)
+        : i18n(`inventory-plus.inv-plus-dialog.removedefaulcategorieswarnmessagedisable`);
+      const msg = i18nFormat(`inventory-plus.inv-plus-dialog.removedefaulcategorieswarnmessage`, { status: status });
       const removeDefaultCategoriesBtn = $(
         `<a class="custom-category"><i class="fas ${iconClass}"></i>${labelDialogDisableDefaultCategories}</a>`,
       ).click(async (ev) => {
-        const template = await renderTemplate(`modules/${CONSTANTS.MODULE_NAME}/templates/restoreDefaultCategoriesDialog.hbs`, {
-          msg: msg
-        });
+        const template = await renderTemplate(
+          `modules/${CONSTANTS.MODULE_NAME}/templates/restoreDefaultCategoriesDialog.hbs`,
+          {
+            msg: msg,
+          },
+        );
         const d = new Dialog({
           title: i18n(`${CONSTANTS.MODULE_NAME}.inv-plus-dialog.removedefaultcategories`),
           content: template,
@@ -293,114 +308,109 @@ export class InventoryPlus {
               icon: '<i class="fas fa-check"></i>',
               label: i18n(`${CONSTANTS.MODULE_NAME}.inv-plus-dialog.accept`),
               callback: async (html: JQuery<HTMLElement>) => {
-                const f = flagDisableDefaultCategories && String(flagDisableDefaultCategories)  === 'true' ? true : false;
-                if(!f){
+                const f =
+                  flagDisableDefaultCategories && String(flagDisableDefaultCategories) === 'true' ? true : false;
+                if (!f) {
                   const physicalItems = ['weapon', 'equipment', 'consumable', 'tool', 'backpack', 'loot'];
-                  for(const catType of physicalItems){
+                  for (const catType of physicalItems) {
                     this.removeCategory(catType);
                   }
-                }else{
+                } else {
                   const categoryWeapon = this.customCategorys['weapon'];
-                  if(!categoryWeapon){
-                    this.customCategorys['weapon'] =
-                      <Category>{
-                        label: 'DND5E.ItemTypeWeaponPl',
-                        dataset: { type: 'weapon' },
-                        sortFlag: 1000,
-                        ignoreWeight: false,
-                        maxWeight: 0,
-                        ownWeight: 0,
-                        collapsed: false,
-                        items: [],
-                        explicitTypes: inventoryPlusItemTypeCollection.filter((t) => {
-                          return t.isInventory;
-                        }),
-                      }
+                  if (!categoryWeapon) {
+                    this.customCategorys['weapon'] = <Category>{
+                      label: 'DND5E.ItemTypeWeaponPl',
+                      dataset: { type: 'weapon' },
+                      sortFlag: 1000,
+                      ignoreWeight: false,
+                      maxWeight: 0,
+                      ownWeight: 0,
+                      collapsed: false,
+                      items: [],
+                      explicitTypes: inventoryPlusItemTypeCollection.filter((t) => {
+                        return t.isInventory;
+                      }),
+                    };
                   }
                   const categoryEquipment = this.customCategorys['equipment'];
-                  if(!categoryEquipment){
-                    this.customCategorys['equipment'] =
-                      <Category>{
-                        label: 'DND5E.ItemTypeEquipmentPl',
-                        dataset: { type: 'equipment' },
-                        sortFlag: 2000,
-                        ignoreWeight: false,
-                        maxWeight: 0,
-                        ownWeight: 0,
-                        collapsed: false,
-                        items: [],
-                        explicitTypes: inventoryPlusItemTypeCollection.filter((t) => {
-                          return t.isInventory;
-                        }),
-                      }
+                  if (!categoryEquipment) {
+                    this.customCategorys['equipment'] = <Category>{
+                      label: 'DND5E.ItemTypeEquipmentPl',
+                      dataset: { type: 'equipment' },
+                      sortFlag: 2000,
+                      ignoreWeight: false,
+                      maxWeight: 0,
+                      ownWeight: 0,
+                      collapsed: false,
+                      items: [],
+                      explicitTypes: inventoryPlusItemTypeCollection.filter((t) => {
+                        return t.isInventory;
+                      }),
+                    };
                   }
                   const categoryConsumable = this.customCategorys['consumable'];
-                  if(!categoryConsumable){
-                    this.customCategorys['consumable'] =
-                      <Category>{
-                        label: 'DND5E.ItemTypeConsumablePl',
-                        dataset: { type: 'consumable' },
-                        sortFlag: 3000,
-                        ignoreWeight: false,
-                        maxWeight: 0,
-                        ownWeight: 0,
-                        collapsed: false,
-                        items: [],
-                        explicitTypes: inventoryPlusItemTypeCollection.filter((t) => {
-                          return t.isInventory;
-                        }),
-                      }
+                  if (!categoryConsumable) {
+                    this.customCategorys['consumable'] = <Category>{
+                      label: 'DND5E.ItemTypeConsumablePl',
+                      dataset: { type: 'consumable' },
+                      sortFlag: 3000,
+                      ignoreWeight: false,
+                      maxWeight: 0,
+                      ownWeight: 0,
+                      collapsed: false,
+                      items: [],
+                      explicitTypes: inventoryPlusItemTypeCollection.filter((t) => {
+                        return t.isInventory;
+                      }),
+                    };
                   }
                   const categoryTool = this.customCategorys['tool'];
-                  if(!categoryTool){
-                    this.customCategorys['tool'] =
-                      <Category>{
-                        label: 'DND5E.ItemTypeToolPl',
-                        dataset: { type: 'tool' },
-                        sortFlag: 4000,
-                        ignoreWeight: false,
-                        maxWeight: 0,
-                        ownWeight: 0,
-                        collapsed: false,
-                        items: [],
-                        explicitTypes: inventoryPlusItemTypeCollection.filter((t) => {
-                          return t.isInventory;
-                        }),
-                      }
+                  if (!categoryTool) {
+                    this.customCategorys['tool'] = <Category>{
+                      label: 'DND5E.ItemTypeToolPl',
+                      dataset: { type: 'tool' },
+                      sortFlag: 4000,
+                      ignoreWeight: false,
+                      maxWeight: 0,
+                      ownWeight: 0,
+                      collapsed: false,
+                      items: [],
+                      explicitTypes: inventoryPlusItemTypeCollection.filter((t) => {
+                        return t.isInventory;
+                      }),
+                    };
                   }
                   const categoryBackpack = this.customCategorys['backpack'];
-                  if(!categoryBackpack){
-                    this.customCategorys['backpack'] =
-                      <Category>{
-                        label: 'DND5E.ItemTypeContainerPl',
-                        dataset: { type: 'backpack' },
-                        sortFlag: 5000,
-                        ignoreWeight: false,
-                        maxWeight: 0,
-                        ownWeight: 0,
-                        collapsed: false,
-                        items: [],
-                        explicitTypes: inventoryPlusItemTypeCollection.filter((t) => {
-                          return t.isInventory;
-                        }),
-                      }
+                  if (!categoryBackpack) {
+                    this.customCategorys['backpack'] = <Category>{
+                      label: 'DND5E.ItemTypeContainerPl',
+                      dataset: { type: 'backpack' },
+                      sortFlag: 5000,
+                      ignoreWeight: false,
+                      maxWeight: 0,
+                      ownWeight: 0,
+                      collapsed: false,
+                      items: [],
+                      explicitTypes: inventoryPlusItemTypeCollection.filter((t) => {
+                        return t.isInventory;
+                      }),
+                    };
                   }
                   const categoryLoot = this.customCategorys['loot'];
-                  if(!categoryLoot){
-                    this.customCategorys['loot'] =
-                      <Category>{
-                        label: 'DND5E.ItemTypeLootPl',
-                        dataset: { type: 'loot' },
-                        sortFlag: 6000,
-                        ignoreWeight: false,
-                        maxWeight: 0,
-                        ownWeight: 0,
-                        collapsed: false,
-                        items: [],
-                        explicitTypes: inventoryPlusItemTypeCollection.filter((t) => {
-                          return t.isInventory;
-                        }),
-                      }
+                  if (!categoryLoot) {
+                    this.customCategorys['loot'] = <Category>{
+                      label: 'DND5E.ItemTypeLootPl',
+                      dataset: { type: 'loot' },
+                      sortFlag: 6000,
+                      ignoreWeight: false,
+                      maxWeight: 0,
+                      ownWeight: 0,
+                      collapsed: false,
+                      items: [],
+                      explicitTypes: inventoryPlusItemTypeCollection.filter((t) => {
+                        return t.isInventory;
+                      }),
+                    };
                   }
                   this.saveCategorys();
                 }
@@ -430,7 +440,7 @@ export class InventoryPlus {
         return t.isInventory;
       });
       const template = await renderTemplate(`modules/${CONSTANTS.MODULE_NAME}/templates/categoryDialog.hbs`, {
-        explicitTypes: explicitTypesFromList
+        explicitTypes: explicitTypesFromList,
       });
       const d = new Dialog({
         title: i18n(`${CONSTANTS.MODULE_NAME}.inv-plus-dialog.creatingnewinventorycategory`),
@@ -442,7 +452,7 @@ export class InventoryPlus {
             callback: async (html: JQuery<HTMLElement>) => {
               const input = html.find('input');
               const selectExplicitTypes = $(<HTMLElement>html.find('select[name="explicitTypes"')[0]);
-              this.createCategory(input,selectExplicitTypes); // ,selectDefaultType
+              this.createCategory(input, selectExplicitTypes); // ,selectDefaultType
             },
           },
           cancel: {
@@ -450,13 +460,13 @@ export class InventoryPlus {
             label: i18n(`${CONSTANTS.MODULE_NAME}.inv-plus-dialog.cancel`),
           },
         },
-        render: (html:JQuery<HTMLElement>) => {
+        render: (html: JQuery<HTMLElement>) => {
           $(<HTMLElement>html.find(`select[name="explicitTypes"]`)[0])
-          //@ts-ignore
-          .SumoSelect({
-            placeholder: 'Select item inventory type...',
-            triggerChangeCombined: true,
-          });
+            //@ts-ignore
+            .SumoSelect({
+              placeholder: 'Select item inventory type...',
+              triggerChangeCombined: true,
+            });
         },
         default: 'cancel',
       });
@@ -467,64 +477,63 @@ export class InventoryPlus {
     /*
      *  add removal function
      */
-    const createBtns:JQuery<HTMLElement> = html.find('.inventory .item-create');
+    const createBtns: JQuery<HTMLElement> = html.find('.inventory .item-create');
     for (const createBtn of createBtns) {
       const type = <string>createBtn.dataset.type;
       // Filter for only invenotry items
       // const physicalItems = ['weapon', 'equipment', 'consumable', 'tool', 'backpack', 'loot'];
       // if (physicalItems.indexOf(type) === -1) {
-        const parent = <ParentNode>createBtn.parentNode;
+      const parent = <ParentNode>createBtn.parentNode;
 
-        const removeCategoryBtn = 
-        $(`<div class="item-controls flexrow">
+      const removeCategoryBtn = $(`<div class="item-controls flexrow">
         <a class="item-control item-create" 
-          title="${i18n("DND5E.ItemCreate")}" 
+          title="${i18n('DND5E.ItemCreate')}" 
           data-type="${type}">
-          <i class="fas fa-plus"></i> ${i18n("DND5E.Add")}</a>
+          <i class="fas fa-plus"></i> ${i18n('DND5E.Add')}</a>
         <a class="item-control remove-category" 
             title="${i18n(`${CONSTANTS.MODULE_NAME}.inv-plus-dialog.deletecategory`)}"
             data-type="${type}">
             <i class="fas fa-minus"></i>${i18n(`${CONSTANTS.MODULE_NAME}.inv-plus-dialog.deletecategoryprefix`)}</a>
-        </div>`,);
-        removeCategoryBtn.find('.item-create').click((ev) => {
-          ev.preventDefault();
-          const catType = <string>ev.target.dataset.type || <string>ev.currentTarget.dataset.type;
-          this._onItemCreate(ev,catType);
+        </div>`);
+      removeCategoryBtn.find('.item-create').click((ev) => {
+        ev.preventDefault();
+        const catType = <string>ev.target.dataset.type || <string>ev.currentTarget.dataset.type;
+        this._onItemCreate(ev, catType);
+      });
+      removeCategoryBtn.find('.remove-category').click(async (ev) => {
+        ev.preventDefault();
+        const catType = <string>ev.target.dataset.type || <string>ev.currentTarget.dataset.type;
+        //this.removeCategory(catType);
+        const status = flagDisableDefaultCategories
+          ? i18n(`inventory-plus.inv-plus-dialog.removedefaulcategorieswarnmessagereenable`)
+          : i18n(`inventory-plus.inv-plus-dialog.removedefaulcategorieswarnmessagedisable`);
+        const msg = i18nFormat(`inventory-plus.inv-plus-dialog.removedefaulcategorieswarnmessage`, { status: status });
+        const template = await renderTemplate(`modules/${CONSTANTS.MODULE_NAME}/templates/removeCategoryDialog.hbs`, {
+          msg: msg,
         });
-        removeCategoryBtn.find('.remove-category').click(async (ev) => {
-          ev.preventDefault();
-          const catType = <string>ev.target.dataset.type || <string>ev.currentTarget.dataset.type;
-          //this.removeCategory(catType);
-          const status = flagDisableDefaultCategories 
-            ? i18n(`inventory-plus.inv-plus-dialog.removedefaulcategorieswarnmessagereenable`) 
-            : i18n(`inventory-plus.inv-plus-dialog.removedefaulcategorieswarnmessagedisable`) ;
-          const msg = i18nFormat(`inventory-plus.inv-plus-dialog.removedefaulcategorieswarnmessage`,{status:status});
-          const template = await renderTemplate(`modules/${CONSTANTS.MODULE_NAME}/templates/removeDefaultCategoriesDialog.hbs`, {
-            msg: msg
-          });
-          const d = new Dialog({
-            title: i18n(`${CONSTANTS.MODULE_NAME}.inv-plus-dialog.removedefaultcategories`),
-            content: template,
-            buttons: {
-              accept: {
-                icon: '<i class="fas fa-check"></i>',
-                label: i18n(`${CONSTANTS.MODULE_NAME}.inv-plus-dialog.accept`),
-                callback: async (html: JQuery<HTMLElement>) => {
-                  this.removeCategory(catType);
-                },
-              },
-              cancel: {
-                icon: '<i class="fas fa-times"></i>',
-                label: i18n(`${CONSTANTS.MODULE_NAME}.inv-plus-dialog.cancel`),
+        const d = new Dialog({
+          title: i18n(`${CONSTANTS.MODULE_NAME}.inv-plus-dialog.deletecategory`),
+          content: template,
+          buttons: {
+            accept: {
+              icon: '<i class="fas fa-check"></i>',
+              label: i18n(`${CONSTANTS.MODULE_NAME}.inv-plus-dialog.accept`),
+              callback: async (html: JQuery<HTMLElement>) => {
+                this.removeCategory(catType);
               },
             },
-            default: 'cancel',
-          });
-          d.render(true);
+            cancel: {
+              icon: '<i class="fas fa-times"></i>',
+              label: i18n(`${CONSTANTS.MODULE_NAME}.inv-plus-dialog.cancel`),
+            },
+          },
+          default: 'cancel',
         });
-        //@ts-ignore
-        parent.innerHTML = '';
-        $(parent).append(removeCategoryBtn);
+        d.render(true);
+      });
+      //@ts-ignore
+      parent.innerHTML = '';
+      $(parent).append(removeCategoryBtn);
       // }
     }
 
@@ -542,12 +551,12 @@ export class InventoryPlus {
       header.find('h3').after(extraStuff);
 
       if (this.customCategorys[type] === undefined) {
-        warn(i18nFormat(`${CONSTANTS.MODULE_NAME}.dialogs.warn.nocategoryfoundbytype`,{type:type}))
+        warn(i18nFormat(`${CONSTANTS.MODULE_NAME}.dialogs.warn.nocategoryfoundbytype`, { type: type }));
         return;
       }
 
       const currentCategory = <Category>this.customCategorys[type];
-      if(!currentCategory.explicitTypes || currentCategory.explicitTypes.length === 0){
+      if (!currentCategory.explicitTypes || currentCategory.explicitTypes.length === 0) {
         currentCategory.explicitTypes = inventoryPlusItemTypeCollection.filter((t) => {
           return t.isInventory;
         });
@@ -579,77 +588,78 @@ export class InventoryPlus {
       // ================
       // edit category
       // ===============
-      const editCategoryBtn = $(`<a class="inv-plus-stuff customize-category" data-type="${type}"><i class="fas fa-edit"></i></a>`).click(
-        async (ev) => {
-          const catTypeTmp = <string>ev.target.dataset.type || <string>ev.currentTarget.dataset.type;
+      const editCategoryBtn = $(
+        `<a class="inv-plus-stuff customize-category" data-type="${type}"><i class="fas fa-edit"></i></a>`,
+      ).click(async (ev) => {
+        const catTypeTmp = <string>ev.target.dataset.type || <string>ev.currentTarget.dataset.type;
 
-          const currentCategoryTmp = duplicateExtended(<Category>this.customCategorys[catTypeTmp]);
-          currentCategoryTmp.label = i18n(currentCategoryTmp.label);
+        const currentCategoryTmp = duplicateExtended(<Category>this.customCategorys[catTypeTmp]);
+        currentCategoryTmp.label = i18n(currentCategoryTmp.label);
 
-          const template = await renderTemplate(
-            `modules/${CONSTANTS.MODULE_NAME}/templates/categoryDialog.hbs`,
-            currentCategoryTmp,
-          );
-          const d = new Dialog({
-            title: i18n(`${CONSTANTS.MODULE_NAME}.inv-plus-dialog.editinventorycategory`),
-            content: template,
-            buttons: {
-              accept: {
-                icon: '<i class="fas fa-check"></i>',
-                label: i18n(`${CONSTANTS.MODULE_NAME}.inv-plus-dialog.accept`),
-                callback: async (html: JQuery<HTMLElement>) => {
-                  const inputs = html.find('input');
-                  for (const input of inputs) {
-                    const value = input.type === 'checkbox' ? input.checked : input.value;
-                    if (input.dataset.dtype === 'Number') {
-                      const valueN = Number(value) > 0 ? Number(value) : 0;
-                      currentCategory[input.name] = valueN;
+        const template = await renderTemplate(
+          `modules/${CONSTANTS.MODULE_NAME}/templates/categoryDialog.hbs`,
+          currentCategoryTmp,
+        );
+        const d = new Dialog({
+          title: i18n(`${CONSTANTS.MODULE_NAME}.inv-plus-dialog.editinventorycategory`),
+          content: template,
+          buttons: {
+            accept: {
+              icon: '<i class="fas fa-check"></i>',
+              label: i18n(`${CONSTANTS.MODULE_NAME}.inv-plus-dialog.accept`),
+              callback: async (html: JQuery<HTMLElement>) => {
+                const inputs = html.find('input');
+                for (const input of inputs) {
+                  const value = input.type === 'checkbox' ? input.checked : input.value;
+                  if (input.dataset.dtype === 'Number') {
+                    const valueN = Number(value) > 0 ? Number(value) : 0;
+                    currentCategory[input.name] = valueN;
+                  } else {
+                    currentCategory[input.name] = value;
+                  }
+                }
+
+                const currentTypeSelectedS = <string[]>(
+                  $(<HTMLElement>html.find('select[name="explicitTypes"')[0])?.val()
+                );
+                if (!currentTypeSelectedS || currentTypeSelectedS.length === 0) {
+                  currentCategory.explicitTypes = [];
+                } else if (currentTypeSelectedS.length === 1 && !currentTypeSelectedS[0]) {
+                  const newArr = currentCategory.explicitTypes.map((obj: InventoryPlusItemType) => {
+                    return { ...obj, isSelected: false };
+                  });
+                  currentCategory.explicitTypes = newArr;
+                } else {
+                  const newArr = currentCategory.explicitTypes.map((obj: InventoryPlusItemType) => {
+                    if (currentTypeSelectedS.includes(obj.id)) {
+                      return { ...obj, isSelected: true };
                     } else {
-                      currentCategory[input.name] = value;
-                    }
-                  }
-
-                  const currentTypeSelectedS = 
-                    <string[]>$(<HTMLElement>html.find('select[name="explicitTypes"')[0])?.val();
-                  if(!currentTypeSelectedS || currentTypeSelectedS.length === 0){
-                    currentCategory.explicitTypes = [];
-                  }else if(currentTypeSelectedS.length === 1 && !currentTypeSelectedS[0]){
-                    const newArr = currentCategory.explicitTypes.map((obj:InventoryPlusItemType) => {
                       return { ...obj, isSelected: false };
-                    });
-                    currentCategory.explicitTypes = newArr;
-                  }else{
-                    const newArr = currentCategory.explicitTypes.map((obj:InventoryPlusItemType) => {
-                      if (currentTypeSelectedS.includes(obj.id)) {
-                        return { ...obj, isSelected: true };
-                      } else {
-                        return { ...obj, isSelected: false };
-                      }
-                    });
-                    currentCategory.explicitTypes = newArr;
-                  }
-                  this.customCategorys[catTypeTmp] = currentCategory;
-                  this.saveCategorys();
-                },
-              },
-              cancel: {
-                icon: '<i class="fas fa-times"></i>',
-                label: i18n(`${CONSTANTS.MODULE_NAME}.inv-plus-dialog.cancel`),
+                    }
+                  });
+                  currentCategory.explicitTypes = newArr;
+                }
+                this.customCategorys[catTypeTmp] = currentCategory;
+                this.saveCategorys();
               },
             },
-            render: (html:JQuery<HTMLElement>) => {
-              $(<HTMLElement>html.find(`select[name="explicitTypes"]`)[0])
+            cancel: {
+              icon: '<i class="fas fa-times"></i>',
+              label: i18n(`${CONSTANTS.MODULE_NAME}.inv-plus-dialog.cancel`),
+            },
+          },
+          render: (html: JQuery<HTMLElement>) => {
+            $(<HTMLElement>html.find(`select[name="explicitTypes"]`)[0])
               //@ts-ignore
               .SumoSelect({
                 placeholder: 'Select item inventory type...',
                 triggerChangeCombined: true,
               });
-            },
-            default: 'cancel',
-          });
-          d.render(true);
-        },
-      );
+          },
+          default: 'cancel',
+        });
+        d.render(true);
+      });
       extraStuff.append(editCategoryBtn);
 
       // hide collapsed category items
@@ -661,47 +671,49 @@ export class InventoryPlus {
 
       // show type of category
       //const physicalItems = ['weapon', 'equipment', 'consumable', 'tool', 'backpack', 'loot']
-      const enabledExplicitTypes = currentCategory.explicitTypes.filter((i) =>{ return i.isSelected});
-      if(enabledExplicitTypes.length > 0){
-        for(const explicitType of enabledExplicitTypes){
+      const enabledExplicitTypes = currentCategory.explicitTypes.filter((i) => {
+        return i.isSelected;
+      });
+      if (enabledExplicitTypes.length > 0) {
+        for (const explicitType of enabledExplicitTypes) {
           // None
           // if(!explicitType.id || explicitType.id === ''){
           //   icon = icon+`<i class="fas fa-times-circle"></i>`;
           // }
           // Weapon
-          if(explicitType.id === 'weapon'){
-            icon = icon+`<i class="fas fa-bomb"></i>`;
+          if (explicitType.id === 'weapon') {
+            icon = icon + `<i class="fas fa-bomb"></i>`;
           }
           // Equipment
-          if(explicitType.id === 'equipment'){
-            icon = icon+`<i class="fas fa-vest"></i>`;
+          if (explicitType.id === 'equipment') {
+            icon = icon + `<i class="fas fa-vest"></i>`;
           }
           // Consumable
-          if(explicitType.id === 'consumable'){
-            icon = icon+`<i class="fas fa-hamburger"></i>`;
+          if (explicitType.id === 'consumable') {
+            icon = icon + `<i class="fas fa-hamburger"></i>`;
           }
           // Tool
-          if(explicitType.id === 'tool'){
-            icon = icon+`<i class="fas fa-scroll"></i>`;
+          if (explicitType.id === 'tool') {
+            icon = icon + `<i class="fas fa-scroll"></i>`;
           }
           // Backpack
-          if(explicitType.id === 'backpack'){
-            icon = icon+`<i class="fas fa-toolbox"></i>`;
+          if (explicitType.id === 'backpack') {
+            icon = icon + `<i class="fas fa-toolbox"></i>`;
           }
           // Loot
-          if(explicitType.id === 'loot'){
-            icon = icon+`<i class="fas fa-box"></i>`;
+          if (explicitType.id === 'loot') {
+            icon = icon + `<i class="fas fa-box"></i>`;
           }
         }
       }
 
       if (currentCategory.maxWeight > 0) {
         if (currentCategory.ignoreWeight) {
-          icon = icon+`<i class="fas fa-feather"></i>`;
+          icon = icon + `<i class="fas fa-feather"></i>`;
         } else if (currentCategory.ownWeight > 0) {
-          icon = icon+`<i class="fas fa-weight-hanging"></i>`;
+          icon = icon + `<i class="fas fa-weight-hanging"></i>`;
         } else {
-          icon = icon+`<i class="fas fa-balance-scale-right"></i>`;
+          icon = icon + `<i class="fas fa-balance-scale-right"></i>`;
         }
         const weight = <number>this.getCategoryItemWeight(type);
         const weightUnit = game.settings.get('dnd5e', 'metricWeightUnits')
@@ -711,7 +723,7 @@ export class InventoryPlus {
 
         const weightString = $(`<label class="category-weight"> ${icon} ${weightValue}</label>`);
         header.find('h3').append(weightString);
-      }else{
+      } else {
         const weight = <number>this.getCategoryItemWeight(type);
         const weightUnit = game.settings.get('dnd5e', 'metricWeightUnits')
           ? game.i18n.localize('DND5E.AbbreviationKgs')
@@ -737,7 +749,7 @@ export class InventoryPlus {
         if (sections[type] === undefined) {
           type = item.type;
         }
-        if (sections[type]){
+        if (sections[type]) {
           (<Category>sections[type]).items?.push(item);
         }
       }
@@ -753,7 +765,8 @@ export class InventoryPlus {
     return sections;
   }
 
-  createCategory(inputs,selectExplicitTypes:JQuery<HTMLElement>) { // ,selectDefaultType:JQuery<HTMLElement>
+  createCategory(inputs, selectExplicitTypes: JQuery<HTMLElement>) {
+    // ,selectDefaultType:JQuery<HTMLElement>
     const newCategory = new Category();
 
     for (const input of inputs) {
@@ -770,7 +783,7 @@ export class InventoryPlus {
     const explicitTypesFromListTmp = <InventoryPlusItemType[]>[];
     const explicitTypesFromList = inventoryPlusItemTypeCollection.filter((t) => {
       const t2 = duplicateExtended(t);
-      if(t2.isInventory && typesSelected.includes(t2.id)){
+      if (t2.isInventory && typesSelected.includes(t2.id)) {
         t2.isSelected = true;
         explicitTypesFromListTmp.push(t2);
       }
@@ -792,7 +805,7 @@ export class InventoryPlus {
     this.saveCategorys();
   }
 
-  async removeCategory(catType:string) {
+  async removeCategory(catType: string) {
     //const catType = <string>ev.target.dataset.type || <string>ev.currentTarget.dataset.type;
     const changedItems: ItemData[] = [];
     for (const item of this.actor.items) {
@@ -968,46 +981,51 @@ export class InventoryPlus {
    * @returns {Promise<Item5e[]>}  The newly created item.
    * @private
    */
-  async _onItemCreate(event,type:string) {
-      event.preventDefault();
-      const header = event.currentTarget;
+  async _onItemCreate(event, type: string) {
+    event.preventDefault();
+    const header = event.currentTarget;
 
-      // Check to make sure the newly created class doesn't take player over level cap
-      //@ts-ignore
-      if ( type === "class" && (this.actor.data.data.details.level + 1 > CONFIG.DND5E.maxLevel) ) {
-        return ui.notifications.error(game.i18n.format("DND5E.MaxCharacterLevelExceededWarn",
+    // Check to make sure the newly created class doesn't take player over level cap
+    //@ts-ignore
+    if (type === 'class' && this.actor.data.data.details.level + 1 > CONFIG.DND5E.maxLevel) {
+      return ui.notifications.error(
+        game.i18n.format(
+          'DND5E.MaxCharacterLevelExceededWarn',
           //@ts-ignore
-          {max: CONFIG.DND5E.maxLevel}));
-      }
+          { max: CONFIG.DND5E.maxLevel },
+        ),
+      );
+    }
 
-      let myName = '';
-      const physicalItems = ['weapon', 'equipment', 'consumable', 'tool', 'backpack', 'loot'];
-      let itemTypeTmp = '';
-      if(physicalItems.includes(type.toLowerCase())){
-        myName = game.i18n.format("DND5E.ItemNew", {type: game.i18n.localize(`DND5E.ItemType${type.capitalize()}`)});
-        itemTypeTmp = type;
-      }else{
-        const defaultType = <InventoryPlusItemType>this.customCategorys[type]?.explicitTypes.filter((i) =>{
-          return i.isSelected && i.isInventory;
-        })[0];
-        if(!defaultType.id){
-          itemTypeTmp = 'weapon';
-        }else{
-          itemTypeTmp = defaultType.id;
-        }
-        myName = game.i18n.format("DND5E.ItemNew", {type: game.i18n.localize(`DND5E.ItemType${itemTypeTmp.capitalize()}`)});
+    let myName = '';
+    const physicalItems = ['weapon', 'equipment', 'consumable', 'tool', 'backpack', 'loot'];
+    let itemTypeTmp = '';
+    if (physicalItems.includes(type.toLowerCase())) {
+      myName = game.i18n.format('DND5E.ItemNew', { type: game.i18n.localize(`DND5E.ItemType${type.capitalize()}`) });
+      itemTypeTmp = type;
+    } else {
+      const defaultType = <InventoryPlusItemType>this.customCategorys[type]?.explicitTypes.filter((i) => {
+        return i.isSelected && i.isInventory;
+      })[0];
+      if (!defaultType.id) {
+        itemTypeTmp = 'weapon';
+      } else {
+        itemTypeTmp = defaultType.id;
       }
-  
-      const itemData = {
-        name: myName,
-        type: itemTypeTmp,
-        data: foundry.utils.deepClone(header.dataset)
-      };
-      delete itemData.data.type;
-      const items = <Item[]>await this.actor.createEmbeddedDocuments("Item", [itemData]);
-      const dropedItem = <Item>items[0];
+      myName = game.i18n.format('DND5E.ItemNew', {
+        type: game.i18n.localize(`DND5E.ItemType${itemTypeTmp.capitalize()}`),
+      });
+    }
 
-      await dropedItem.setFlag(CONSTANTS.MODULE_NAME,InventoryPlusFlags.CATEGORY,type);
+    const itemData = {
+      name: myName,
+      type: itemTypeTmp,
+      data: foundry.utils.deepClone(header.dataset),
+    };
+    delete itemData.data.type;
+    const items = <Item[]>await this.actor.createEmbeddedDocuments('Item', [itemData]);
+    const dropedItem = <Item>items[0];
+
+    await dropedItem.setFlag(CONSTANTS.MODULE_NAME, InventoryPlusFlags.CATEGORY, type);
   }
-
 }

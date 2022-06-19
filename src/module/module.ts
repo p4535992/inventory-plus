@@ -277,6 +277,18 @@ export const readyHooks = async (): Promise<void> => {
             return;
           }
           // END WEIGHT CONTROL
+          // START ACCEPTABLE TYPE
+          if (!API.isAcceptableType(categoryRef, itemData)) {
+            warn(
+              i18nFormat(`${CONSTANTS.MODULE_NAME}.dialogs.warn.noacceptabletype`, {
+                categoryName: categoryName,
+                itemDataType: itemData.type,
+              }),
+              true,
+            );
+            return;
+          }
+          // END itemDataType
           if (!this.actor.isOwner) return false;
           // const item = <Item>await Item.fromDropData(data);
           // const itemData = item.toObject();
@@ -318,6 +330,18 @@ export const readyHooks = async (): Promise<void> => {
               return;
             }
             // END WEIGHT CONTROL
+            // START ACCEPTABLE TYPE
+            if (!API.isAcceptableType(categoryRef, itemData)) {
+              warn(
+                i18nFormat(`${CONSTANTS.MODULE_NAME}.dialogs.warn.noacceptabletype`, {
+                  categoryName: categoryName,
+                  itemDataType: itemData.type,
+                }),
+                true,
+              );
+              return;
+            }
+            // END itemDataType
             if (!this.actor.isOwner) return false;
             // const item = <Item>await Item.fromDropData(data);
             // const itemData = item.toObject();
@@ -361,6 +385,30 @@ export const readyHooks = async (): Promise<void> => {
       // changing item list
       let itemType = this.inventoryPlus.getItemType(itemData); // data.data
       if (itemType !== targetType) {
+        // START WEIGHT CONTROL
+        if (API.isCategoryFulled(actor, targetType, itemData)) {
+          warn(
+            i18nFormat(`${CONSTANTS.MODULE_NAME}.dialogs.warn.exceedsmaxweight`, { categoryName: categoryName }),
+            true,
+          );
+          return;
+        }
+        // END WEIGHT CONTROL
+        // START ACCEPTABLE TYPE
+        if (!API.isAcceptableType(categoryRef, itemData)) {
+          warn(
+            i18nFormat(`${CONSTANTS.MODULE_NAME}.dialogs.warn.noacceptabletype`, {
+              categoryName: categoryName,
+              itemDataType: itemData.type,
+            }),
+            true,
+          );
+          return;
+        }
+        // END itemDataType
+        await dropedItem.setFlag(CONSTANTS.MODULE_NAME, InventoryPlusFlags.CATEGORY, targetType);
+        itemType = targetType;
+        /*
         const categoryWeight = this.inventoryPlus.getCategoryItemWeight(targetType);
         //@ts-ignore
         const itemWeight = dropedItem.data.data.weight * dropedItem.data.data.quantity;
@@ -381,12 +429,13 @@ export const readyHooks = async (): Promise<void> => {
           );
           return;
         }
+        */
       }
 
       // reordering items
 
       // Get the drag source and its siblings
-      
+
       const siblings = <Item[]>this.object.items.filter((i: Item) => {
         const type = <string>this.inventoryPlus.getItemType(i.data);
         return type === itemType && i.data._id !== dropedItem.data._id;

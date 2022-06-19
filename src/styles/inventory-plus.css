@@ -73,13 +73,12 @@
 .inventory-list .category-weight .fa-hamburger,
 .inventory-list .category-weight .fa-scroll,
 .inventory-list .category-weight .fa-toolbox,
-.inventory-list .category-weight .fa-box{
+.inventory-list .category-weight .fa-box {
   color: darkslategrey;
   text-shadow: 0 0 8px black;
   background-color: ghostwhite;
   padding-left: 1px;
   padding-right: 1px;
-
 }
 
 .inv-plus-dialog {

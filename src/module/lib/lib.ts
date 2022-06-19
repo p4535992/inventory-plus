@@ -809,14 +809,19 @@ export function calculateEncumbranceWithEquippedMultiplier(actorData) {
     : //@ts-ignore
       CONFIG.DND5E.encumbrance.strMultiplier.imperial;
 
-  if(!strengthMultiplier || !is_real_number(strengthMultiplier)){
+  if (!strengthMultiplier || !is_real_number(strengthMultiplier)) {
     strengthMultiplier = 1;
   }
 
-  const modStr = actorData.data.abilities.str.value && is_real_number(actorData.data.abilities.str.value) ? actorData.data.abilities.str.value : 1;
-  const maxValue = (modStr * strengthMultiplier * mod)
-  //@ts-ignore
-  const max = maxValue && is_real_number(maxValue) ? maxValue.toNearest(0.1) : actorEntity.data.data.attributes.encumbrance.max;
+  const modStr =
+    actorData.data.abilities.str.value && is_real_number(actorData.data.abilities.str.value)
+      ? actorData.data.abilities.str.value
+      : 1;
+  const maxValue = modStr * strengthMultiplier * mod;
+
+  const max =
+    //@ts-ignore
+    maxValue && is_real_number(maxValue) ? maxValue.toNearest(0.1) : actorEntity.data.data.attributes.encumbrance.max;
   const pct = Math.clamped((weight * 100) / max, 0, 100);
   return { value: weight, max, pct, encumbered: pct > 200 / 3 };
 }

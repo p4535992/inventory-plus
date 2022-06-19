@@ -26,8 +26,9 @@ const API = {
       game.modules.get('variant-encumbrance-dnd5e')?.active &&
       game.settings.get(CONSTANTS.MODULE_NAME, 'enableIntegrationWithVariantEncumbrance')
     ) {
-      const encumbranceData = <EncumbranceData>//@ts-ignore
-      game.modules.get('variant-encumbrance-dnd5e')?.api.calculateWeightOnActor(actorEntity);
+      const encumbranceData = <
+        EncumbranceData //@ts-ignore
+      >game.modules.get('variant-encumbrance-dnd5e')?.api.calculateWeightOnActor(actorEntity);
       const encumbrane5e = encumbranceData.encumbrance;
       return encumbrane5e;
     }
@@ -234,6 +235,30 @@ const API = {
 
     if (isNaN(maxWeight) || maxWeight <= 0 || maxWeight >= categoryWeight + itemWeight) {
       return false;
+    } else {
+      return true;
+    }
+  },
+
+  isAcceptableType(categoryRef: Category, itemData: ItemData) {
+    if (categoryRef.explicitTypes && categoryRef.explicitTypes.length > 0) {
+      const acceptableTypes = categoryRef.explicitTypes.filter((i) => {
+        return i.isSelected;
+      });
+      if (acceptableTypes && acceptableTypes.length == 0) {
+        return true;
+      }
+      if (acceptableTypes && acceptableTypes.length == 1 && acceptableTypes[0]?.id == '') {
+        return true;
+      }
+      let isOk = false;
+      for (const acc of acceptableTypes) {
+        if (acc.id === itemData.type) {
+          isOk = true;
+          break;
+        }
+      }
+      return isOk;
     } else {
       return true;
     }

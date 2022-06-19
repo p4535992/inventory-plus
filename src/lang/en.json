@@ -58,14 +58,15 @@
   "inventory-plus.dialogs.warn.exceedsmaxweight": "Item cannot be insert because exceeds max weight on category '{categoryName}'",
   "inventory-plus.dialogs.warn.nodroppeditem": "No Item founded",
   "inventory-plus.dialogs.warn.nocategoryfoundbytype": "No category founded for type '{type}', maybe you need to create a category for that ?",
+  "inventory-plus.dialogs.warn.noacceptabletype": "Item cannot be insert because the type '{itemDataType}' is not acceptable on category '{categoryName}'",
 
   "inventory-plus.inv-plus-dialog.removedefaulcategorieswarnmessage": "This actions will {status} the default categories of dnd5e.",
   "inventory-plus.inv-plus-dialog.removedefaulcategorieswarnmessage1": "Please, please , please test in a demo world before try out on your official world.",
   "inventory-plus.inv-plus-dialog.removedefaulcategorieswarnmessage2": "Duplicate this current actor as a backup. Better safe than sorry",
   "inventory-plus.inv-plus-dialog.removedefaulcategorieswarnmessage3": "Every item under a default category with the id 'weapon', 'equipment', 'consumable', 'tool', 'backpack', 'loot' will be deleted, so be aware if you have renamed a default category, before apply this move every item you need to a customized category.",
-  "inventory-plus.inv-plus-dialog.removedefaulcategorieswarnmessagereenable":"RE-ENABLE",
-  "inventory-plus.inv-plus-dialog.removedefaulcategorieswarnmessagedisable":"DISABLE",
-  "inventory-plus.inv-plus-dialog.confirmationdeletecategory": "Are you sure you want to delete this category ? Beware all the items in this category will be 'hidden' (not deleted), but it's advisable to move to another category befroe go on with this action.",
+  "inventory-plus.inv-plus-dialog.removedefaulcategorieswarnmessagereenable": "RE-ENABLE",
+  "inventory-plus.inv-plus-dialog.removedefaulcategorieswarnmessagedisable": "DISABLE",
+  "inventory-plus.inv-plus-dialog.confirmationdeletecategory": "Are you sure you want to delete this category ? Beware all the items in this category will be 'hidden' (not deleted), but it's advisable to move every item in this category to another before go further with this action.",
 
   "inventory-plus.notEnoughCurrency": "You don't have enough of the following currencies",
   "inventory-plus.howManyItem": "How many items do you want to move?",
@@ -80,5 +81,4 @@
 
   "inventory-plus.inv-plus-dialog.reenabledefaultcategories": "Re-enable Def. Cat.",
   "inventory-plus.inv-plus-dialog.removedefaultcategories": "Disable Def. Cat."
-
 }

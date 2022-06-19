@@ -58,6 +58,15 @@
   "inventory-plus.dialogs.warn.exceedsmaxweight": "O item não pode ser inserido porque excede o peso máximo na categoria '{categoryName}'",
   "inventory-plus.dialogs.warn.nodroppeditem": "Nenhum item encontrado",
   "inventory-plus.dialogs.warn.nocategoryfoundbytype": "Nenhuma categoria fundada para o tipo '{type}', talvez você precise criar uma categoria para isso?",
+  "inventory-plus.dialogs.warn.noacceptabletype": "O item não pode ser inserido porque o tipo '{itemDataType}' não é aceitável na categoria '{categoryName}'",
+
+  "inventory-plus.inv-plus-dialog.removedefaulcategorieswarnmessage": "Estas ações irão {status} as categorias padrão de dnd5e.",
+  "inventory-plus.inv-plus-dialog.removedefaulcategorieswarnmessage1": "Por favor, por favor, teste em um mundo de demonstração antes de experimentar em seu mundo oficial.",
+  "inventory-plus.inv-plus-dialog.removedefaulcategorieswarnmessage2": "Duplicar este ator atual como backup. Melhor prevenir do que remediar",
+  "inventory-plus.inv-plus-dialog.removedefaulcategorieswarnmessage3": "Cada item em uma categoria padrão com o id 'arma', 'equipamento', 'consumível', 'ferramenta', 'mochila', 'saque' será excluído , portanto, esteja ciente de que você renomeou uma categoria padrão, antes de aplicar esta mudança, mova todos os itens necessários para uma categoria personalizada.",
+  "inventory-plus.inv-plus-dialog.removedefaulcategorieswarnmessagereenable": "RE-ENABLE",
+  "inventory-plus.inv-plus-dialog.removedefaulcategorieswarnmessagedisable": "DISABLE",
+  "inventory-plus.inv-plus-dialog.confirmationdeletecategory": "Tem certeza de que deseja excluir esta categoria? Cuidado, todos os itens nesta categoria serão 'ocultos' (não excluídos), mas é aconselhável mover todos os itens esta categoria para outra antes de ir mais longe com esta ação.",
 
   "inventory-plus.notEnoughCurrency": "Você não tem o suficiente das seguintes moedas",
   "inventory-plus.howManyItem": "Quantos itens você deseja mover?",
