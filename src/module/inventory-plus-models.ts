@@ -15,7 +15,7 @@ export class Category {
 export enum InventoryPlusFlags {
   CATEGORYS = 'categorys',
   CATEGORY = 'category',
-  DISABLE_DEFAULT_CATEGORIES = 'disableDefaultCategories'
+  // DISABLE_DEFAULT_CATEGORIES = 'disableDefaultCategories'
 }
 
 export class EncumbranceDnd5e {

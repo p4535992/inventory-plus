@@ -28,7 +28,8 @@ export class InventoryPlus {
 
   initCategorys() {
     let flagCategorys = <Record<string, Category>>this.actor.getFlag(CONSTANTS.MODULE_NAME, InventoryPlusFlags.CATEGORYS);
-    const flagDisableDefaultCategories = <boolean>this.actor.getFlag(CONSTANTS.MODULE_NAME, InventoryPlusFlags.DISABLE_DEFAULT_CATEGORIES);
+    // const flagDisableDefaultCategories = <boolean>this.actor.getFlag(CONSTANTS.MODULE_NAME, InventoryPlusFlags.DISABLE_DEFAULT_CATEGORIES);
+    const flagDisableDefaultCategories = false;
     if (flagCategorys === undefined && !flagDisableDefaultCategories) {
       debug(`flagCategory=false && flagDisableDefaultCategories=false`);
       flagCategorys = {
@@ -405,7 +406,7 @@ export class InventoryPlus {
                   }
                   this.saveCategorys();
                 }
-                await this.actor.setFlag(CONSTANTS.MODULE_NAME, InventoryPlusFlags.DISABLE_DEFAULT_CATEGORIES, !f);
+                // await this.actor.setFlag(CONSTANTS.MODULE_NAME, InventoryPlusFlags.DISABLE_DEFAULT_CATEGORIES, !f);
               },
             },
             cancel: {
@@ -1026,30 +1027,73 @@ export class InventoryPlus {
 
       let myName = '';
       const physicalItems = ['weapon', 'equipment', 'consumable', 'tool', 'backpack', 'loot'];
-      let itemType = '';
+      let itemTypeTmp = '';
       if(physicalItems.includes(type.toLowerCase())){
         myName = game.i18n.format("DND5E.ItemNew", {type: game.i18n.localize(`DND5E.ItemType${type.capitalize()}`)});
-        itemType = type;
+        itemTypeTmp = type;
       }else{
         const defaultType = <InventoryPlusItemType>this.customCategorys[type]?.explicitTypes.filter((i) =>{
           return i.isSelected && i.isInventory;
         })[0];
         if(!defaultType.id){
-          itemType = 'weapon';
+          itemTypeTmp = 'weapon';
         }else{
-          itemType = defaultType.id;
+          itemTypeTmp = defaultType.id;
         }
-        myName = game.i18n.format("DND5E.ItemNew", {type: game.i18n.localize(`DND5E.ItemType${itemType.capitalize()}`)});
+        myName = game.i18n.format("DND5E.ItemNew", {type: game.i18n.localize(`DND5E.ItemType${itemTypeTmp.capitalize()}`)});
       }
   
       const itemData = {
         name: myName,
-        type: itemType,
+        type: itemTypeTmp,
         data: foundry.utils.deepClone(header.dataset)
       };
       delete itemData.data.type;
       const items = <Item[]>await this.actor.createEmbeddedDocuments("Item", [itemData]);
       const dropedItem = <Item>items[0];
+
+      await dropedItem.setFlag(CONSTANTS.MODULE_NAME,InventoryPlusFlags.CATEGORY,type);
+      /*
+      let currentCategoryFounded:Category|null = null;
+      for (const key in this.customCategorys) {
+        const category = <Category>this.customCategorys[key];
+        if(category && !category?.label){
+          continue;
+        }
+        if(category.items){
+          for(const item of category.items){
+            if(item._id === dropedItem.id){
+              currentCategoryFounded = category;
+              break;
+            }
+          }
+        }
+        if(currentCategoryFounded){
+          break;
+        }
+      }
+
+      const itemsTmp = duplicateExtended(currentCategoryFounded?.items).filter((i) => {
+        return i._id != dropedItem.id;
+      });
+      setProperty(<Category>this.customCategorys[<string>currentCategoryFounded?.dataset.type],'items',itemsTmp);
+
+      const itemsTmp2 = duplicateExtended(this.customCategorys[type]?.items);
+      itemsTmp2.push(dropedItem.data);
+      setProperty(<Category>this.customCategorys[type],'items',itemsTmp2);
+      
+      this.saveCategorys();
+      */
+
+      /*
+      const targetType = type;
+
+      // changing item list
+      //@ts-ignore
+      let itemType = this.actor.sheet.inventoryPlus.getItemType(itemData); // data.data
+      if (itemType !== targetType) {
+        itemType = targetType;
+      }
 
       // reordering items
 
@@ -1084,6 +1128,7 @@ export class InventoryPlus {
 
       // Perform the update
       this.actor.updateEmbeddedDocuments('Item', updateData);
+      */
   }
 
 }
