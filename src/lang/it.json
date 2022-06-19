@@ -37,6 +37,8 @@
   "inventory-plus.inv-plus-dialog.inherentweightprefix": "Peso intrinseco:",
   "inventory-plus.inv-plus-dialog.ignoreweightdescription": "Se selezionato, il peso degli articoli in questa categoria non verrà calcolato in base alla capacità di carico.",
   "inventory-plus.inv-plus-dialog.ignoreweightprefix": "Ignora peso articolo:",
+  "inventory-plus.inv-plus-dialog.explicittypesdescription": "Questo filtro non rilascerà elementi con un tipo diverso da quello impostato",
+  "inventory-plus.inv-plus-dialog.explicittypesprefix": "Tipi espliciti per questa categoria:",
 
   "inventory-plus.inv-plus-dialog.editinventorycategory": "Edita categoria personalizzata",
   "inventory-plus.inv-plus-dialog.addcustomcategory": "Aggiungi categoria personalizzata",

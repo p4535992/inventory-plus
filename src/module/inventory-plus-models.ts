@@ -9,6 +9,7 @@ export class Category {
   ownWeight: number;
   collapsed: boolean;
   items: ItemData[];
+  explicitTypes: InventoryPlusItemType[];
 }
 
 export enum InventoryPlusFlags {
@@ -65,18 +66,27 @@ export class EncumbranceBulkData extends EncumbranceData {
 // "DND5E.ItemTypeWeapon": "Weapon",
 // "DND5E.ItemTypeWeaponPl": "Weapons",
 
-export const inventoryPlusItemType = [
-  {id:'', name:'None', namePl:'None', img:'', isSelected: false},
-  {id:'weapon', name:'DND5E.ItemTypeWeapon', namePl:'DND5E.ItemTypeWeaponPl', img:'', isSelected: false},
-  {id:'equipment', name:'DND5E.ItemTypeEquipment', namePl:'DND5E.ItemTypeEquipmentPl', img:'', isSelected: false},
-  {id:'consumable', name:'DND5E.ItemTypeConsumable', namePl:'DND5E.ItemTypeConsumablePl', img:'', isSelected: false},
-  {id:'tool', name:'DND5E.ItemTypeTool', namePl:'DND5E.ItemTypeToolPl', img:'', isSelected: false},
-  {id:'loot', name:'DND5E.ItemTypeLoot', namePl:'DND5E.ItemTypeLootPl', img:'', isSelected: false},
-  {id:'background', name:'DND5E.ItemTypeBackground', namePl:'DND5E.ItemTypeBackgroundPl', img:'', isSelected: false},
-  {id:'class', name:'DND5E.ItemTypeClass', namePl:'DND5E.ItemTypeClassPl', img:'', isSelected: false},
-  {id:'subclass', name:'DND5E.ItemTypeSubclass', namePl:'DND5E.ItemTypeSubclassPl', img:'', isSelected: false},
-  {id:'spell', name:'DND5E.ItemTypeSpell', namePl:'DND5E.ItemTypeSpellPl', img:'', isSelected: false},
-  {id:'feat', name:'DND5E.ItemTypeFeat', namePl:'DND5E.ItemTypeFeatPl', img:'', isSelected: false},
-  {id:'backpack', name:'DND5E.ItemTypeContainer', namePl:'DND5E.ItemTypeContainerPl', img:'', isSelected: false},
-  {id:'set', name:'Armor set', namePl:'Armor set', img:'', isSelected: false},
+export const inventoryPlusItemTypeCollection = <InventoryPlusItemType[]>[
+  {id:'', name:'None', namePl:'None', img:'', isSelected: true, isInventory: true},
+  {id:'weapon', name:'DND5E.ItemTypeWeapon', namePl:'DND5E.ItemTypeWeaponPl', img:'', isSelected: false, isInventory: true},
+  {id:'equipment', name:'DND5E.ItemTypeEquipment', namePl:'DND5E.ItemTypeEquipmentPl', img:'', isSelected: false, isInventory: true},
+  {id:'consumable', name:'DND5E.ItemTypeConsumable', namePl:'DND5E.ItemTypeConsumablePl', img:'', isSelected: false, isInventory: true},
+  {id:'tool', name:'DND5E.ItemTypeTool', namePl:'DND5E.ItemTypeToolPl', img:'', isSelected: false, isInventory: true},
+  {id:'loot', name:'DND5E.ItemTypeLoot', namePl:'DND5E.ItemTypeLootPl', img:'', isSelected: false, isInventory: true},
+  {id:'background', name:'DND5E.ItemTypeBackground', namePl:'DND5E.ItemTypeBackgroundPl', img:'', isSelected: false, isInventory: false},
+  {id:'class', name:'DND5E.ItemTypeClass', namePl:'DND5E.ItemTypeClassPl', img:'', isSelected: false, isInventory: false},
+  {id:'subclass', name:'DND5E.ItemTypeSubclass', namePl:'DND5E.ItemTypeSubclassPl', img:'', isSelected: false, isInventory: false},
+  {id:'spell', name:'DND5E.ItemTypeSpell', namePl:'DND5E.ItemTypeSpellPl', img:'', isSelected: false, isInventory: false},
+  {id:'feat', name:'DND5E.ItemTypeFeat', namePl:'DND5E.ItemTypeFeatPl', img:'', isSelected: false, isInventory: false},
+  {id:'backpack', name:'DND5E.ItemTypeContainer', namePl:'DND5E.ItemTypeContainerPl', img:'', isSelected: false, isInventory: true},
+  // {id:'set', name:'Armor set', namePl:'Armor set', img:'', isSelected: false},
 ]
+
+export class InventoryPlusItemType{
+  id:string;
+  name:string;  
+  namePl:string; 
+  img:string; 
+  isSelected: boolean;
+  isInventory: boolean;
+}

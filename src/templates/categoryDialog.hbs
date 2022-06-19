@@ -13,11 +13,11 @@
     <dd title="{{localize "inventory-plus.inv-plus-dialog.ignoreweightdescription"}}">
         <input name="ignoreWeight" type="checkbox" {{#if ignoreWeight}}checked{{/if}}>
     </dd>
-    <dt title="{{localize "inventory-plus.inv-plus-dialog.explicittypedescription"}}">{{localize "inventory-plus.inv-plus-dialog.explicittype"}} </dt>
-    <dd title="{{localize "inventory-plus.inv-plus-dialog.explicittypedescription"}}">
-        <select id="explicitType" name="explicitType" is="ms-dropdown-inventory-plus">
-            {{#each types as |type|}}
-                <option data-image="{{type.img}}" value="{{type.id}}" {{#if type.isSelected}}selected{{else}}{{/if}}>{{localize type.name}}</option>
+    <dt title="{{localize "inventory-plus.inv-plus-dialog.explicittypesdescription"}}">{{localize "inventory-plus.inv-plus-dialog.explicittypesprefix"}} </dt>
+    <dd title="{{localize "inventory-plus.inv-plus-dialog.explicittypesdescription"}}">
+        <select id="explicitTypes" name="explicitTypes" is="ms-dropdown-inventory-plus" multiple>
+            {{#each explicitTypes as |type|}}
+                <option data-image="{{type.img}}" value="{{type.id}}" {{#if type.isSelected}}selected{{/if}}>{{localize type.name}}</option>
             {{/each}}
         </select>
     </dd>
