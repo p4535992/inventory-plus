@@ -445,7 +445,7 @@ export const readyHooks = async (): Promise<void> => {
       // reordering items
 
       // Get the drag source and its siblings
-      // const source = dropedItem;
+      
       const siblings = <Item[]>this.object.items.filter((i: Item) => {
         const type = <string>this.inventoryPlus.getItemType(i.data);
         return type === itemType && i.data._id !== dropedItem.data._id;

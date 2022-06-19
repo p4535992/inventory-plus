@@ -67,6 +67,21 @@
   text-shadow: 0 0 8px darkgreen;
 }
 
+.inventory-list .category-weight .fa-times-circle,
+.inventory-list .category-weight .fa-bomb,
+.inventory-list .category-weight .fa-vest,
+.inventory-list .category-weight .fa-hamburger,
+.inventory-list .category-weight .fa-scroll,
+.inventory-list .category-weight .fa-toolbox,
+.inventory-list .category-weight .fa-box{
+  color: darkslategrey;
+  text-shadow: 0 0 8px black;
+  background-color: ghostwhite;
+  padding-left: 1px;
+  padding-right: 1px;
+
+}
+
 .inv-plus-dialog {
   margin: 5px;
 }

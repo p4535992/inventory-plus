@@ -263,7 +263,8 @@ export class InventoryPlus {
     /*
      *  add remove default categories
      */
-    const flagDisableDefaultCategories = this.actor.getFlag(CONSTANTS.MODULE_NAME, InventoryPlusFlags.DISABLE_DEFAULT_CATEGORIES);
+    // const flagDisableDefaultCategories = this.actor.getFlag(CONSTANTS.MODULE_NAME, InventoryPlusFlags.DISABLE_DEFAULT_CATEGORIES);
+    const flagDisableDefaultCategories = true; // IS ALWAYS FALSE FOR NOW
     const labelDialogDisableDefaultCategories = flagDisableDefaultCategories
       ? i18n(`${CONSTANTS.MODULE_NAME}.inv-plus-dialog.reenabledefaultcategories`)
       : i18n(`${CONSTANTS.MODULE_NAME}.inv-plus-dialog.removedefaultcategories`);
@@ -272,34 +273,152 @@ export class InventoryPlus {
       ? `fa-plus-square`
       : `fa-minus-square`;
 
-    const removeDefaultCategoriesBtn = $(
-      `<a class="custom-category"><i class="fas ${iconClass}"></i>${labelDialogDisableDefaultCategories}</a>`,
-    ).click(async (ev) => {
-      const template = await renderTemplate(`modules/${CONSTANTS.MODULE_NAME}/templates/removeDefaultCategoriesDialog.hbs`, {
-        flagDisableDefaultCategories: flagDisableDefaultCategories
-      });
-      const d = new Dialog({
-        title: i18n(`${CONSTANTS.MODULE_NAME}.inv-plus-dialog.removedefaultcategories`),
-        content: template,
-        buttons: {
-          accept: {
-            icon: '<i class="fas fa-check"></i>',
-            label: i18n(`${CONSTANTS.MODULE_NAME}.inv-plus-dialog.accept`),
-            callback: async (html: JQuery<HTMLElement>) => {
-              const f = flagDisableDefaultCategories && String(flagDisableDefaultCategories)  === 'true' ? true : false;
-              await this.actor.setFlag(CONSTANTS.MODULE_NAME, InventoryPlusFlags.DISABLE_DEFAULT_CATEGORIES, !f);
+    // ONly gm can do this
+    
+    if(game.user?.isGM){
+      const status = flagDisableDefaultCategories 
+        ? i18n(`inventory-plus.inv-plus-dialog.removedefaulcategorieswarnmessagereenable`) 
+        : i18n(`inventory-plus.inv-plus-dialog.removedefaulcategorieswarnmessagedisable`) ;
+      const msg = i18nFormat(`inventory-plus.inv-plus-dialog.removedefaulcategorieswarnmessage`,{status:status});
+      const removeDefaultCategoriesBtn = $(
+        `<a class="custom-category"><i class="fas ${iconClass}"></i>${labelDialogDisableDefaultCategories}</a>`,
+      ).click(async (ev) => {
+        const template = await renderTemplate(`modules/${CONSTANTS.MODULE_NAME}/templates/restoreDefaultCategoriesDialog.hbs`, {
+          msg: msg
+        });
+        const d = new Dialog({
+          title: i18n(`${CONSTANTS.MODULE_NAME}.inv-plus-dialog.removedefaultcategories`),
+          content: template,
+          buttons: {
+            accept: {
+              icon: '<i class="fas fa-check"></i>',
+              label: i18n(`${CONSTANTS.MODULE_NAME}.inv-plus-dialog.accept`),
+              callback: async (html: JQuery<HTMLElement>) => {
+                const f = flagDisableDefaultCategories && String(flagDisableDefaultCategories)  === 'true' ? true : false;
+                if(!f){
+                  const physicalItems = ['weapon', 'equipment', 'consumable', 'tool', 'backpack', 'loot'];
+                  for(const catType of physicalItems){
+                    this.removeCategory(catType);
+                  }
+                }else{
+                  const categoryWeapon = this.customCategorys['weapon'];
+                  if(!categoryWeapon){
+                    this.customCategorys['weapon'] =
+                      <Category>{
+                        label: 'DND5E.ItemTypeWeaponPl',
+                        dataset: { type: 'weapon' },
+                        sortFlag: 1000,
+                        ignoreWeight: false,
+                        maxWeight: 0,
+                        ownWeight: 0,
+                        collapsed: false,
+                        items: [],
+                        explicitTypes: inventoryPlusItemTypeCollection.filter((t) => {
+                          return t.isInventory;
+                        }),
+                      }
+                  }
+                  const categoryEquipment = this.customCategorys['equipment'];
+                  if(!categoryEquipment){
+                    this.customCategorys['equipment'] =
+                      <Category>{
+                        label: 'DND5E.ItemTypeEquipmentPl',
+                        dataset: { type: 'equipment' },
+                        sortFlag: 2000,
+                        ignoreWeight: false,
+                        maxWeight: 0,
+                        ownWeight: 0,
+                        collapsed: false,
+                        items: [],
+                        explicitTypes: inventoryPlusItemTypeCollection.filter((t) => {
+                          return t.isInventory;
+                        }),
+                      }
+                  }
+                  const categoryConsumable = this.customCategorys['consumable'];
+                  if(!categoryConsumable){
+                    this.customCategorys['consumable'] =
+                      <Category>{
+                        label: 'DND5E.ItemTypeConsumablePl',
+                        dataset: { type: 'consumable' },
+                        sortFlag: 3000,
+                        ignoreWeight: false,
+                        maxWeight: 0,
+                        ownWeight: 0,
+                        collapsed: false,
+                        items: [],
+                        explicitTypes: inventoryPlusItemTypeCollection.filter((t) => {
+                          return t.isInventory;
+                        }),
+                      }
+                  }
+                  const categoryTool = this.customCategorys['tool'];
+                  if(!categoryTool){
+                    this.customCategorys['tool'] =
+                      <Category>{
+                        label: 'DND5E.ItemTypeToolPl',
+                        dataset: { type: 'tool' },
+                        sortFlag: 4000,
+                        ignoreWeight: false,
+                        maxWeight: 0,
+                        ownWeight: 0,
+                        collapsed: false,
+                        items: [],
+                        explicitTypes: inventoryPlusItemTypeCollection.filter((t) => {
+                          return t.isInventory;
+                        }),
+                      }
+                  }
+                  const categoryBackpack = this.customCategorys['backpack'];
+                  if(!categoryBackpack){
+                    this.customCategorys['backpack'] =
+                      <Category>{
+                        label: 'DND5E.ItemTypeContainerPl',
+                        dataset: { type: 'backpack' },
+                        sortFlag: 5000,
+                        ignoreWeight: false,
+                        maxWeight: 0,
+                        ownWeight: 0,
+                        collapsed: false,
+                        items: [],
+                        explicitTypes: inventoryPlusItemTypeCollection.filter((t) => {
+                          return t.isInventory;
+                        }),
+                      }
+                  }
+                  const categoryLoot = this.customCategorys['loot'];
+                  if(!categoryLoot){
+                    this.customCategorys['loot'] =
+                      <Category>{
+                        label: 'DND5E.ItemTypeLootPl',
+                        dataset: { type: 'loot' },
+                        sortFlag: 6000,
+                        ignoreWeight: false,
+                        maxWeight: 0,
+                        ownWeight: 0,
+                        collapsed: false,
+                        items: [],
+                        explicitTypes: inventoryPlusItemTypeCollection.filter((t) => {
+                          return t.isInventory;
+                        }),
+                      }
+                  }
+                  this.saveCategorys();
+                }
+                await this.actor.setFlag(CONSTANTS.MODULE_NAME, InventoryPlusFlags.DISABLE_DEFAULT_CATEGORIES, !f);
+              },
+            },
+            cancel: {
+              icon: '<i class="fas fa-times"></i>',
+              label: i18n(`${CONSTANTS.MODULE_NAME}.inv-plus-dialog.cancel`),
             },
           },
-          cancel: {
-            icon: '<i class="fas fa-times"></i>',
-            label: i18n(`${CONSTANTS.MODULE_NAME}.inv-plus-dialog.cancel`),
-          },
-        },
-        default: 'cancel',
+          default: 'cancel',
+        });
+        d.render(true);
       });
-      d.render(true);
-    });
-    html.find('.inventory .filter-list').prepend(removeDefaultCategoriesBtn);
+      html.find('.inventory .filter-list').prepend(removeDefaultCategoriesBtn);
+    }
 
     /*
      *  create custom category
@@ -312,8 +431,12 @@ export class InventoryPlus {
       const explicitTypesFromList = inventoryPlusItemTypeCollection.filter((t) => {
         return t.isInventory;
       });
+      // const defaultTypesFromList = inventoryPlusItemTypeCollection.filter((t) => {
+      //   return t.isInventory;
+      // });
       const template = await renderTemplate(`modules/${CONSTANTS.MODULE_NAME}/templates/categoryDialog.hbs`, {
-        explicitTypes: explicitTypesFromList
+        explicitTypes: explicitTypesFromList,
+        // defaultTypes: defaultTypesFromList
       });
       const d = new Dialog({
         title: i18n(`${CONSTANTS.MODULE_NAME}.inv-plus-dialog.creatingnewinventorycategory`),
@@ -325,7 +448,8 @@ export class InventoryPlus {
             callback: async (html: JQuery<HTMLElement>) => {
               const input = html.find('input');
               const selectExplicitTypes = $(<HTMLElement>html.find('select[name="explicitTypes"')[0]);
-              this.createCategory(input,selectExplicitTypes);
+              // const selectDefaultType = $(<HTMLElement>html.find('select[name="defaultType"')[0]);
+              this.createCategory(input,selectExplicitTypes); // ,selectDefaultType
             },
           },
           cancel: {
@@ -351,25 +475,81 @@ export class InventoryPlus {
      *  add removal function
      */
 
-    const createBtns = html.find('.inventory .item-create');
+    /*
+    const createBtnsTmp:JQuery<HTMLElement> = html.find('.inventory .item-create');
+    if(!createBtnsTmp || createBtnsTmp.length == 0){
+      const createItemCategoryBtn = 
+      $(`<div class="item-controls flexrow">
+          <a class="item-control item-create" title="${i18n("DND5E.ItemCreate")}" 
+          data-type="weapon"><i class="fas fa-plus"></i> ${i18n("DND5E.Add")}</a>
+      </div>`);
+      createItemCategoryBtn.click((ev) => {
+        this._onItemCreate(ev);
+      });
+      const parent = html.find('.inventory .item-action').parent();
+      $(parent).append(createItemCategoryBtn);
+      parent.append(createItemCategoryBtn);
+    }
+    */
+    const createBtns:JQuery<HTMLElement> = html.find('.inventory .item-create');
     for (const createBtn of createBtns) {
       const type = <string>createBtn.dataset.type;
       // Filter for only invenotry items
-      if (['weapon', 'equipment', 'consumable', 'tool', 'backpack', 'loot'].indexOf(type) === -1) {
+      // const physicalItems = ['weapon', 'equipment', 'consumable', 'tool', 'backpack', 'loot'];
+      // if (physicalItems.indexOf(type) === -1) {
         const parent = <ParentNode>createBtn.parentNode;
-        const removeCategoryBtn = $(
-          `<a class="item-control remove-category"
+
+        const removeCategoryBtn = 
+        $(`<div class="item-controls flexrow">
+        <a class="item-control item-create" 
+          title="${i18n("DND5E.ItemCreate")}" 
+          data-type="${type}">
+          <i class="fas fa-plus"></i> ${i18n("DND5E.Add")}</a>
+        <a class="item-control remove-category" 
             title="${i18n(`${CONSTANTS.MODULE_NAME}.inv-plus-dialog.deletecategory`)}"
             data-type="${type}">
-            <i class="fas fa-minus"></i>${i18n(`${CONSTANTS.MODULE_NAME}.inv-plus-dialog.deletecategoryprefix`)}</a>`,
-        );
-        removeCategoryBtn.click((ev) => {
-          this.removeCategory(ev);
+            <i class="fas fa-minus"></i>${i18n(`${CONSTANTS.MODULE_NAME}.inv-plus-dialog.deletecategoryprefix`)}</a>
+        </div>`,);
+        removeCategoryBtn.find('.item-create').click((ev) => {
+          ev.preventDefault();
+          const catType = <string>ev.target.dataset.type || <string>ev.currentTarget.dataset.type;
+          this._onItemCreate(ev,catType);
+        });
+        removeCategoryBtn.find('.remove-category').click(async (ev) => {
+          ev.preventDefault();
+          const catType = <string>ev.target.dataset.type || <string>ev.currentTarget.dataset.type;
+          //this.removeCategory(catType);
+          const status = flagDisableDefaultCategories 
+            ? i18n(`inventory-plus.inv-plus-dialog.removedefaulcategorieswarnmessagereenable`) 
+            : i18n(`inventory-plus.inv-plus-dialog.removedefaulcategorieswarnmessagedisable`) ;
+          const msg = i18nFormat(`inventory-plus.inv-plus-dialog.removedefaulcategorieswarnmessage`,{status:status});
+          const template = await renderTemplate(`modules/${CONSTANTS.MODULE_NAME}/templates/removeDefaultCategoriesDialog.hbs`, {
+            msg: msg
+          });
+          const d = new Dialog({
+            title: i18n(`${CONSTANTS.MODULE_NAME}.inv-plus-dialog.removedefaultcategories`),
+            content: template,
+            buttons: {
+              accept: {
+                icon: '<i class="fas fa-check"></i>',
+                label: i18n(`${CONSTANTS.MODULE_NAME}.inv-plus-dialog.accept`),
+                callback: async (html: JQuery<HTMLElement>) => {
+                  this.removeCategory(catType);
+                },
+              },
+              cancel: {
+                icon: '<i class="fas fa-times"></i>',
+                label: i18n(`${CONSTANTS.MODULE_NAME}.inv-plus-dialog.cancel`),
+              },
+            },
+            default: 'cancel',
+          });
+          d.render(true);
         });
         //@ts-ignore
         parent.innerHTML = '';
         $(parent).append(removeCategoryBtn);
-      }
+      // }
     }
 
     /*
@@ -426,8 +606,21 @@ export class InventoryPlus {
       const editCategoryBtn = $(`<a class="inv-plus-stuff customize-category" data-type="${type}"><i class="fas fa-edit"></i></a>`).click(
         async (ev) => {
           const catTypeTmp = <string>ev.target.dataset.type || <string>ev.currentTarget.dataset.type;
+          // const defaultTypesTmp = inventoryPlusItemTypeCollection.filter((t) => {
+          //   return t.isInventory;
+          // });
+          // const newArr = defaultTypesTmp.map((obj:InventoryPlusItemType) => {
+          //   if (catTypeTmp == obj.id) {
+          //     return { ...obj, isSelected: true };
+          //   } else {
+          //     return { ...obj, isSelected: false };
+          //   }
+          // });
+
           const currentCategoryTmp = duplicateExtended(<Category>this.customCategorys[catTypeTmp]);
           currentCategoryTmp.label = i18n(currentCategoryTmp.label);
+          // currentCategoryTmp.defaultTypes = newArr;
+
           const template = await renderTemplate(
             `modules/${CONSTANTS.MODULE_NAME}/templates/categoryDialog.hbs`,
             currentCategoryTmp,
@@ -450,7 +643,14 @@ export class InventoryPlus {
                       currentCategory[input.name] = value;
                     }
                   }
-                  const currentTypeSelectedS = <string[]>$(<HTMLElement>html.find('select[name="explicitTypes"')[0])?.val();
+
+                  // const selectDefaultType = 
+                  //   <string>(<string[]>$(<HTMLElement>html.find('select[name="defaultType"')[0])?.val())[0];
+
+                  // currentCategory.dataset.type = selectDefaultType;
+
+                  const currentTypeSelectedS = 
+                    <string[]>$(<HTMLElement>html.find('select[name="explicitTypes"')[0])?.val();
                   if(!currentTypeSelectedS || currentTypeSelectedS.length === 0){
                     currentCategory.explicitTypes = [];
                   }else if(currentTypeSelectedS.length === 1 && !currentTypeSelectedS[0]){
@@ -498,25 +698,51 @@ export class InventoryPlus {
       }
 
       let icon = ``;
-      if (currentCategory.ignoreWeight) {
-        icon = `<i class="fas fa-feather"></i>`;
-      } else if (currentCategory.ownWeight > 0) {
-        icon = `<i class="fas fa-weight-hanging"></i>`;
-      } else {
-        icon = `<i class="fas fa-balance-scale-right"></i>`;
+
+      // show type of category
+      //const physicalItems = ['weapon', 'equipment', 'consumable', 'tool', 'backpack', 'loot']
+      const enabledExplicitTypes = currentCategory.explicitTypes.filter((i) =>{ return i.isSelected});
+      if(enabledExplicitTypes.length > 0){
+        for(const explicitType of enabledExplicitTypes){
+          // None
+          // if(!explicitType.id || explicitType.id === ''){
+          //   icon = icon+`<i class="fas fa-times-circle"></i>`;
+          // }
+          // Weapon
+          if(explicitType.id === 'weapon'){
+            icon = icon+`<i class="fas fa-bomb"></i>`;
+          }
+          // Equipment
+          if(explicitType.id === 'equipment'){
+            icon = icon+`<i class="fas fa-vest"></i>`;
+          }
+          // Consumable
+          if(explicitType.id === 'consumable'){
+            icon = icon+`<i class="fas fa-hamburger"></i>`;
+          }
+          // Tool
+          if(explicitType.id === 'tool'){
+            icon = icon+`<i class="fas fa-scroll"></i>`;
+          }
+          // Backpack
+          if(explicitType.id === 'backpack'){
+            icon = icon+`<i class="fas fa-toolbox"></i>`;
+          }
+          // Loot
+          if(explicitType.id === 'loot'){
+            icon = icon+`<i class="fas fa-box"></i>`;
+          }
+        }
       }
 
-      // TODO show type of category
-      // none // 
-      // weapon // <i class="fas fa-bomb"></i>
-      // equipment // <i class="fas fa-vest"></i>
-      // consumable // <i class="fas fa-hamburger"></i>
-      // tool // <i class="fas fa-scroll"></i>
-      // backpack // <i class="fas fa-toolbox"></i>
-      // loot // <i class="fas fa-box"></i>
-      // armorset // <i class="fas fa-tools"></i>
-
       if (currentCategory.maxWeight > 0) {
+        if (currentCategory.ignoreWeight) {
+          icon = icon+`<i class="fas fa-feather"></i>`;
+        } else if (currentCategory.ownWeight > 0) {
+          icon = icon+`<i class="fas fa-weight-hanging"></i>`;
+        } else {
+          icon = icon+`<i class="fas fa-balance-scale-right"></i>`;
+        }
         const weight = <number>this.getCategoryItemWeight(type);
         const weightUnit = game.settings.get('dnd5e', 'metricWeightUnits')
           ? game.i18n.localize('DND5E.AbbreviationKgs')
@@ -524,6 +750,15 @@ export class InventoryPlus {
         const weightValue = `(${weight}/${currentCategory.maxWeight} ${weightUnit})`;
 
         const weightString = $(`<label class="category-weight"> ${icon} ${weightValue}</label>`);
+        header.find('h3').append(weightString);
+      }else{
+        const weight = <number>this.getCategoryItemWeight(type);
+        const weightUnit = game.settings.get('dnd5e', 'metricWeightUnits')
+          ? game.i18n.localize('DND5E.AbbreviationKgs')
+          : game.i18n.localize('DND5E.AbbreviationLbs');
+        const weightValue = `(${weight}/${currentCategory.maxWeight} ${weightUnit})`;
+
+        const weightString = $(`<label class="category-weight"> ${icon}</label>`);
         header.find('h3').append(weightString);
       }
     }
@@ -542,7 +777,9 @@ export class InventoryPlus {
         if (sections[type] === undefined) {
           type = item.type;
         }
-        (<Category>sections[type]).items?.push(item);
+        if (sections[type]){
+          (<Category>sections[type]).items?.push(item);
+        }
       }
     }
 
@@ -556,7 +793,7 @@ export class InventoryPlus {
     return sections;
   }
 
-  createCategory(inputs,selectExplicitTypes:JQuery<HTMLElement>) {
+  createCategory(inputs,selectExplicitTypes:JQuery<HTMLElement>) { // ,selectDefaultType:JQuery<HTMLElement>
     const newCategory = new Category();
 
     for (const input of inputs) {
@@ -568,6 +805,9 @@ export class InventoryPlus {
         newCategory[input.name] = value;
       }
     }
+
+    // const defaultTypeSelected = (<string[]>selectDefaultType.val())[0];
+    // newCategory.dataset.type = <string>defaultTypeSelected;
 
     const typesSelected = <string[]>selectExplicitTypes.val();
     const explicitTypesFromListTmp = <InventoryPlusItemType[]>[];
@@ -595,8 +835,8 @@ export class InventoryPlus {
     this.saveCategorys();
   }
 
-  async removeCategory(ev) {
-    const catType = <string>ev.target.dataset.type || <string>ev.currentTarget.dataset.type;
+  async removeCategory(catType:string) {
+    //const catType = <string>ev.target.dataset.type || <string>ev.currentTarget.dataset.type;
     const changedItems: ItemData[] = [];
     for (const item of this.actor.items) {
       const type = this.getItemType(item.data);
@@ -763,6 +1003,87 @@ export class InventoryPlus {
 
   async saveCategorys() {
     await this.actor.setFlag(CONSTANTS.MODULE_NAME, InventoryPlusFlags.CATEGORYS, this.customCategorys);
+  }
+
+    /**
+   * Handle creating a new Owned Item for the actor using initial data defined in the HTML dataset.
+   * @param {Event} event          The originating click event.
+   * @returns {Promise<Item5e[]>}  The newly created item.
+   * @private
+   */
+  async _onItemCreate(ev,type:string) {
+      //event.preventDefault();
+      const header = ev.currentTarget;
+      //const type = header.dataset.type;
+
+      // Check to make sure the newly created class doesn't take player over level cap
+      //@ts-ignore
+      if ( type === "class" && (this.actor.data.data.details.level + 1 > CONFIG.DND5E.maxLevel) ) {
+        return ui.notifications.error(game.i18n.format("DND5E.MaxCharacterLevelExceededWarn",
+          //@ts-ignore
+          {max: CONFIG.DND5E.maxLevel}));
+      }
+
+      let myName = '';
+      const physicalItems = ['weapon', 'equipment', 'consumable', 'tool', 'backpack', 'loot'];
+      let itemType = '';
+      if(physicalItems.includes(type.toLowerCase())){
+        myName = game.i18n.format("DND5E.ItemNew", {type: game.i18n.localize(`DND5E.ItemType${type.capitalize()}`)});
+        itemType = type;
+      }else{
+        const defaultType = <InventoryPlusItemType>this.customCategorys[type]?.explicitTypes.filter((i) =>{
+          return i.isSelected && i.isInventory;
+        })[0];
+        if(!defaultType.id){
+          itemType = 'weapon';
+        }else{
+          itemType = defaultType.id;
+        }
+        myName = game.i18n.format("DND5E.ItemNew", {type: game.i18n.localize(`DND5E.ItemType${itemType.capitalize()}`)});
+      }
+  
+      const itemData = {
+        name: myName,
+        type: itemType,
+        data: foundry.utils.deepClone(header.dataset)
+      };
+      delete itemData.data.type;
+      const items = <Item[]>await this.actor.createEmbeddedDocuments("Item", [itemData]);
+      const dropedItem = <Item>items[0];
+
+      // reordering items
+
+      // Get the drag source and its siblings
+      
+      const siblings = <Item[]>this.actor.items.filter((i: Item) => {
+        return type === itemType && i.data._id !== dropedItem.data._id;
+      });
+      // Get the drop target
+      const dropTargetTmp = $(ev.currentTarget.parentNode.parentNode.parentNode).find('.item');
+      const dropTarget = dropTargetTmp.length > 0 ? dropTargetTmp[dropTargetTmp.length-1] : null;
+      let targetId: string | null = null;
+      if(dropTarget){
+        targetId = dropTarget ? <string>dropTarget.dataset.itemId : null;
+      }
+      if(!targetId){
+        targetId = $(ev.currentTarget.parentNode.parentNode.parentNode)[0].closest('.item');
+      }
+      const target = <Item>siblings.find((s) => s.data._id === targetId);
+
+      // Perform the sort
+      const sortUpdates = SortingHelpers.performIntegerSort(dropedItem, { target: target, siblings });
+      let updateData: any[] = sortUpdates.map((u) => {
+        const update: any = u.update;
+        update._id = u.target.data._id;
+        return update;
+      });
+
+      updateData = updateData.filter((i) => {
+        return i._id != null && i._id != undefined && i._id != '';
+      });
+
+      // Perform the update
+      this.actor.updateEmbeddedDocuments('Item', updateData);
   }
 
 }
