@@ -49,8 +49,6 @@ export const readyHooks = async (): Promise<void> => {
   // Hooks.callAll(HOOKS.READY);
 
   // Add any additional hooks if necessary
-  // InventoryPlus.replaceGetData();
-  // InventoryPlus.replaceOnDropItem();
 
   //@ts-ignore
   libWrapper.register(
@@ -63,15 +61,6 @@ export const readyHooks = async (): Promise<void> => {
       const actor = <Actor>this.actor;
       const newInventory = InventoryPlus.processInventory(this, actor, sheetData.inventory);
       sheetData.inventory = newInventory;
-      /*
-      sheetData.data.attributes.encumbrance.value = API.calculateWeight(
-        sheetData.inventory,
-        //@ts-ignore
-        actor.data.data.currency,
-      );
-      sheetData.data.attributes.encumbrance.pct =
-        (sheetData.data.attributes.encumbrance.value / sheetData.data.attributes.encumbrance.max) * 100;
-      */
       const encumbrance5e = <EncumbranceDnd5e>API.calculateWeightFromActor(actor);
       if (
         game.modules.get('variant-encumbrance-dnd5e')?.active &&
@@ -279,31 +268,7 @@ export const readyHooks = async (): Promise<void> => {
       // dropping new item
       if (actorId !== this.object.id || itemData === undefined) {
         if (!actor.items.get(<string>itemId)) {
-          /*
           // START WEIGHT CONTROL
-          // changing item list
-          const itemType = this.inventoryPlus.getItemType(itemData); // data.data
-          if (itemType !== targetType) {
-            const categoryWeight = this.inventoryPlus.getCategoryItemWeight(targetType);
-            //@ts-ignore
-            const itemWeight = itemData.data.weight * itemData.data.quantity;
-            const maxWeight = Number(
-              this.inventoryPlus.customCategorys[targetType].maxWeight
-                ? this.inventoryPlus.customCategorys[targetType].maxWeight
-                : 0,
-            );
-
-            if (isNaN(maxWeight) || maxWeight <= 0 || maxWeight >= categoryWeight + itemWeight) {
-              // do nothing
-            } else {
-              warn(
-                i18nFormat(`${CONSTANTS.MODULE_NAME}.dialogs.warn.exceedsmaxweight`, { categoryName: categoryName }),
-                true,
-              );
-              return;
-            }
-          }
-          */
           if (API.isCategoryFulled(actor, targetType, itemData)) {
             warn(
               i18nFormat(`${CONSTANTS.MODULE_NAME}.dialogs.warn.exceedsmaxweight`, { categoryName: categoryName }),
@@ -345,30 +310,6 @@ export const readyHooks = async (): Promise<void> => {
         } else {
           if (!actor.items.get(<string>itemId)) {
             // START WEIGHT CONTROL
-            /*
-            // changing item list
-            const itemType = this.inventoryPlus.getItemType(itemData); // data.data
-            if (itemType !== targetType) {
-              const categoryWeight = this.inventoryPlus.getCategoryItemWeight(targetType);
-              //@ts-ignore
-              const itemWeight = itemData.data.weight * itemData.data.quantity;
-              const maxWeight = Number(
-                this.inventoryPlus.customCategorys[targetType].maxWeight
-                  ? this.inventoryPlus.customCategorys[targetType].maxWeight
-                  : 0,
-              );
-
-              if (isNaN(maxWeight) || maxWeight <= 0 || maxWeight >= categoryWeight + itemWeight) {
-                // do nothing
-              } else {
-                warn(
-                  i18nFormat(`${CONSTANTS.MODULE_NAME}.dialogs.warn.exceedsmaxweight`, { categoryName: categoryName }),
-                  true,
-                );
-                return;
-              }
-            }
-            */
             if (API.isCategoryFulled(actor, targetType, itemData)) {
               warn(
                 i18nFormat(`${CONSTANTS.MODULE_NAME}.dialogs.warn.exceedsmaxweight`, { categoryName: categoryName }),

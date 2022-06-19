@@ -14,8 +14,7 @@ export class Category {
 
 export enum InventoryPlusFlags {
   CATEGORYS = 'categorys',
-  CATEGORY = 'category',
-  // DISABLE_DEFAULT_CATEGORIES = 'disableDefaultCategories'
+  CATEGORY = 'category'
 }
 
 export class EncumbranceDnd5e {
@@ -41,30 +40,6 @@ export class EncumbranceBulkData extends EncumbranceData {
   inventorySlot: number;
   minimumBulk: number;
 }
-
-
-// "DND5E.ItemTypeClass": "Class",
-// "DND5E.ItemTypeClassPl": "Class Levels",
-// "DND5E.ItemTypeConsumable": "Consumable",
-// "DND5E.ItemTypeConsumablePl": "Consumables",
-// "DND5E.ItemTypeContainer": "Container",
-// "DND5E.ItemTypeBackground": "Background",
-// "DND5E.ItemTypeBackgroundPl": "Backgrounds",
-// "DND5E.ItemTypeBackpack": "Container",
-// "DND5E.ItemTypeContainerPl": "Containers",
-// "DND5E.ItemTypeEquipment": "Equipment",
-// "DND5E.ItemTypeEquipmentPl": "Equipment",
-// "DND5E.ItemTypeFeat": "Feature",
-// "DND5E.ItemTypeLoot": "Loot",
-// "DND5E.ItemTypeLootPl": "Loot",
-// "DND5E.ItemTypeTool": "Tool",
-// "DND5E.ItemTypeToolPl": "Tools",
-// "DND5E.ItemTypeSpell": "Spell",
-// "DND5E.ItemTypeSpellPl": "Spells",
-// "DND5E.ItemTypeSubclass": "Subclass",
-// "DND5E.ItemTypeSubclassPl": "Subclasses",
-// "DND5E.ItemTypeWeapon": "Weapon",
-// "DND5E.ItemTypeWeaponPl": "Weapons",
 
 export const inventoryPlusItemTypeCollection = <InventoryPlusItemType[]>[
   {id:'', name:'None', namePl:'None', img:'', isSelected: true, isInventory: true},

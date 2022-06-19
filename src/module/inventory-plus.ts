@@ -28,7 +28,6 @@ export class InventoryPlus {
 
   initCategorys() {
     let flagCategorys = <Record<string, Category>>this.actor.getFlag(CONSTANTS.MODULE_NAME, InventoryPlusFlags.CATEGORYS);
-    // const flagDisableDefaultCategories = <boolean>this.actor.getFlag(CONSTANTS.MODULE_NAME, InventoryPlusFlags.DISABLE_DEFAULT_CATEGORIES);
     const flagDisableDefaultCategories = false;
     if (flagCategorys === undefined && !flagDisableDefaultCategories) {
       debug(`flagCategory=false && flagDisableDefaultCategories=false`);
@@ -264,7 +263,6 @@ export class InventoryPlus {
     /*
      *  add remove default categories
      */
-    // const flagDisableDefaultCategories = this.actor.getFlag(CONSTANTS.MODULE_NAME, InventoryPlusFlags.DISABLE_DEFAULT_CATEGORIES);
     const flagDisableDefaultCategories = true; // IS ALWAYS FALSE FOR NOW
     const labelDialogDisableDefaultCategories = flagDisableDefaultCategories
       ? i18n(`${CONSTANTS.MODULE_NAME}.inv-plus-dialog.reenabledefaultcategories`)
@@ -406,7 +404,6 @@ export class InventoryPlus {
                   }
                   this.saveCategorys();
                 }
-                // await this.actor.setFlag(CONSTANTS.MODULE_NAME, InventoryPlusFlags.DISABLE_DEFAULT_CATEGORIES, !f);
               },
             },
             cancel: {
@@ -432,12 +429,8 @@ export class InventoryPlus {
       const explicitTypesFromList = inventoryPlusItemTypeCollection.filter((t) => {
         return t.isInventory;
       });
-      // const defaultTypesFromList = inventoryPlusItemTypeCollection.filter((t) => {
-      //   return t.isInventory;
-      // });
       const template = await renderTemplate(`modules/${CONSTANTS.MODULE_NAME}/templates/categoryDialog.hbs`, {
-        explicitTypes: explicitTypesFromList,
-        // defaultTypes: defaultTypesFromList
+        explicitTypes: explicitTypesFromList
       });
       const d = new Dialog({
         title: i18n(`${CONSTANTS.MODULE_NAME}.inv-plus-dialog.creatingnewinventorycategory`),
@@ -449,7 +442,6 @@ export class InventoryPlus {
             callback: async (html: JQuery<HTMLElement>) => {
               const input = html.find('input');
               const selectExplicitTypes = $(<HTMLElement>html.find('select[name="explicitTypes"')[0]);
-              // const selectDefaultType = $(<HTMLElement>html.find('select[name="defaultType"')[0]);
               this.createCategory(input,selectExplicitTypes); // ,selectDefaultType
             },
           },
@@ -475,23 +467,6 @@ export class InventoryPlus {
     /*
      *  add removal function
      */
-
-    /*
-    const createBtnsTmp:JQuery<HTMLElement> = html.find('.inventory .item-create');
-    if(!createBtnsTmp || createBtnsTmp.length == 0){
-      const createItemCategoryBtn = 
-      $(`<div class="item-controls flexrow">
-          <a class="item-control item-create" title="${i18n("DND5E.ItemCreate")}" 
-          data-type="weapon"><i class="fas fa-plus"></i> ${i18n("DND5E.Add")}</a>
-      </div>`);
-      createItemCategoryBtn.click((ev) => {
-        this._onItemCreate(ev);
-      });
-      const parent = html.find('.inventory .item-action').parent();
-      $(parent).append(createItemCategoryBtn);
-      parent.append(createItemCategoryBtn);
-    }
-    */
     const createBtns:JQuery<HTMLElement> = html.find('.inventory .item-create');
     for (const createBtn of createBtns) {
       const type = <string>createBtn.dataset.type;
@@ -607,20 +582,9 @@ export class InventoryPlus {
       const editCategoryBtn = $(`<a class="inv-plus-stuff customize-category" data-type="${type}"><i class="fas fa-edit"></i></a>`).click(
         async (ev) => {
           const catTypeTmp = <string>ev.target.dataset.type || <string>ev.currentTarget.dataset.type;
-          // const defaultTypesTmp = inventoryPlusItemTypeCollection.filter((t) => {
-          //   return t.isInventory;
-          // });
-          // const newArr = defaultTypesTmp.map((obj:InventoryPlusItemType) => {
-          //   if (catTypeTmp == obj.id) {
-          //     return { ...obj, isSelected: true };
-          //   } else {
-          //     return { ...obj, isSelected: false };
-          //   }
-          // });
 
           const currentCategoryTmp = duplicateExtended(<Category>this.customCategorys[catTypeTmp]);
           currentCategoryTmp.label = i18n(currentCategoryTmp.label);
-          // currentCategoryTmp.defaultTypes = newArr;
 
           const template = await renderTemplate(
             `modules/${CONSTANTS.MODULE_NAME}/templates/categoryDialog.hbs`,
@@ -644,11 +608,6 @@ export class InventoryPlus {
                       currentCategory[input.name] = value;
                     }
                   }
-
-                  // const selectDefaultType = 
-                  //   <string>(<string[]>$(<HTMLElement>html.find('select[name="defaultType"')[0])?.val())[0];
-
-                  // currentCategory.dataset.type = selectDefaultType;
 
                   const currentTypeSelectedS = 
                     <string[]>$(<HTMLElement>html.find('select[name="explicitTypes"')[0])?.val();
@@ -806,9 +765,6 @@ export class InventoryPlus {
         newCategory[input.name] = value;
       }
     }
-
-    // const defaultTypeSelected = (<string[]>selectDefaultType.val())[0];
-    // newCategory.dataset.type = <string>defaultTypeSelected;
 
     const typesSelected = <string[]>selectExplicitTypes.val();
     const explicitTypesFromListTmp = <InventoryPlusItemType[]>[];
@@ -1006,16 +962,15 @@ export class InventoryPlus {
     await this.actor.setFlag(CONSTANTS.MODULE_NAME, InventoryPlusFlags.CATEGORYS, this.customCategorys);
   }
 
-    /**
+  /**
    * Handle creating a new Owned Item for the actor using initial data defined in the HTML dataset.
    * @param {Event} event          The originating click event.
    * @returns {Promise<Item5e[]>}  The newly created item.
    * @private
    */
-  async _onItemCreate(ev,type:string) {
-      //event.preventDefault();
-      const header = ev.currentTarget;
-      //const type = header.dataset.type;
+  async _onItemCreate(event,type:string) {
+      event.preventDefault();
+      const header = event.currentTarget;
 
       // Check to make sure the newly created class doesn't take player over level cap
       //@ts-ignore
@@ -1053,82 +1008,6 @@ export class InventoryPlus {
       const dropedItem = <Item>items[0];
 
       await dropedItem.setFlag(CONSTANTS.MODULE_NAME,InventoryPlusFlags.CATEGORY,type);
-      /*
-      let currentCategoryFounded:Category|null = null;
-      for (const key in this.customCategorys) {
-        const category = <Category>this.customCategorys[key];
-        if(category && !category?.label){
-          continue;
-        }
-        if(category.items){
-          for(const item of category.items){
-            if(item._id === dropedItem.id){
-              currentCategoryFounded = category;
-              break;
-            }
-          }
-        }
-        if(currentCategoryFounded){
-          break;
-        }
-      }
-
-      const itemsTmp = duplicateExtended(currentCategoryFounded?.items).filter((i) => {
-        return i._id != dropedItem.id;
-      });
-      setProperty(<Category>this.customCategorys[<string>currentCategoryFounded?.dataset.type],'items',itemsTmp);
-
-      const itemsTmp2 = duplicateExtended(this.customCategorys[type]?.items);
-      itemsTmp2.push(dropedItem.data);
-      setProperty(<Category>this.customCategorys[type],'items',itemsTmp2);
-      
-      this.saveCategorys();
-      */
-
-      /*
-      const targetType = type;
-
-      // changing item list
-      //@ts-ignore
-      let itemType = this.actor.sheet.inventoryPlus.getItemType(itemData); // data.data
-      if (itemType !== targetType) {
-        itemType = targetType;
-      }
-
-      // reordering items
-
-      // Get the drag source and its siblings
-      
-      const siblings = <Item[]>this.actor.items.filter((i: Item) => {
-        return type === itemType && i.data._id !== dropedItem.data._id;
-      });
-      // Get the drop target
-      const dropTargetTmp = $(ev.currentTarget.parentNode.parentNode.parentNode).find('.item');
-      const dropTarget = dropTargetTmp.length > 0 ? dropTargetTmp[dropTargetTmp.length-1] : null;
-      let targetId: string | null = null;
-      if(dropTarget){
-        targetId = dropTarget ? <string>dropTarget.dataset.itemId : null;
-      }
-      if(!targetId){
-        targetId = $(ev.currentTarget.parentNode.parentNode.parentNode)[0].closest('.item');
-      }
-      const target = <Item>siblings.find((s) => s.data._id === targetId);
-
-      // Perform the sort
-      const sortUpdates = SortingHelpers.performIntegerSort(dropedItem, { target: target, siblings });
-      let updateData: any[] = sortUpdates.map((u) => {
-        const update: any = u.update;
-        update._id = u.target.data._id;
-        return update;
-      });
-
-      updateData = updateData.filter((i) => {
-        return i._id != null && i._id != undefined && i._id != '';
-      });
-
-      // Perform the update
-      this.actor.updateEmbeddedDocuments('Item', updateData);
-      */
   }
 
 }
