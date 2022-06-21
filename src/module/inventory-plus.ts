@@ -31,9 +31,9 @@ export class InventoryPlus {
   static processInventory(app, actor: Actor, inventory: Category[]) {
     if (app.inventoryPlus === undefined) {
       app.inventoryPlus = new InventoryPlus();
-      app.inventoryPlus.init(actor);
+      (<InventoryPlus>app.inventoryPlus).init(actor);
     }
-    return (<InventoryPlus>app.inventoryPlus).prepareInventory(inventory);
+    return (<InventoryPlus>app.inventoryPlus).prepareInventory(actor, inventory);
   }
 
   init(actor: Actor) {
@@ -286,9 +286,9 @@ export class InventoryPlus {
 
     // ONly gm can do this
 
-    if (game.user?.isGM) {
+    if (this.actor.isOwner) {
       const status = flagDisableDefaultCategories
-        ? i18n(`inventory-plus.inv-plus-dialog.removedefaulcategorieswarnmessagereenable`)
+        ? i18n(`inventory-plus.inv-plus-dialog.reenabledefaultcategories`)
         : i18n(`inventory-plus.inv-plus-dialog.removedefaulcategorieswarnmessagedisable`);
       const msg = i18nFormat(`inventory-plus.inv-plus-dialog.removedefaulcategorieswarnmessage`, { status: status });
       const removeDefaultCategoriesBtn = $(
@@ -301,7 +301,7 @@ export class InventoryPlus {
           },
         );
         const d = new Dialog({
-          title: i18n(`${CONSTANTS.MODULE_NAME}.inv-plus-dialog.removedefaultcategories`),
+          title: labelDialogDisableDefaultCategories,
           content: template,
           buttons: {
             accept: {
@@ -484,7 +484,7 @@ export class InventoryPlus {
       // const physicalItems = ['weapon', 'equipment', 'consumable', 'tool', 'backpack', 'loot'];
       // if (physicalItems.indexOf(type) === -1) {
       const parent = <ParentNode>createBtn.parentNode;
-
+      const categoryName = this.customCategorys[type]?.label;
       const removeCategoryBtn = $(`<div class="item-controls flexrow">
         <a class="item-control item-create" 
           title="${i18n('DND5E.ItemCreate')}" 
@@ -508,8 +508,14 @@ export class InventoryPlus {
           ? i18n(`inventory-plus.inv-plus-dialog.removedefaulcategorieswarnmessagereenable`)
           : i18n(`inventory-plus.inv-plus-dialog.removedefaulcategorieswarnmessagedisable`);
         const msg = i18nFormat(`inventory-plus.inv-plus-dialog.removedefaulcategorieswarnmessage`, { status: status });
+        const msgDeleteCategory = i18nFormat(`inventory-plus.inv-plus-dialog.confirmationdeletecategory`, {
+          categoryName: categoryName,
+        });
+        const msgBackupActor = i18n(`inventory-plus.inv-plus-dialog.removedefaulcategorieswarnmessage2`);
         const template = await renderTemplate(`modules/${CONSTANTS.MODULE_NAME}/templates/removeCategoryDialog.hbs`, {
           msg: msg,
+          msgDeleteCategory: msgDeleteCategory,
+          msgBackupActor: msgBackupActor,
         });
         const d = new Dialog({
           title: i18n(`${CONSTANTS.MODULE_NAME}.inv-plus-dialog.deletecategory`),
@@ -707,36 +713,41 @@ export class InventoryPlus {
         }
       }
 
-      if (currentCategory.maxWeight > 0) {
-        if (currentCategory.ignoreWeight) {
-          icon = icon + `<i class="fas fa-feather"></i>`;
-        } else if (currentCategory.ownWeight > 0) {
-          icon = icon + `<i class="fas fa-weight-hanging"></i>`;
-        } else {
-          icon = icon + `<i class="fas fa-balance-scale-right"></i>`;
-        }
-        const weight = <number>this.getCategoryItemWeight(type);
-        const weightUnit = game.settings.get('dnd5e', 'metricWeightUnits')
-          ? game.i18n.localize('DND5E.AbbreviationKgs')
-          : game.i18n.localize('DND5E.AbbreviationLbs');
-        const weightValue = `(${weight}/${currentCategory.maxWeight} ${weightUnit})`;
-
-        const weightString = $(`<label class="category-weight"> ${icon} ${weightValue}</label>`);
-        header.find('h3').append(weightString);
-      } else {
-        const weight = <number>this.getCategoryItemWeight(type);
-        const weightUnit = game.settings.get('dnd5e', 'metricWeightUnits')
-          ? game.i18n.localize('DND5E.AbbreviationKgs')
-          : game.i18n.localize('DND5E.AbbreviationLbs');
-        const weightValue = `(${weight}/${currentCategory.maxWeight} ${weightUnit})`;
-
-        const weightString = $(`<label class="category-weight"> ${icon}</label>`);
-        header.find('h3').append(weightString);
+      // if (currentCategory.maxWeight > 0) {
+      if (currentCategory.ignoreWeight) {
+        icon = icon + `<i class="fas fa-feather"></i>`;
+      } else if (currentCategory.ownWeight > 0) {
+        icon = icon + `<i class="fas fa-weight-hanging"></i>`;
+      } else if (currentCategory.maxWeight > 0) {
+        icon = icon + `<i class="fas fa-balance-scale-right"></i>`;
       }
+
+      const weight = <number>this.getCategoryItemWeight(type);
+      const weightUnit = game.settings.get('dnd5e', 'metricWeightUnits')
+        ? game.i18n.localize('DND5E.AbbreviationKgs')
+        : game.i18n.localize('DND5E.AbbreviationLbs');
+      const weightValue =
+        currentCategory.maxWeight > 0
+          ? `(${weight}/${currentCategory.maxWeight} ${weightUnit})`
+          : `(${weight} ${weightUnit})`;
+
+      const weightString = $(`<label class="category-weight"> ${icon} ${weightValue}</label>`);
+      header.find('h3').append(weightString);
+      // }
+      // else {
+      //   const weight = <number>this.getCategoryItemWeight(type);
+      //   const weightUnit = game.settings.get('dnd5e', 'metricWeightUnits')
+      //     ? game.i18n.localize('DND5E.AbbreviationKgs')
+      //     : game.i18n.localize('DND5E.AbbreviationLbs');
+      //   const weightValue = `(${weight} ${weightUnit})`;
+
+      //   const weightString = $(`<label class="category-weight"> ${icon} ${weightValue}</label>`);
+      //   header.find('h3').append(weightString);
+      // }
     }
   }
 
-  prepareInventory(inventory: Category[]) {
+  prepareInventory(actor: Actor, inventory: Category[]) {
     const sections = <Record<string, Category>>duplicateExtended(this.customCategorys);
 
     for (const id in sections) {
@@ -754,6 +765,31 @@ export class InventoryPlus {
         }
       }
     }
+    // TODO WHY THIS HIDE THE WEIGHT LABEL OF ITEMS ????
+    /*
+    const items = actor.data.items.contents;
+    for (const section of inventory) {
+      for (const item of <Item[]>items) { 
+        if(!item){
+          continue;
+        }   
+        let type = this.getItemType(item.data);
+        if (sections[type] === undefined) {
+          type = item.type;
+        }
+        if(!sections[type] && 
+          section.explicitTypes?.length > 0 && 
+          section.explicitTypes[0]?.id != ''){
+          type = section.explicitTypes[0];
+        }
+        if (sections[type]) {
+          (<Category>sections[type]).items?.push(duplicateExtended(item.data));
+        }else{
+          warn(`Cannot retrieve a category for the type ${type}, for item ${item.data.name} make sure to create at least one category with that explicit type`);
+        }
+      }
+    }
+    */
 
     // sort items within sections
     for (const id in sections) {

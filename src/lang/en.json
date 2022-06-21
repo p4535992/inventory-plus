@@ -66,7 +66,7 @@
   "inventory-plus.inv-plus-dialog.removedefaulcategorieswarnmessage3": "Every item under a default category with the id 'weapon', 'equipment', 'consumable', 'tool', 'backpack', 'loot' will be deleted, so be aware if you have renamed a default category, before apply this move every item you need to a customized category.",
   "inventory-plus.inv-plus-dialog.removedefaulcategorieswarnmessagereenable": "RE-ENABLE",
   "inventory-plus.inv-plus-dialog.removedefaulcategorieswarnmessagedisable": "DISABLE",
-  "inventory-plus.inv-plus-dialog.confirmationdeletecategory": "Are you sure you want to delete this category ? Beware all the items in this category will be 'hidden' (not deleted), but it's advisable to move every item in this category to another before go further with this action.",
+  "inventory-plus.inv-plus-dialog.confirmationdeletecategory": "Are you sure you want to delete the category '{categoryName}'? Beware all the items in this category will be 'hidden' (not deleted), but it's advisable to move every item in this category to another before go further with this action.",
 
   "inventory-plus.notEnoughCurrency": "You don't have enough of the following currencies",
   "inventory-plus.howManyItem": "How many items do you want to move?",

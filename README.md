@@ -16,6 +16,11 @@
 
 A Foundry VTT module to enhance the dnd5e inventory. Allows to customize your Inventory in various ways, transfer items instead duplicate between character sheet, ordering the items, and many other feature hidden under the hood.
 
+- Delete every category even the default ones of dnd5e
+- Add item in every category even the non-default ones of dnd5e
+- Specify what type of item can be put on a category
+- Set up a max weight for the category
+
 ![example](./wiki/preview.jpg)
 
 ## NOTE: If you are a javascript developer and not a typescript developer, you can just use the javascript files under the dist folder
@@ -58,7 +63,9 @@ Due to collisions, code maintenance problems, and **reduction in the number of m
 
 **Feature: Equipment Multiplier:** Apply a weight multiplier to equipped items
 
-**[Only with 'Feature: Equipment Multiplier' enabled] Equipment Multiplier value:** What weight multiplier to apply to equipped items
+**[Only with 'Feature: Equipment Multiplier' enabled] Equipment Multiplier value:** What weight multiplier to apply to equipped items. ATTENTION: If the module 'Variant Encumbrance' is present and active this feature is disabled by default if the module settings 'Feature: Integration with Variant Encumbrance' is enabled",
+
+**Feature: Integration with Variant Encumbrance**: If enabled it will calculate the weight with the API of the module 'VariantEncumbrance' for a better and smarter calculation of the weight, if the module is present and active
 
 ## API
 
@@ -72,7 +79,7 @@ A method to calculate the weight (the one from the module filters) on the actor
 | --- | --- | --- | --- |
 | actorIdOrName | <code>string</code> | The actor id or name (if founded) | <code>undefined</code> |
 
-### game.modules.get('inventory-plus').api.calculateWeight(inventory: Category[], currency: number) ⇒ <code>number</code>
+### [REMOVED] game.modules.get('inventory-plus').api.calculateWeight(inventory: Category[], currency: number) ⇒ <code>number</code>
 
 **Returns**: <code>number</code>
 

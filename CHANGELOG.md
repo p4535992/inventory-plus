@@ -1,3 +1,12 @@
+### 0.5.9
+
+- Bug fix bad weight calculatin
+- New feature: Delete every category even the default ones of dnd5e
+- New Feature: Add item in every category even the non-default ones of dnd5e
+- New Feature: Specify what type of item can be put on a category
+- Add some icons for better eye-contact
+- [BREAKING CHANGES] Re-write many part of the code
+
 ### 0.5.8
 
 - Bug fix: apply internationalization languages

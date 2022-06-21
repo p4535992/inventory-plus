@@ -42,7 +42,14 @@ export class EncumbranceBulkData extends EncumbranceData {
 }
 
 export const inventoryPlusItemTypeCollection = <InventoryPlusItemType[]>[
-  { id: '', name: 'None', namePl: 'None', img: '', isSelected: true, isInventory: true },
+  {
+    id: '',
+    name: 'None',
+    namePl: 'None',
+    img: '',
+    isSelected: true,
+    isInventory: true,
+  },
   {
     id: 'weapon',
     name: 'DND5E.ItemTypeWeapon',

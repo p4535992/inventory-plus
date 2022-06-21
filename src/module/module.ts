@@ -62,15 +62,20 @@ export const readyHooks = async (): Promise<void> => {
       const newInventory = InventoryPlus.processInventory(this, actor, sheetData.inventory);
       sheetData.inventory = newInventory;
       const encumbrance5e = <EncumbranceDnd5e>API.calculateWeightFromActor(actor);
+      /*
       if (
         game.modules.get('variant-encumbrance-dnd5e')?.active &&
         game.settings.get(CONSTANTS.MODULE_NAME, 'enableIntegrationWithVariantEncumbrance')
       ) {
         // DO NOTHING
       } else {
-        if (!encumbrance5e) {
+        if (encumbrance5e) {
           sheetData.data.attributes.encumbrance = encumbrance5e;
         }
+      }
+      */
+      if (encumbrance5e) {
+        sheetData.data.attributes.encumbrance = encumbrance5e;
       }
       return sheetData;
     },

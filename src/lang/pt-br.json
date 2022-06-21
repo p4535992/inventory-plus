@@ -66,7 +66,7 @@
   "inventory-plus.inv-plus-dialog.removedefaulcategorieswarnmessage3": "Cada item em uma categoria padrão com o id 'arma', 'equipamento', 'consumível', 'ferramenta', 'mochila', 'saque' será excluído , portanto, esteja ciente de que você renomeou uma categoria padrão, antes de aplicar esta mudança, mova todos os itens necessários para uma categoria personalizada.",
   "inventory-plus.inv-plus-dialog.removedefaulcategorieswarnmessagereenable": "RE-ENABLE",
   "inventory-plus.inv-plus-dialog.removedefaulcategorieswarnmessagedisable": "DISABLE",
-  "inventory-plus.inv-plus-dialog.confirmationdeletecategory": "Tem certeza de que deseja excluir esta categoria? Cuidado, todos os itens nesta categoria serão 'ocultos' (não excluídos), mas é aconselhável mover todos os itens esta categoria para outra antes de ir mais longe com esta ação.",
+  "inventory-plus.inv-plus-dialog.confirmationdeletecategory": "Tem certeza de que deseja excluir categoria '{categoryName}'? Cuidado, todos os itens nesta categoria serão 'ocultos' (não excluídos), mas é aconselhável mover todos os itens esta categoria para outra antes de ir mais longe com esta ação.",
 
   "inventory-plus.notEnoughCurrency": "Você não tem o suficiente das seguintes moedas",
   "inventory-plus.howManyItem": "Quantos itens você deseja mover?",

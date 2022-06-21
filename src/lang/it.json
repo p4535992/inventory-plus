@@ -65,7 +65,7 @@
   "inventory-plus.inv-plus-dialog.removedefoulcategorieswarnmessage3": "Ogni oggetto in una categoria predefinita con ID 'arma', 'equipaggiamento', 'materiale di consumo', 'strumento', 'zaino', 'bottino' sarà eliminato , quindi tieni presente se hai rinominato una categoria predefinita, prima di applicare questa mossa a tutti gli elementi di cui hai bisogno a una categoria personalizzata.",
   "inventory-plus.inv-plus-dialog.removedefoulcategorieswarnmessagereenable": "RI-ABILITA",
   "inventory-plus.inv-plus-dialog.removedefoulcategorieswarnmessagedisable": "DISABILITA",
-  "inventory-plus.inv-plus-dialog.confirmationdeletecategory": "Sei sicuro di voler eliminare questa categoria? Attenzione, tutti gli elementi in questa categoria saranno 'nascosti' (non eliminati), ma è consigliabile spostare ogni elemento in questa categoria in un'altra prima di andare oltre con questa azione.",
+  "inventory-plus.inv-plus-dialog.confirmationdeletecategory": "Sei sicuro di voler eliminare la categoria '{categoryName}'? Attenzione, tutti gli elementi in questa categoria saranno 'nascosti' (non eliminati), ma è consigliabile spostare ogni elemento in questa categoria in un'altra prima di andare oltre con questa azione.",
 
   "inventory-plus.notEnoughCurrency": "Non hai abbastanza delle seguenti valute",
   "inventory-plus.howManyItem": "Quanti oggetti vuoi spostare?",
