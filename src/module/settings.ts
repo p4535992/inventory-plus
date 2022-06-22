@@ -2,13 +2,13 @@ import CONSTANTS from './constants';
 import { dialogWarning, i18n, warn } from './lib/lib';
 
 export const registerSettings = function (): void {
-  // game.settings.registerMenu(CONSTANTS.MODULE_NAME, 'resetAllSettings', {
-  //   name: `${CONSTANTS.MODULE_NAME}.setting.reset.name`,
-  //   hint: `${CONSTANTS.MODULE_NAME}.setting.reset.hint`,
-  //   icon: 'fas fa-coins',
-  //   type: ResetSettingsDialog,
-  //   restricted: true,
-  // });
+  game.settings.registerMenu(CONSTANTS.MODULE_NAME, 'resetAllSettings', {
+    name: `${CONSTANTS.MODULE_NAME}.setting.reset.name`,
+    hint: `${CONSTANTS.MODULE_NAME}.setting.reset.hint`,
+    icon: 'fas fa-coins',
+    type: ResetSettingsDialog,
+    restricted: true,
+  });
 
   // ===================================================================
 
@@ -19,6 +19,19 @@ export const registerSettings = function (): void {
   game.settings.register(CONSTANTS.MODULE_NAME, 'enableIntegrationWithVariantEncumbrance', {
     name: `${CONSTANTS.MODULE_NAME}.setting.enableIntegrationWithVariantEncumbrance.name`,
     hint: `${CONSTANTS.MODULE_NAME}.setting.enableIntegrationWithVariantEncumbrance.hint`,
+    scope: 'world',
+    config: true,
+    type: Boolean,
+    default: true,
+  });
+
+  // =================================
+  // INTEGRATION ITEM COLLECTION
+  // =================================
+
+  game.settings.register(CONSTANTS.MODULE_NAME, 'useEquippedUnequippedItemCollectionFeature', {
+    name: `${CONSTANTS.MODULE_NAME}.setting.useEquippedUnequippedItemCollectionFeature.name`,
+    hint: `${CONSTANTS.MODULE_NAME}.setting.useEquippedUnequippedItemCollectionFeature.hint`,
     scope: 'world',
     config: true,
     type: Boolean,
@@ -87,7 +100,7 @@ export const registerSettings = function (): void {
   });
 
   // =====================================
-  // ENCUMBRANCE EQUIPPED MUTLIPLIER
+  // ENCUMBRANCE EQUIPPED MULTIPLIER
   // ======================================
 
   game.settings.register(CONSTANTS.MODULE_NAME, 'enableEquipmentMultiplier', {
@@ -192,6 +205,116 @@ async function applyDefaultSettings() {
 
 function otherSettings(apply = false) {
   return {
+    // =================================
+    // INTEGRATION VARIANT ENCUMBRANCE
+    // =================================
+
+    enableIntegrationWithVariantEncumbrance: {
+      name: `${CONSTANTS.MODULE_NAME}.setting.enableIntegrationWithVariantEncumbrance.name`,
+      hint: `${CONSTANTS.MODULE_NAME}.setting.enableIntegrationWithVariantEncumbrance.hint`,
+      scope: 'world',
+      config: true,
+      type: Boolean,
+      default: true,
+    },
+
+    // =================================
+    // INTEGRATION ITEM COLLECTION
+    // =================================
+
+    useEquippedUnequippedItemCollectionFeature: {
+      name: `${CONSTANTS.MODULE_NAME}.setting.useEquippedUnequippedItemCollectionFeature.name`,
+      hint: `${CONSTANTS.MODULE_NAME}.setting.useEquippedUnequippedItemCollectionFeature.hint`,
+      scope: 'world',
+      config: true,
+      type: Boolean,
+      default: true,
+    },
+
+    // =================================
+    // INTEGRATION TRANSFER STUFF
+    // =================================
+
+    enableItemTransfer: {
+      name: `${CONSTANTS.MODULE_NAME}.setting.enableItemTransfer.name`,
+      hint: `${CONSTANTS.MODULE_NAME}.setting.enableItemTransfer.hint`,
+      scope: 'world',
+      config: true,
+      type: Boolean,
+      default: false,
+    },
+
+    enableCurrencyTransfer: {
+      name: `${CONSTANTS.MODULE_NAME}.setting.enableCurrencyTransfer.name`,
+      hint: `${CONSTANTS.MODULE_NAME}.setting.enableCurrencyTransfer.hint`,
+      scope: 'world',
+      config: true,
+      type: Boolean,
+      default: true,
+    },
+
+    actorTransferSame: {
+      name: `${CONSTANTS.MODULE_NAME}.setting.actorTransferSame.name`,
+      hint: `${CONSTANTS.MODULE_NAME}.setting.actorTransferSame.hint`,
+      scope: 'world',
+      config: true,
+      type: Boolean,
+      default: true,
+    },
+
+    actorTransferPairs: {
+      name: `${CONSTANTS.MODULE_NAME}.setting.actorTransferPairs.name`,
+      hint: `${CONSTANTS.MODULE_NAME}.setting.actorTransferPairs.hint`,
+      scope: 'world',
+      config: true,
+      type: String,
+      default: '',
+      onChange: (value: string) => {
+        try {
+          JSON.parse('{' + value + '}');
+        } catch (err: any) {
+          ui.notifications.error(err.message);
+          throw err;
+        }
+      },
+    },
+
+    // =================================
+    // INTEGRATION SORTER 5E
+    // =================================
+
+    enableInventorySorter: {
+      name: `${CONSTANTS.MODULE_NAME}.setting.enableInventorySorter.name`,
+      hint: `${CONSTANTS.MODULE_NAME}.setting.enableInventorySorter.hint`,
+      scope: 'client',
+      config: true,
+      default: false,
+      type: Boolean,
+    },
+
+    // =====================================
+    // ENCUMBRANCE EQUIPPED MULTIPLIER
+    // ======================================
+
+    enableEquipmentMultiplier: {
+      name: `${CONSTANTS.MODULE_NAME}.setting.enableEquipmentMultiplier.name`,
+      hint: `${CONSTANTS.MODULE_NAME}.setting.enableEquipmentMultiplier.hint`,
+      scope: 'client',
+      config: true,
+      default: false,
+      type: Boolean,
+    },
+
+    equipmentMultiplier: {
+      name: `${CONSTANTS.MODULE_NAME}.setting.equipmentMultiplier.name`,
+      hint: `${CONSTANTS.MODULE_NAME}.setting.equipmentMultiplier.hint`,
+      scope: 'client',
+      config: true,
+      default: 1,
+      type: Number,
+    },
+
+    // ===================================================================
     debug: {
       name: `${CONSTANTS.MODULE_NAME}.setting.debug.name`,
       hint: `${CONSTANTS.MODULE_NAME}.setting.debug.hint`,

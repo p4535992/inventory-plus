@@ -26,6 +26,9 @@
   "inventory-plus.setting.enableIntegrationWithVariantEncumbrance.name": "Feature: Integration with Variant Encumbrance",
   "inventory-plus.setting.enableIntegrationWithVariantEncumbrance.hint": "If enabled it will calculate the weight with the API of the module 'VariantEncumbrance' for a better and smarter calculation of the weight, if the module is present and active",
 
+  "inventory-plus.setting.useEquippedUnequippedItemCollectionFeature.name": "Feature: Integration with Item Collection",
+  "inventory-plus.setting.useEquippedUnequippedItemCollectionFeature.hint": "Use equipped/unequipped feature of the 'ItemCollection/Item Container' module for the backpack. Bags can be unequipped by players or GM, so that their reported weight drops to 0 in your inventory (only bags with a capacity other than 0 can be unequipped). ATTENTION: If the module 'Variant Encumbrance' is present and active this feature is disabled by default if the module settings 'Feature: Integration with Variant Encumbrance' is enabled.",
+
   "inventory-plus.dialogs.resetsettings.title": "Reset Module Settings",
   "inventory-plus.dialogs.resetsettings.content": "Are you sure you want to reset all of the module settings to the current system's defaults? <strong>THIS CANNOT BE UNDONE!</strong>",
   "inventory-plus.dialogs.resetsettings.confirm": "Reset Module Settings",

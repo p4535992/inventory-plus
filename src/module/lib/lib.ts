@@ -825,3 +825,95 @@ export function calculateEncumbranceWithEquippedMultiplier(actorData) {
   const pct = Math.clamped((weight * 100) / max, 0, 100);
   return { value: weight, max, pct, encumbered: pct > 200 / 3 };
 }
+
+// ===========================
+// Item Collection/Container SUPPORT
+// ===========================
+
+export function calcWeight(
+  item: Item,
+  useEquippedUnequippedItemCollectionFeature: boolean,
+  { ignoreItems, ignoreTypes } = { ignoreItems: undefined, ignoreTypes: undefined },
+) {
+  if (item.type !== 'backpack' || !item.data.flags.itemcollection) return calcItemWeight(item);
+  // if (item.parent instanceof Actor && !item.data.data.equipped) return 0;
+  // MOD 4535992 Removed variant encumbrance take care of this
+  // const useEquippedUnequippedItemCollectionFeature = game.settings.get(
+  //   CONSTANTS.MODULE_NAME,
+  //   'useEquippedUnequippedItemCollectionFeature',
+  // );
+  const isEquipped: boolean =
+    //@ts-ignore
+    (item.data.equipped && item.data.equipped != item.data.data?.equipped
+      ? //@ts-ignore
+        item.data.equipped
+      : //@ts-ignore
+        item.data.data?.equipped) || false;
+  //@ts-ignore
+  if (useEquippedUnequippedItemCollectionFeature && !isEquipped) {
+    return 0;
+  }
+  // END MOD 4535992
+  const weightless = getProperty(item, 'data.data.capacity.weightless') ?? false;
+  if (weightless) return getProperty(item, 'data.flags.itemcollection.bagWeight') ?? 0;
+  return (
+    calcItemWeight(item, { ignoreItems, ignoreTypes }) + (getProperty(item, 'data.flags.itemcollection.bagWeight') ?? 0)
+  );
+}
+
+function calcItemWeight(item: Item, { ignoreItems, ignoreTypes } = { ignoreItems: undefined, ignoreTypes: undefined }) {
+  //@ts-ignore
+  if (item.type !== 'backpack' || item.items === undefined) return _calcItemWeight(item);
+  //@ts-ignore
+  let weight = item.items.reduce((acc, item) => {
+    //@ts-ignore
+    if (ignoreTypes?.some((name) => item.name.includes(name))) return acc;
+    //@ts-ignore
+    if (ignoreItems?.includes(item.name)) return acc;
+    return acc + (item.calcWeight() ?? 0); // TODO convert this in a static method ???
+  }, (item.type === 'backpack' ? 0 : _calcItemWeight(item)) ?? 0);
+  // [Optional] add Currency Weight (for non-transformed actors)
+  //@ts-ignore
+  if (game.settings.get('dnd5e', 'currencyWeight') && item.data.data.currency) {
+    //@ts-ignore
+    const currency = item.data.data.currency ?? {};
+    const numCoins = <number>Object.values(currency).reduce((val: any, denom: any) => (val += Math.max(denom, 0)), 0);
+
+    let currencyPerWeight = 0;
+    if (game.settings.get('dnd5e', 'metricWeightUnits')) {
+      //@ts-ignore
+      currencyPerWeight = CONFIG.DND5E.encumbrance.currencyPerWeight.metric;
+    } else {
+      //@ts-ignore
+      currencyPerWeight = CONFIG.DND5E.encumbrance.currencyPerWeight.imperial;
+    }
+
+    weight = Math.round(weight + numCoins / currencyPerWeight);
+  } else {
+    //@ts-ignore
+    const currency = item.data.data.currency ?? {};
+    const numCoins = currency ? Object.keys(currency).reduce((val, denom) => val + currency[denom], 0) : 0;
+    weight = Math.round(weight + numCoins / 50);
+  }
+  return weight;
+}
+
+function _calcItemWeight(item: Item) {
+  // const quantity = item.data.data.quantity || 1;
+  // const weight = item.data.data.weight || 0;
+  const quantity =
+    //@ts-ignore
+    (item.data.quantity && item.data.quantity != item.data.data?.quantity
+      ? //@ts-ignore
+        item.data.quantity
+      : //@ts-ignore
+        item.data.data?.quantity) || 0;
+  const weight =
+    //@ts-ignore
+    (item.data.weight && item.data.weight != item.data.data?.weight
+      ? //@ts-ignore
+        item.data.weight
+      : //@ts-ignore
+        item.data.data?.weight) || 0;
+  return Math.round(weight * quantity * 100) / 100;
+}

@@ -2,7 +2,7 @@ import type { ItemData } from '@league-of-foundry-developers/foundry-vtt-types/s
 import CONSTANTS from './constants';
 import type { InventoryPlus } from './inventory-plus';
 import { Category, EncumbranceData, EncumbranceDnd5e, InventoryPlusFlags } from './inventory-plus-models';
-import { debug, is_real_number, warn } from './lib/lib';
+import { calcWeight, debug, is_real_number, warn } from './lib/lib';
 
 const API = {
   inventoryPlus: <InventoryPlus>{},
@@ -26,9 +26,9 @@ const API = {
       game.modules.get('variant-encumbrance-dnd5e')?.active &&
       game.settings.get(CONSTANTS.MODULE_NAME, 'enableIntegrationWithVariantEncumbrance')
     ) {
-      const encumbranceData = <
-        EncumbranceData //@ts-ignore
-      >game.modules.get('variant-encumbrance-dnd5e')?.api.calculateWeightOnActor(actorEntity);
+      const encumbranceData =
+      //@ts-ignore
+      <EncumbranceData>game.modules.get('variant-encumbrance-dnd5e')?.api.calculateWeightOnActor(actorEntity);
       const encumbrane5e = encumbranceData.encumbrance;
       return encumbrane5e;
     }
@@ -41,15 +41,20 @@ const API = {
         inventoryItems.push(im);
       }
     }
-    // if (!isAlreadyInActor) {
-    //   const im = <Item>game.items?.find((itemTmp: Item) => itemTmp.id === currentItemId);
-    //   if (im && physicalItems.includes(im.type)) {
-    //     inventoryItems.push(im);
-    //   }
-    // }
+
+    const invPlusActive = true;
+
+    // =====================================================
+    // THIS CODE IS FROM THE MODULE 'Variant Encumbrance'
+    // =====================================================
 
     const invPlusCategoriesWeightToAdd = new Map<string, number>();
-    let totalWeight = <number>inventoryItems.reduce((weight, item) => {
+
+    // START TOTAL WEIGHT
+    // Get the total weight from items
+    // const physicalItems = ['weapon', 'equipment', 'consumable', 'tool', 'backpack', 'loot'];
+    // let totalWeight: number = actorEntity.data.items.reduce((weight, item) => {
+    let totalWeight: number = inventoryItems.reduce((weight, item) => {
       if (!physicalItems.includes(item.type)) {
         return weight;
       }
@@ -70,78 +75,129 @@ const API = {
           : //@ts-ignore
             item.data.data?.weight) || 0;
 
-      // let ignoreEquipmentCheck = false;
+      let ignoreEquipmentCheck = false;
 
-      // Retrieve flag 'categorys' from inventory plus module
-      const inventoryPlusCategories = <any[]>actorEntity.getFlag(CONSTANTS.MODULE_NAME, InventoryPlusFlags.CATEGORYS);
-      if (inventoryPlusCategories) {
-        // "weapon", "equipment", "consumable", "tool", "backpack", "loot"
-        let actorHasCustomCategories = false;
-        for (const categoryId in inventoryPlusCategories) {
-          if (
-            // This is a error from the inventory plus developer flags stay on 'item.data' not on the 'item'
-            //@ts-ignore
-            (item.flags &&
-              //@ts-ignore
-              item.flags[CONSTANTS.MODULE_NAME]?.category === categoryId) ||
-            (item.data?.flags &&
-              //@ts-ignore
-              item.data?.flags[CONSTANTS.MODULE_NAME]?.category === categoryId) ||
-            //@ts-ignore
-            (item.data?.data?.flags &&
-              //@ts-ignore
-              item.data?.data?.flags[CONSTANTS.MODULE_NAME]?.category === categoryId)
-          ) {
-            const section = inventoryPlusCategories[categoryId];
-            // Ignore weight
-            if (section?.ignoreWeight == true) {
-              itemWeight = 0;
-              // ignoreEquipmentCheck = true;
-            }
-            // Inherent weight
-            if (Number(section?.ownWeight) > 0) {
-              if (!invPlusCategoriesWeightToAdd.has(categoryId)) {
-                // invPlusCategoriesWeightToAdd.set(categoryId, Number(section.ownWeight));
-                itemWeight = Number(section.ownWeight);
-              }
-            }
-            // EXIT FOR
-            actorHasCustomCategories = true;
-            break;
+      // External modules calculation
+
+      // Start Item container check
+      if (
+        getProperty(item, 'data.flags.itemcollection.bagWeight') != null &&
+        getProperty(item, 'data.flags.itemcollection.bagWeight') != undefined
+      ) {
+        const weightless = getProperty(item, 'data.data.capacity.weightless') ?? false;
+        if (weightless) {
+          itemWeight = getProperty(item, 'data.flags.itemcollection.bagWeight');
+        } else {
+          // itemWeight = calcItemWeight(item) + getProperty(item, 'data.flags.itemcollection.bagWeight');
+          // MOD 4535992 Removed variant encumbrance take care of this
+          const useEquippedUnequippedItemCollectionFeature = <boolean>(
+            game.settings.get(CONSTANTS.MODULE_NAME, 'useEquippedUnequippedItemCollectionFeature')
+          );
+          itemWeight = calcWeight(item, useEquippedUnequippedItemCollectionFeature);
+          //@ts-ignore
+          if (useEquippedUnequippedItemCollectionFeature) {
+            ignoreEquipmentCheck = true;
           }
         }
-        if (!actorHasCustomCategories) {
+      }
+      // End Item container check
+      // Start inventory+ module is active
+      if (invPlusActive) {
+        // Retrieve flag 'categorys' from inventory plus module
+        const inventoryPlusCategories = <any[]>actorEntity.getFlag(CONSTANTS.MODULE_NAME, InventoryPlusFlags.CATEGORYS);
+        if (inventoryPlusCategories) {
+          // "weapon", "equipment", "consumable", "tool", "backpack", "loot"
+          let actorHasCustomCategories = false;
           for (const categoryId in inventoryPlusCategories) {
-            if (item.type === categoryId) {
+            if (
+              // This is a error from the inventory plus developer flags stay on 'item.data' not on the 'item'
+              //@ts-ignore
+              (item.flags &&
+                //@ts-ignore
+                item.flags[CONSTANTS.INVENTORY_PLUS_MODULE_NAME]?.category === categoryId) ||
+              (item.data?.flags &&
+                //@ts-ignore
+                item.data?.flags[CONSTANTS.INVENTORY_PLUS_MODULE_NAME]?.category === categoryId) ||
+              //@ts-ignore
+              (item.data?.data?.flags &&
+                //@ts-ignore
+                item.data?.data?.flags[CONSTANTS.INVENTORY_PLUS_MODULE_NAME]?.category === categoryId)
+            ) {
               const section = inventoryPlusCategories[categoryId];
               // Ignore weight
               if (section?.ignoreWeight == true) {
                 itemWeight = 0;
-                // ignoreEquipmentCheck = true;
+                ignoreEquipmentCheck = true;
               }
               // Inherent weight
               if (Number(section?.ownWeight) > 0) {
                 if (!invPlusCategoriesWeightToAdd.has(categoryId)) {
-                  // invPlusCategoriesWeightToAdd.set(categoryId, Number(section.ownWeight));
-                  itemWeight = Number(section.ownWeight);
+                  invPlusCategoriesWeightToAdd.set(categoryId, Number(section.ownWeight));
                 }
               }
               // EXIT FOR
+              actorHasCustomCategories = true;
               break;
             }
           }
+          if (!actorHasCustomCategories) {
+            for (const categoryId in inventoryPlusCategories) {
+              if (item.type === categoryId) {
+                const section = inventoryPlusCategories[categoryId];
+                // Ignore weight
+                if (section?.ignoreWeight == true) {
+                  itemWeight = 0;
+                  ignoreEquipmentCheck = true;
+                }
+                // Inherent weight
+                if (Number(section?.ownWeight) > 0) {
+                  if (!invPlusCategoriesWeightToAdd.has(categoryId)) {
+                    invPlusCategoriesWeightToAdd.set(categoryId, Number(section.ownWeight));
+                  }
+                }
+                // EXIT FOR
+                break;
+              }
+            }
+          }
         }
+      }
+      // End Inventory+ module is active
+
+      // End External modules calculation
+
+      let appliedWeight = itemQuantity * itemWeight;
+      if (ignoreEquipmentCheck) {
+        return weight + appliedWeight;
+      }
+      const isEquipped: boolean =
+        //@ts-ignore
+        (item.data.equipped && item.data.equipped != item.data.data?.equipped
+          ? //@ts-ignore
+            item.data.equipped
+          : //@ts-ignore
+            item.data.data?.equipped) || false;
+      if (isEquipped) {
         let eqpMultiplyer = 1;
         if (game.settings.get(CONSTANTS.MODULE_NAME, 'enableEquipmentMultiplier')) {
           eqpMultiplyer = <number>game.settings.get(CONSTANTS.MODULE_NAME, 'equipmentMultiplier') || 1;
         }
         //@ts-ignore
-        const e = <number>item.data.data.equipped ? eqpMultiplyer : 1;
-
-        const appliedWeight = itemQuantity * itemWeight * e;
-        return weight + appliedWeight;
+        appliedWeight *= eqpMultiplyer;
+      } else {
+        appliedWeight *= 1;//<number>game.settings.get(CONSTANTS.MODULE_NAME, 'unequippedMultiplier');
       }
+      return weight + appliedWeight;
     }, 0);
+
+    // Start inventory+ module is active 2
+    if (invPlusActive) {
+      for (const [key, value] of invPlusCategoriesWeightToAdd) {
+        totalWeight = totalWeight + value;
+      }
+    }
+    // End inventory+ module is active 2
+    // END TOTAL WEIGHT
 
     // [Optional] add Currency Weight (for non-transformed actors)
     //@ts-ignore
@@ -163,9 +219,6 @@ const API = {
     }
 
     // Compute Encumbrance percentage
-    // const pct =
-    //   //@ts-ignore
-    //   (actorEntity.data.data.attributes.encumbrance.value / actorEntity.data.data.attributes.encumbrance.max) * 100;
     //@ts-ignore
     const max = actorEntity.data.data.attributes.encumbrance.max;
     const pct = Math.clamped((totalWeight * 100) / max, 0, 100);

@@ -6,25 +6,29 @@
   "inventory-plus.setting.debug.label": "Stampa i messaggi di debug sulla console",
   "inventory-plus.setting.debug.hint": " ",
 
-  "inventory-plus.setting.enableItemTransfer.name": "Funzione: abilita il trasferimento dell'oggetto",
+  "inventory-plus.setting.enableItemTransfer.name": "Feature: abilita il trasferimento dell'oggetto",
   "inventory-plus.setting.enableItemTransfer.hint": "Anche se è la caratteristica principale di questo modulo, puoi comunque disabilitare il trasferimento degli oggetti. Sappi che puoi disabilitare temporaneamente la funzione di trasferimento premendo il tasto alt mentre sposti l'oggetto.",
-  "inventory-plus.setting.enableCurrencyTransfer.name": "[Solo con 'Funzione: Abilita trasferimento articolo' abilitato] Abilita trasferimento di valuta",
+  "inventory-plus.setting.enableCurrencyTransfer.name": "[Solo con 'Feature: Abilita trasferimento articolo' abilitato] Abilita trasferimento di valuta",
   "inventory-plus.setting.enableCurrencyTransfer.hint": "Quando si sposta un oggetto denominato \"Currency\" si aprirà una finestra di dialogo per trasferire denaro invece di trasferire l'oggetto effettivo.",
-  "inventory-plus.setting.actorTransferSame.name": "[Solo con 'Funzione: Abilita trasferimento oggetto' abilitato] Abilita per attori dello stesso tipo",
+  "inventory-plus.setting.actorTransferSame.name": "[Solo con 'Feature: Abilita trasferimento oggetto' abilitato] Abilita per attori dello stesso tipo",
   "inventory-plus.setting.actorTransferSame.hint": "Se disabilitato dovrai fare affidamento sulle coppie che puoi definire manualmente.",
-  "inventory-plus.setting.actorTransferPairs.name": "[Solo con 'Funzione: Abilita trasferimento oggetto' abilitato] Tipi di attori compatibili:",
+  "inventory-plus.setting.actorTransferPairs.name": "[Solo con 'Feature: Abilita trasferimento oggetto' abilitato] Tipi di attori compatibili:",
   "inventory-plus.setting.actorTransferPairs.hint": "Il corpo di una mappa JSON di coppie chiave-valore di tipo attore compatibile che consente il trasferimento. Per impostazione predefinita, questo modulo funziona solo tra fogli attore dello stesso tipo, ma alcuni sistemi di gioco potrebbero avere altre combinazioni che funzionano. Esempio 1: \"character\":\"synthetic\",\"synthetic\":\"vehicles\",\"vehicles\":\"character\". Esempio 2 (for DnD5e): \"character\":\"vehicle\",\"vehicle\":\"character\" che abiliterebbe lo spostamento di oggetti tra personaggi e veicoli. Puoi anche avere più tipi di attore come valore, esempio 3: \"character\":[\"vehicle\", \"character\"],\"vehicle\":\"character\" consentirebbe il trasferimento da personaggio a veicolo, da personaggio a personaggio e da veicolo a personaggio ma NON da veicolo a veicolo (a condizione che la casella di controllo \"attori dello stesso tipo\" sia deselezionata).",
 
-  "inventory-plus.setting.enableInventorySorter.name": "Funzione: abilita lo smistamento dell'inventario",
+  "inventory-plus.setting.enableInventorySorter.name": "Feature: abilita lo smistamento dell'inventario",
   "inventory-plus.setting.enableInventorySorter.hint": "Ordina automaticamente gli elementi di tutti gli attori (inventario, caratteristiche e incantesimi) in ordine alfabetico (all'interno di ciascuna categoria).",
 
-  "inventory-plus.setting.enableEquipmentMultiplier.name": "Caratteristica: moltiplicatore attrezzatura",
+  "inventory-plus.setting.enableEquipmentMultiplier.name": "Feature: moltiplicatore attrezzatura",
   "inventory-plus.setting.enableEquipmentMultiplier.hint": "Applica un moltiplicatore di peso agli oggetti equipaggiati",
-  "inventory-plus.setting.equipmentMultiplier.name": "[Solo con 'Caratteristica: moltiplicatore attrezzatura' abilitato] Valore moltiplicatore attrezzatura",
+  "inventory-plus.setting.equipmentMultiplier.name": "[Solo con 'Feature: moltiplicatore attrezzatura' abilitato] Valore moltiplicatore attrezzatura",
   "inventory-plus.setting.equipmentMultiplier.hint": "Quale moltiplicatore di peso applicare agli articoli equipaggiati. ATTENZIONE: Se il modulo 'Variant Encumbrance' è presente e attivo questa funzione è disabilitata di default se le impostazioni del modulo 'Feature: Integrazione con La variante ingombro' è abilitata",
 
-  "inventory-plus.setting.enableIntegrationWithVariantEncumbrance.name": "Caratteristica: integrazione con Variant Encumbrance",
+  "inventory-plus.setting.enableIntegrationWithVariantEncumbrance.name": "Feature: integrazione con Variant Encumbrance",
   "inventory-plus.setting.enableIntegrationWithVariantEncumbrance.hint": "Se abilitato calcolerà il peso con l'API del modulo 'VariantEncumbrance' per un calcolo del peso migliore e più intelligente, se il modulo è presente e attivo",
+
+  "inventory-plus.setting.useEquippedUnequippedItemCollectionFeature.name": "Feature: integrazione con Item Collection",
+  "inventory-plus.setting.useEquippedUnequippedItemCollectionFeature.hint": "Usa la funzione equipaggiata/non equipaggiata del modulo 'ItemCollection/Item Container' per lo zaino. Le borse possono essere non equipaggiate dai giocatori o dal GM, in modo che il loro peso riportato scenda a 0 nel tuo inventario ( solo i bagagli con capacità diversa da 0 possono essere disequipaggiati)",
+
   "inventory-plus.dialogs.resettings.title": "Ripristina le impostazioni del modulo",
   "inventory-plus.dialogs.resetsettings.content": "Sei sicuro di voler ripristinare tutte le impostazioni del modulo sui valori predefiniti del sistema attuale? <strong>QUESTO NON PUÒ ESSERE ANNULLATO!</strong>",
   "inventory-plus.dialogs.resetsettings.confirm": "Ripristina impostazioni modulo",

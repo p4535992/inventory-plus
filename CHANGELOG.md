@@ -1,3 +1,9 @@
+### 0.5.10
+
+- Bug fix: [Carry Capacity Issues](https://github.com/p4535992/inventory-plus/issues/7)
+- New feature : Integration with Item Collection for the weight calculation (copy and paste the code from Variant Encumbrance....my other module)
+- Add reset settings to the module settings panel
+
 ### 0.5.9
 
 - Bug fix bad weight calculation

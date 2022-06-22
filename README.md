@@ -51,6 +51,10 @@ This module allows you to create custom inventory categories and sort items into
 
 Due to collisions, code maintenance problems, and **reduction in the number of modules** I have rewritten for the inherent use of the module some features of other modules, mentioned in the _credits_ of this document. I invite you to support these authors in their various kofis and patreons. Each feature is non-blocking with the other modules and can be activated / deactivated from a specific module setting, which we list below
 
+**Feature: Integration with Variant Encumbrance**: If enabled it will calculate the weight with the API of the module 'VariantEncumbrance' for a better and smarter calculation of the weight, if the module is present and active
+
+**Feature: Integration with Item Collection**: Use equipped/unequipped feature of the 'ItemCollection/Item Container' module for the backpack. Bags can be unequipped by players or GM, so that their reported weight drops to 0 in your inventory (only bags with a capacity other than 0 can be unequipped). ATTENTION: If the module 'Variant Encumbrance' is present and active this feature is disabled by default if the module settings 'Feature: Integration with Variant Encumbrance' is enabled.
+
 **Feature: Enable item transfer:** Know that you can temporarily disable the transfer feature by pressing the alt key while you move the item.
 
 **[Only with 'Feature: Enable item transfer' enabled] Enable currency transfer:** When moving an object named \"Currency\" is transferer it will open a dialog to transfer money instead of transferring the actual item.",
@@ -63,9 +67,7 @@ Due to collisions, code maintenance problems, and **reduction in the number of m
 
 **Feature: Equipment Multiplier:** Apply a weight multiplier to equipped items
 
-**[Only with 'Feature: Equipment Multiplier' enabled] Equipment Multiplier value:** What weight multiplier to apply to equipped items. ATTENTION: If the module 'Variant Encumbrance' is present and active this feature is disabled by default if the module settings 'Feature: Integration with Variant Encumbrance' is enabled",
-
-**Feature: Integration with Variant Encumbrance**: If enabled it will calculate the weight with the API of the module 'VariantEncumbrance' for a better and smarter calculation of the weight, if the module is present and active
+**[Only with 'Feature: Equipment Multiplier' enabled] Equipment Multiplier value:** What weight multiplier to apply to equipped items. ATTENTION: If the module 'Variant Encumbrance' is present and active this feature is disabled by default if the module settings 'Feature: Integration with Variant Encumbrance' is enabled.
 
 ## API
 

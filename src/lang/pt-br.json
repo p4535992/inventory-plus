@@ -23,8 +23,11 @@
   "inventory-plus.setting.equipmentMultiplier.name": "[Somente com 'Recurso: Multiplicador de Equipamento' ativado] Valor do Multiplicador de Equipamento",
   "inventory-plus.setting.equipmentMultiplier.hint": "Qual multiplicador de peso aplicar aos itens equipados. ATENÇÃO: Se o módulo 'Variant Ônus' estiver presente e ativo, este recurso é desabilitado por padrão se as configurações do módulo 'Recurso: Integração com Variant Ônus' estiverem habilitadas",
 
-  "inventory-plus.setting.enableIntegrationWithVariantEncumbrance.name": "Recurso: Sobrecarga Variante",
+  "inventory-plus.setting.enableIntegrationWithVariantEncumbrance.name": "Recurso: Integração com Variant Encumbrance",
   "inventory-plus.setting.enableIntegrationWithVariantEncumbrance.hint": "Se habilitado, calculará o peso com a API do módulo 'VariantEncumbrance' para um cálculo melhor e mais inteligente do peso, caso o módulo esteja presente e ativo",
+
+  "inventory-plus.setting.useEquippedUnequippedItemCollectionFeature.name": "Recurso: Integração com Item Collection",
+  "inventory-plus.setting.useEquippedUnequippedItemCollectionFeature.hint": "Use o recurso equipado/não equipado do módulo 'ItemCollection/Item Container' para a mochila. As bolsas podem ser desequipadas por jogadores ou GM, para que seu peso relatado caia para 0 em seu inventário ( apenas malas com capacidade diferente de 0 podem ser desequipadas)",
 
   "inventory-plus.dialogs.resetsettings.title": "Redefinir Configurações do Módulo",
   "inventory-plus.dialogs.resetsettings.content": "Tem certeza de que deseja redefinir todas as configurações do módulo para os padrões do sistema atual? <strong>ISTO NÃO PODE SER DESFEITO!</strong>",
