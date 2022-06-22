@@ -726,10 +726,22 @@ export class InventoryPlus {
       const weightUnit = game.settings.get('dnd5e', 'metricWeightUnits')
         ? game.i18n.localize('DND5E.AbbreviationKgs')
         : game.i18n.localize('DND5E.AbbreviationLbs');
-      const weightValue =
-        currentCategory.maxWeight > 0
-          ? `(${weight}/${currentCategory.maxWeight} ${weightUnit})`
-          : `(${weight} ${weightUnit})`;
+      let weightValue = '';
+      if (currentCategory.ignoreWeight) {
+        if (currentCategory.maxWeight > 0) {
+          weightValue = `(${weight}/${currentCategory.maxWeight} ${weightUnit})`
+        }else{
+          weightValue = `(${weight} ${weightUnit})`;
+        }
+      } else if (currentCategory.ownWeight > 0) {
+        if (currentCategory.maxWeight > 0) {
+          weightValue = `(${currentCategory.ownWeight+weight}/${currentCategory.maxWeight} ${weightUnit})`
+        }else{
+          weightValue = `(${currentCategory.ownWeight+weight} ${weightUnit})`;
+        }
+      } else if (currentCategory.maxWeight > 0) {
+        weightValue = `(${weight}/${currentCategory.maxWeight} ${weightUnit})`
+      }
 
       const weightString = $(`<label class="category-weight"> ${icon} ${weightValue}</label>`);
       header.find('h3').append(weightString);
