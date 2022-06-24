@@ -27,8 +27,8 @@ const API = {
       game.settings.get(CONSTANTS.MODULE_NAME, 'enableIntegrationWithVariantEncumbrance')
     ) {
       const encumbranceData =
-      //@ts-ignore
-      <EncumbranceData>game.modules.get('variant-encumbrance-dnd5e')?.api.calculateWeightOnActor(actorEntity);
+        //@ts-ignore
+        <EncumbranceData>game.modules.get('variant-encumbrance-dnd5e')?.api.calculateWeightOnActor(actorEntity);
       const encumbrane5e = encumbranceData.encumbrance;
       return encumbrane5e;
     }
@@ -185,7 +185,7 @@ const API = {
         //@ts-ignore
         appliedWeight *= eqpMultiplyer;
       } else {
-        appliedWeight *= 1;//<number>game.settings.get(CONSTANTS.MODULE_NAME, 'unequippedMultiplier');
+        appliedWeight *= 1; //<number>game.settings.get(CONSTANTS.MODULE_NAME, 'unequippedMultiplier');
       }
       return weight + appliedWeight;
     }, 0);
@@ -320,6 +320,17 @@ const API = {
     } else {
       return true;
     }
+  },
+
+  getItemsFromCategory(actor: Actor, category: Category): Item[] {
+    return actor.data.items.filter((item) => {
+      // Ripreso da getItemType
+      let type = getProperty(item, `flags.${CONSTANTS.MODULE_NAME}.${InventoryPlusFlags.CATEGORY}`);
+      if (type === undefined || this.customCategorys[type] === undefined) {
+        type = item.type;
+      }
+      return category.dataset.type === type;
+    });
   },
 };
 

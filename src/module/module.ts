@@ -105,24 +105,24 @@ export const readyHooks = async (): Promise<void> => {
       const dragAndDropFromCompendium = data.pack ? true : false;
       const dragAndDropFromActorSource = data.actorId ? true : false;
       const itemCurrent = await retrieveItemFromData(actor, itemId, '', data.pack, data.actorId);
-      let itemData:ItemData|null = null;
+      let itemData: ItemData | null = null;
       if (!itemCurrent) {
         // Start Patch Party Inventory
-        if(data.data && data.data.type && data.data._id){
+        if (data.data && data.data.type && data.data._id) {
           itemData = <ItemData>data.data;
-          if(!itemData.flags){
+          if (!itemData.flags) {
             setProperty(itemData, `flags`, {});
           }
-          if(!itemData.flags.core){
+          if (!itemData.flags.core) {
             setProperty(itemData.flags, `core`, {});
-          }        
+          }
         }
         // End Patch Party Inventory
-        if(!itemData){
+        if (!itemData) {
           warn(i18n(`${CONSTANTS.MODULE_NAME}.dialogs.warn.itemcurrent`));
           return;
         }
-      }else{
+      } else {
         itemData = <ItemData>itemCurrent?.data;
       }
       if (!itemData) {

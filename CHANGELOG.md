@@ -1,3 +1,9 @@
+### 0.5.11
+
+- Bug fix [[BUG] Conflict with party Inventory](https://github.com/p4535992/inventory-plus/issues/9)
+- Add control for delete category only if no itmes is on iot
+- Add feature for hide Re-enable category default [Re-enable def Cat.](https://github.com/p4535992/inventory-plus/issues/8)
+
 ### 0.5.10
 
 - Bug fix: [Carry Capacity Issues](https://github.com/p4535992/inventory-plus/issues/7)

@@ -29,6 +29,9 @@
   "inventory-plus.setting.useEquippedUnequippedItemCollectionFeature.name": "Feature: Integration with Item Collection",
   "inventory-plus.setting.useEquippedUnequippedItemCollectionFeature.hint": "Use equipped/unequipped feature of the 'ItemCollection/Item Container' module for the backpack. Bags can be unequipped by players or GM, so that their reported weight drops to 0 in your inventory (only bags with a capacity other than 0 can be unequipped). ATTENTION: If the module 'Variant Encumbrance' is present and active this feature is disabled by default if the module settings 'Feature: Integration with Variant Encumbrance' is enabled.",
 
+  "inventory-plus.setting.hideButtonDefaultCategories.name": "Hide button for manage default categories",
+  "inventory-plus.setting.hideButtonDefaultCategories.hint": "By default only GM can see this button, but if you enable this module settings the button is hide for everyone.",
+
   "inventory-plus.dialogs.resetsettings.title": "Reset Module Settings",
   "inventory-plus.dialogs.resetsettings.content": "Are you sure you want to reset all of the module settings to the current system's defaults? <strong>THIS CANNOT BE UNDONE!</strong>",
   "inventory-plus.dialogs.resetsettings.confirm": "Reset Module Settings",
@@ -51,6 +54,7 @@
   "inventory-plus.inv-plus-dialog.cancel": "Cancel",
   "inventory-plus.inv-plus-dialog.deletecategoryprefix": "Del.",
   "inventory-plus.inv-plus-dialog.deletecategory": "Delete Category",
+  "inventory-plus.inv-plus-dialog.deletecategorycheckitems": "Sorry can't delete the category '{categoryName}', because there is still some item on it",
 
   "inventory-plus.dialogs.warn.notargethtml": "No target html founded for the drop of the item. Usually happens when the drop occurs at a dead end, retrying the drag and drop is the simplest solution",
   "inventory-plus.dialogs.warn.nocategoryfounded": "No category founded with type '{targetType}'",

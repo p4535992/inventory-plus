@@ -3,6 +3,7 @@
  */
 
 import type { ItemData } from '@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/data/module.mjs';
+import API from './api';
 import CONSTANTS from './constants';
 import {
   Category,
@@ -286,7 +287,7 @@ export class InventoryPlus {
 
     // ONly gm can do this
 
-    if (this.actor.isOwner) {
+    if (game.user?.isGM && !game.settings.get(CONSTANTS.MODULE_NAME, 'hideButtonDefaultCategories')) {
       const status = flagDisableDefaultCategories
         ? i18n(`inventory-plus.inv-plus-dialog.reenabledefaultcategories`)
         : i18n(`inventory-plus.inv-plus-dialog.removedefaulcategorieswarnmessagedisable`);
@@ -503,7 +504,17 @@ export class InventoryPlus {
       removeCategoryBtn.find('.remove-category').click(async (ev) => {
         ev.preventDefault();
         const catType = <string>ev.target.dataset.type || <string>ev.currentTarget.dataset.type;
-        //this.removeCategory(catType);
+        const category = <Category>this.customCategorys[catType];
+        const categoryItems = API.getItemsFromCategory(this.actor, category);
+        if (categoryItems && categoryItems.length > 0) {
+          warn(
+            i18nFormat(`${CONSTANTS.MODULE_NAME}.inv-plus-dialog.deletecategorycheckitems`, {
+              categoryName: i18n(category.label),
+            }),
+            true,
+          );
+          return;
+        }
         const status = flagDisableDefaultCategories
           ? i18n(`inventory-plus.inv-plus-dialog.removedefaulcategorieswarnmessagereenable`)
           : i18n(`inventory-plus.inv-plus-dialog.removedefaulcategorieswarnmessagedisable`);
@@ -729,18 +740,18 @@ export class InventoryPlus {
       let weightValue = '';
       if (currentCategory.ignoreWeight) {
         if (currentCategory.maxWeight > 0) {
-          weightValue = `(${weight}/${currentCategory.maxWeight} ${weightUnit})`
-        }else{
+          weightValue = `(${weight}/${currentCategory.maxWeight} ${weightUnit})`;
+        } else {
           weightValue = `(${weight} ${weightUnit})`;
         }
       } else if (currentCategory.ownWeight > 0) {
         if (currentCategory.maxWeight > 0) {
-          weightValue = `(${currentCategory.ownWeight+weight}/${currentCategory.maxWeight} ${weightUnit})`
-        }else{
-          weightValue = `(${currentCategory.ownWeight+weight} ${weightUnit})`;
+          weightValue = `(${currentCategory.ownWeight + weight}/${currentCategory.maxWeight} ${weightUnit})`;
+        } else {
+          weightValue = `(${currentCategory.ownWeight + weight} ${weightUnit})`;
         }
       } else if (currentCategory.maxWeight > 0) {
-        weightValue = `(${weight}/${currentCategory.maxWeight} ${weightUnit})`
+        weightValue = `(${weight}/${currentCategory.maxWeight} ${weightUnit})`;
       }
 
       const weightString = $(`<label class="category-weight"> ${icon} ${weightValue}</label>`);

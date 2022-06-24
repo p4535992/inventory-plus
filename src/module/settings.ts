@@ -10,6 +10,15 @@ export const registerSettings = function (): void {
     restricted: true,
   });
 
+  game.settings.register(CONSTANTS.MODULE_NAME, 'hideButtonDefaultCategories', {
+    name: `${CONSTANTS.MODULE_NAME}.setting.hideButtonDefaultCategories.name`,
+    hint: `${CONSTANTS.MODULE_NAME}.setting.hideButtonDefaultCategories.hint`,
+    scope: 'world',
+    config: true,
+    type: Boolean,
+    default: false,
+  });
+
   // ===================================================================
 
   // =================================
@@ -205,6 +214,15 @@ async function applyDefaultSettings() {
 
 function otherSettings(apply = false) {
   return {
+    hideButtonDefaultCategories: {
+      name: `${CONSTANTS.MODULE_NAME}.setting.hideButtonDefaultCategories.name`,
+      hint: `${CONSTANTS.MODULE_NAME}.setting.hideButtonDefaultCategories.hint`,
+      scope: 'world',
+      config: true,
+      type: Boolean,
+      default: false,
+    },
+
     // =================================
     // INTEGRATION VARIANT ENCUMBRANCE
     // =================================

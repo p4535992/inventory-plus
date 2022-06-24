@@ -29,6 +29,9 @@
   "inventory-plus.setting.useEquippedUnequippedItemCollectionFeature.name": "Feature: integrazione con Item Collection",
   "inventory-plus.setting.useEquippedUnequippedItemCollectionFeature.hint": "Usa la funzione equipaggiata/non equipaggiata del modulo 'ItemCollection/Item Container' per lo zaino. Le borse possono essere non equipaggiate dai giocatori o dal GM, in modo che il loro peso riportato scenda a 0 nel tuo inventario ( solo i bagagli con capacità diversa da 0 possono essere disequipaggiati)",
 
+  "inventory-plus.setting.hideButtonDefaultCategories.name": "Nascondi pulsante per gestire le categorie predefinite",
+  "inventory-plus.setting.hideButtonDefaultCategories.hint": "Per impostazione predefinita, solo GM può vedere questo pulsante, ma se abiliti le impostazioni di questo modulo il pulsante è nascosto per tutti.",
+
   "inventory-plus.dialogs.resettings.title": "Ripristina le impostazioni del modulo",
   "inventory-plus.dialogs.resetsettings.content": "Sei sicuro di voler ripristinare tutte le impostazioni del modulo sui valori predefiniti del sistema attuale? <strong>QUESTO NON PUÒ ESSERE ANNULLATO!</strong>",
   "inventory-plus.dialogs.resetsettings.confirm": "Ripristina impostazioni modulo",
@@ -51,6 +54,7 @@
   "inventory-plus.inv-plus-dialog.cancel": "Annulla",
   "inventory-plus.inv-plus-dialog.deletecategoryprefix": "Cancella.",
   "inventory-plus.inv-plus-dialog.deletecategory": "Elimina categoria",
+  "inventory-plus.inv-plus-dialog.deletecategorycheckitems": "Spiacente, non posso eliminare la categoria '{categoryName}', perche' c'e' ancora qualche elemento su di essa",
 
   "inventory-plus.dialogs.warn.notargethtml": "Nessun html di destinazione trovato per il rilascio dell'elemento. Di solito accade quando il rilascio si verifica in un vicolo cieco, riprovare a trascinare e rilasciare e' la soluzione più semplice",
   "inventory-plus.dialogs.warn.nocategoryfounded": "Nessuna categoria trovata con il tipo '{targetType}'",

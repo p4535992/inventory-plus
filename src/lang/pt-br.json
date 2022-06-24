@@ -29,6 +29,9 @@
   "inventory-plus.setting.useEquippedUnequippedItemCollectionFeature.name": "Recurso: Integração com Item Collection",
   "inventory-plus.setting.useEquippedUnequippedItemCollectionFeature.hint": "Use o recurso equipado/não equipado do módulo 'ItemCollection/Item Container' para a mochila. As bolsas podem ser desequipadas por jogadores ou GM, para que seu peso relatado caia para 0 em seu inventário ( apenas malas com capacidade diferente de 0 podem ser desequipadas)",
 
+  "inventory-plus.setting.hideButtonDefaultCategories.name": "Ocultar botão para gerenciar categorias padrão",
+  "inventory-plus.setting.hideButtonDefaultCategories.hint": "Por padrão, apenas o GM pode ver este botão, mas se você habilitar as configurações deste módulo, o botão ficará oculto para todos.",
+
   "inventory-plus.dialogs.resetsettings.title": "Redefinir Configurações do Módulo",
   "inventory-plus.dialogs.resetsettings.content": "Tem certeza de que deseja redefinir todas as configurações do módulo para os padrões do sistema atual? <strong>ISTO NÃO PODE SER DESFEITO!</strong>",
   "inventory-plus.dialogs.resetsettings.confirm": "Redefinir",
@@ -70,6 +73,7 @@
   "inventory-plus.inv-plus-dialog.removedefaulcategorieswarnmessagereenable": "RE-ENABLE",
   "inventory-plus.inv-plus-dialog.removedefaulcategorieswarnmessagedisable": "DISABLE",
   "inventory-plus.inv-plus-dialog.confirmationdeletecategory": "Tem certeza de que deseja excluir categoria '{categoryName}'? Cuidado, todos os itens nesta categoria serão 'ocultos' (não excluídos), mas é aconselhável mover todos os itens esta categoria para outra antes de ir mais longe com esta ação.",
+  "inventory-plus.inv-plus-dialog.deletecategorycheckitems": "Desculpe, não é possível excluir a categoria '{categoryName}', porque ainda há algum item nela",
 
   "inventory-plus.notEnoughCurrency": "Você não tem o suficiente das seguintes moedas",
   "inventory-plus.howManyItem": "Quantos itens você deseja mover?",
