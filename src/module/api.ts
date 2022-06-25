@@ -109,6 +109,7 @@ const API = {
           // "weapon", "equipment", "consumable", "tool", "backpack", "loot"
           let actorHasCustomCategories = false;
           for (const categoryId in inventoryPlusCategories) {
+            const section = inventoryPlusCategories[categoryId];
             if (
               // This is a error from the inventory plus developer flags stay on 'item.data' not on the 'item'
               //@ts-ignore
@@ -123,20 +124,22 @@ const API = {
                 //@ts-ignore
                 item.data?.data?.flags[CONSTANTS.MODULE_NAME]?.category === categoryId)
             ) {
-              const section = inventoryPlusCategories[categoryId];
               // Ignore weight
               if (section?.ignoreWeight == true) {
                 itemWeight = 0;
                 ignoreEquipmentCheck = true;
               }
-              // Inherent weight
-              if (Number(section?.ownWeight) > 0) {
-                if (!invPlusCategoriesWeightToAdd.has(categoryId)) {
-                  invPlusCategoriesWeightToAdd.set(categoryId, Number(section.ownWeight));
-                }
-              }
               // EXIT FOR
               actorHasCustomCategories = true;
+            }
+
+            // Inherent weight
+            if (Number(section?.ownWeight) > 0) {
+              if (!invPlusCategoriesWeightToAdd.has(categoryId)) {
+                invPlusCategoriesWeightToAdd.set(categoryId, Number(section.ownWeight));
+              }
+            }
+            if(actorHasCustomCategories){
               break;
             }
           }
