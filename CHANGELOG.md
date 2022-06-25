@@ -3,6 +3,8 @@
 - Bug fix [[BUG] Conflict with party Inventory](https://github.com/p4535992/inventory-plus/issues/9)
 - Add control for delete category only if no itmes is on iot
 - Add feature for hide Re-enable category default [Re-enable def Cat.](https://github.com/p4535992/inventory-plus/issues/8)
+- Bug fix [[BUG] Ignore Item Weight and Inherent Weight does not work](https://github.com/p4535992/inventory-plus/issues/10)
+- Bug fix retrieve type of the item from 'data.flags' not 'flags' it remain for retrocomaptibility
 
 ### 0.5.10
 

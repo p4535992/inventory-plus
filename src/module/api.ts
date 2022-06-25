@@ -114,14 +114,14 @@ const API = {
               //@ts-ignore
               (item.flags &&
                 //@ts-ignore
-                item.flags[CONSTANTS.INVENTORY_PLUS_MODULE_NAME]?.category === categoryId) ||
+                item.flags[CONSTANTS.MODULE_NAME]?.category === categoryId) ||
               (item.data?.flags &&
                 //@ts-ignore
-                item.data?.flags[CONSTANTS.INVENTORY_PLUS_MODULE_NAME]?.category === categoryId) ||
+                item.data?.flags[CONSTANTS.MODULE_NAME]?.category === categoryId) ||
               //@ts-ignore
               (item.data?.data?.flags &&
                 //@ts-ignore
-                item.data?.data?.flags[CONSTANTS.INVENTORY_PLUS_MODULE_NAME]?.category === categoryId)
+                item.data?.data?.flags[CONSTANTS.MODULE_NAME]?.category === categoryId)
             ) {
               const section = inventoryPlusCategories[categoryId];
               // Ignore weight
@@ -322,14 +322,17 @@ const API = {
     }
   },
 
-  getItemsFromCategory(actor: Actor, category: Category): Item[] {
+  getItemsFromCategory(actor: Actor, categoryDatasetType: string, customCategorys: Record<string, any>): Item[] {
     return actor.data.items.filter((item) => {
       // Ripreso da getItemType
       let type = getProperty(item, `flags.${CONSTANTS.MODULE_NAME}.${InventoryPlusFlags.CATEGORY}`);
-      if (type === undefined || this.customCategorys[type] === undefined) {
+      if (!type) {
+        type = getProperty(item, `data.flags.${CONSTANTS.MODULE_NAME}.${InventoryPlusFlags.CATEGORY}`);
+      }
+      if (type === undefined || customCategorys[type] === undefined) {
         type = item.type;
       }
-      return category.dataset.type === type;
+      return categoryDatasetType === type;
     });
   },
 };

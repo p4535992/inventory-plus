@@ -505,7 +505,7 @@ export class InventoryPlus {
         ev.preventDefault();
         const catType = <string>ev.target.dataset.type || <string>ev.currentTarget.dataset.type;
         const category = <Category>this.customCategorys[catType];
-        const categoryItems = API.getItemsFromCategory(this.actor, category);
+        const categoryItems = API.getItemsFromCategory(this.actor, category.dataset.type, this.customCategorys);
         if (categoryItems && categoryItems.length > 0) {
           warn(
             i18nFormat(`${CONSTANTS.MODULE_NAME}.inv-plus-dialog.deletecategorycheckitems`, {
@@ -740,18 +740,30 @@ export class InventoryPlus {
       let weightValue = '';
       if (currentCategory.ignoreWeight) {
         if (currentCategory.maxWeight > 0) {
-          weightValue = `(${weight}/${currentCategory.maxWeight} ${weightUnit})`;
+          if (currentCategory.ownWeight > 0) {
+            weightValue = `(${weight}/${currentCategory.maxWeight} ${weightUnit})[${currentCategory.ownWeight} ${weightUnit}]`;
+          } else {
+            weightValue = `(${weight}/${currentCategory.maxWeight} ${weightUnit})`;
+          }
         } else {
-          weightValue = `(${weight} ${weightUnit})`;
+          if (currentCategory.ownWeight > 0) {
+            weightValue = `(${weight} ${weightUnit})[${currentCategory.ownWeight} ${weightUnit}]`;
+          } else {
+            weightValue = `(${weight} ${weightUnit})`;
+          }
         }
       } else if (currentCategory.ownWeight > 0) {
         if (currentCategory.maxWeight > 0) {
-          weightValue = `(${currentCategory.ownWeight + weight}/${currentCategory.maxWeight} ${weightUnit})`;
+          weightValue = `(${weight}/${currentCategory.maxWeight} ${weightUnit})[${currentCategory.ownWeight} ${weightUnit}]`;
         } else {
-          weightValue = `(${currentCategory.ownWeight + weight} ${weightUnit})`;
+          weightValue = `(${weight} ${weightUnit})[${currentCategory.ownWeight} ${weightUnit}]`;
         }
       } else if (currentCategory.maxWeight > 0) {
-        weightValue = `(${weight}/${currentCategory.maxWeight} ${weightUnit})`;
+        if (currentCategory.ownWeight > 0) {
+          weightValue = `(${weight}/${currentCategory.maxWeight} ${weightUnit})[${currentCategory.ownWeight} ${weightUnit}]`;
+        } else {
+          weightValue = `(${weight}/${currentCategory.maxWeight} ${weightUnit})`;
+        }
       }
 
       const weightString = $(`<label class="category-weight"> ${icon} ${weightValue}</label>`);
@@ -982,6 +994,9 @@ export class InventoryPlus {
 
   getItemType(item: ItemData) {
     let type = getProperty(item, `flags.${CONSTANTS.MODULE_NAME}.${InventoryPlusFlags.CATEGORY}`);
+    if (!type) {
+      type = getProperty(item, `data.flags.${CONSTANTS.MODULE_NAME}.${InventoryPlusFlags.CATEGORY}`);
+    }
     if (type === undefined || this.customCategorys[type] === undefined) {
       type = item.type;
     }
