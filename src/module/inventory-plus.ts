@@ -480,32 +480,39 @@ export class InventoryPlus {
     /*
      *  add removal function
      */
-    const createBtns: JQuery<HTMLElement> = html.find('.inventory .item-create');
-    for (const createBtn of createBtns) {
-      const type = <string>createBtn.dataset.type;
-      // Filter for only invenotry items
-      // const physicalItems = ['weapon', 'equipment', 'consumable', 'tool', 'backpack', 'loot'];
-      // if (physicalItems.indexOf(type) === -1) {
-      const parent = <ParentNode>createBtn.parentNode;
-      const categoryName = this.customCategorys[type]?.label;
-      const removeCategoryBtn = $(`<div class="item-controls flexrow">
-        <a class="item-control item-create" 
-          title="${i18n('DND5E.ItemCreate')}" 
+    // const createBtns: JQuery<HTMLElement> = html.find('.inventory .item-create');
+    // for (const createBtn of createBtns) {
+    //   const type = <string>createBtn.dataset.type;
+    //   // Filter for only invenotry items
+    //   // const physicalItems = ['weapon', 'equipment', 'consumable', 'tool', 'backpack', 'loot'];
+    //   // if (physicalItems.indexOf(type) === -1) {
+    //   //const parent = <ParentNode>createBtn.parentNode;
+    //   const createItemBtn = `<a class="item-control item-create"
+    //     title="${i18n('DND5E.ItemCreate')}"
+    //     data-type="${type}">`;
+    //   $(createBtn).html(createItemBtn);
+    //@ts-ignore
+    //parent.innerHTML = '';
+    //$(parent).append(manageCategoryBtn);
+    // }
+    // }
+
+    html.find('.inventory a.item-create').each((i, el) => {
+      const type = <string>el.dataset.type;
+      $(el).data('type', type);
+      $(el).attr('data-type', type);
+
+      const removeCategoryBtnS = `<a class="item-control remove-category" 
+          title="${i18n(`${CONSTANTS.MODULE_NAME}.inv-plus-dialog.deletecategory`)}"
           data-type="${type}">
-          <i class="fas fa-plus"></i> ${i18n('DND5E.Add')}</a>
-        <a class="item-control remove-category" 
-            title="${i18n(`${CONSTANTS.MODULE_NAME}.inv-plus-dialog.deletecategory`)}"
-            data-type="${type}">
-            <i class="fas fa-minus"></i>${i18n(`${CONSTANTS.MODULE_NAME}.inv-plus-dialog.deletecategoryprefix`)}</a>
-        </div>`);
-      removeCategoryBtn.find('.item-create').click((ev) => {
+          <i class="fas fa-minus"></i>${i18n(`${CONSTANTS.MODULE_NAME}.inv-plus-dialog.deletecategoryprefix`)}</a>`;
+
+      const linkElRemoveCategory = $(removeCategoryBtnS);
+      $(el).after(linkElRemoveCategory);
+
+      linkElRemoveCategory.on('click', async (ev) => {
         ev.preventDefault();
-        const catType = <string>ev.target.dataset.type || <string>ev.currentTarget.dataset.type;
-        this._onItemCreate(ev, catType);
-      });
-      removeCategoryBtn.find('.remove-category').click(async (ev) => {
-        ev.preventDefault();
-        const catType = <string>ev.target.dataset.type || <string>ev.currentTarget.dataset.type;
+        const catType = <string>ev.target.dataset.type || <string>ev.currentTarget.dataset.type || <string>type;
         const category = <Category>this.customCategorys[catType];
         const categoryItems = API.getItemsFromCategory(this.actor, category.dataset.type, this.customCategorys);
         if (categoryItems && categoryItems.length > 0) {
@@ -517,6 +524,9 @@ export class InventoryPlus {
           );
           return;
         }
+        const categoryName = this.customCategorys[type]?.label
+          ? i18n(<string>this.customCategorys[type]?.label)
+          : 'Unknown';
         const status = flagDisableDefaultCategories
           ? i18n(`inventory-plus.inv-plus-dialog.removedefaulcategorieswarnmessagereenable`)
           : i18n(`inventory-plus.inv-plus-dialog.removedefaulcategorieswarnmessagedisable`);
@@ -550,11 +560,25 @@ export class InventoryPlus {
         });
         d.render(true);
       });
-      //@ts-ignore
-      parent.innerHTML = '';
-      $(parent).append(removeCategoryBtn);
-      // }
-    }
+
+      const createItemBtn = `<a class="item-control item-create-2" 
+          title="${i18n('DND5E.ItemCreate')}" 
+          data-type="${type}">
+          <i class="fas fa-plus"></i> ${i18n('DND5E.Add')}</a>`;
+
+      const linkElItemCreate2 = $(createItemBtn);
+      $(el).after(linkElItemCreate2);
+      linkElItemCreate2.on('click', (ev) => {
+        ev.preventDefault();
+        let catType = <string>ev.target.dataset.type || <string>ev.currentTarget.dataset.type;
+        if (!catType) {
+          catType = <string>$(ev.currentTarget).parent().find('.remove-category')[0]?.dataset.type;
+        }
+        this._onItemCreate(ev, catType);
+      });
+    });
+
+    html.find('.inventory a.item-create').css('display', 'none');
 
     /*
      *  add extra header functions
@@ -1058,12 +1082,9 @@ export class InventoryPlus {
       game.modules.get('variant-encumbrance-dnd5e')?.active &&
       game.settings.get(CONSTANTS.MODULE_NAME, 'enableIntegrationWithVariantEncumbrance')
     ) {
-      const encumbranceData =
-        
-        <EncumbranceData>(
-          //@ts-ignore
-          game.modules.get('variant-encumbrance-dnd5e')?.api.calculateWeightOnActorWithItems(this.actor, items)
-        );
+      const encumbranceData = <
+        EncumbranceData //@ts-ignore
+      >game.modules.get('variant-encumbrance-dnd5e')?.api.calculateWeightOnActorWithItems(this.actor, items);
       return encumbranceData.totalWeight;
     } else {
       for (const i of items) {
@@ -1106,11 +1127,9 @@ export class InventoryPlus {
       game.modules.get('variant-encumbrance-dnd5e')?.active &&
       game.settings.get(CONSTANTS.MODULE_NAME, 'enableIntegrationWithVariantEncumbrance')
     ) {
-      const encumbranceData =
-        <EncumbranceBulkData>(
-          //@ts-ignore
-          game.modules.get('variant-encumbrance-dnd5e')?.api.calculateBulkOnActorWithItems(this.actor, items)
-        );
+      const encumbranceData = <
+        EncumbranceBulkData //@ts-ignore
+      >game.modules.get('variant-encumbrance-dnd5e')?.api.calculateBulkOnActorWithItems(this.actor, items);
       return encumbranceData.totalWeight;
     }
     // }else{

@@ -2,12 +2,34 @@
   max-width: 100%;
 }
 
-.inventory-filters .filter-list .custom-category {
+/* .inventory-filters .filter-list .custom-category {
   flex-grow: 2;
 }
 
 .inventory-list .item-controls .remove-category {
   flex: 0 0 100%;
+} */
+
+.inventory-list .item-controls a.remove-category {
+  flex: 0 0 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.inventory-list .item-controls a.remove-category i::before {
+  font-size: 14px;
+}
+
+.inventory-list .item-controls a.item-create-2 {
+  flex: 0 0 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.inventory-list .item-controls a.item-create-2 i::before {
+  font-size: 14px;
 }
 
 .inventory-list .inv-plus-stuff {

@@ -1,3 +1,7 @@
+### 0.5.15
+
+- Bug fix: [[Compatibility] Quick Insert](https://github.com/p4535992/inventory-plus/issues/11)
+
 ### 0.5.14
 
 - Feature: Do Not increase weight by quantity for no ammunition item
