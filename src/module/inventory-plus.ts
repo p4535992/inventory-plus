@@ -580,6 +580,15 @@ export class InventoryPlus {
 
     html.find('.inventory a.item-create').css('display', 'none');
 
+    html.find('.inventory a.quick-insert-link').each((i, el) => {
+      let catType = <string>el.attributes['data-type'];
+      if (!catType) {
+        catType = <string>$(el).parent().find('.remove-category')[0]?.dataset.type;
+      }
+      $(el).data('type', catType);
+      $(el).attr('data-type', catType);
+    });
+
     /*
      *  add extra header functions
      */
