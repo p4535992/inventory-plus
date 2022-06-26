@@ -69,6 +69,10 @@ Due to collisions, code maintenance problems, and **reduction in the number of m
 
 **[Only with 'Feature: Equipment Multiplier' enabled] Equipment Multiplier value:** What weight multiplier to apply to equipped items. ATTENTION: If the module 'Variant Encumbrance' is present and active this feature is disabled by default if the module settings 'Feature: Integration with Variant Encumbrance' is enabled.
 
+**Feature: Do Not increase weight by quantity for no ammunition item:** This is a homebrew rule, for non-ammunition items don't increase weight by quantity (so 5 potions = 1 item weight for example). ATTENTION: If the module 'Variant Encumbrance' is present and active this feature is disabled by default if the module settings 'Feature: Integration with Variant Encumbrance' is enabled.
+
+**Hide button for manage default categories:** By default only GM can see this button, but if you enable this module settings the button is hide for everyone.
+
 ## API
 
 ### game.modules.get('inventory-plus').api.calculateWeightFromActor(actorIdOrName:string) ⇒ <code>number</code>
