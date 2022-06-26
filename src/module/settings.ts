@@ -130,6 +130,15 @@ export const registerSettings = function (): void {
     type: Number,
   });
 
+  game.settings.register(CONSTANTS.MODULE_NAME, 'doNotIncreaseWeightByQuantityForNoAmmunition', {
+    name: `${CONSTANTS.MODULE_NAME}.setting.doNotIncreaseWeightByQuantityForNoAmmunition.name`,
+    hint: `${CONSTANTS.MODULE_NAME}.setting.doNotIncreaseWeightByQuantityForNoAmmunition.hint`,
+    scope: 'client',
+    config: true,
+    default: false,
+    type: Boolean,
+  });
+
   // ===================================================================
 
   game.settings.register(CONSTANTS.MODULE_NAME, 'debug', {
@@ -330,6 +339,15 @@ function otherSettings(apply = false) {
       config: true,
       default: 1,
       type: Number,
+    },
+
+    doNotIncreaseWeightByQuantityForNoAmmunition: {
+      name: `${CONSTANTS.MODULE_NAME}.setting.doNotIncreaseWeightByQuantityForNoAmmunition.name`,
+      hint: `${CONSTANTS.MODULE_NAME}.setting.doNotIncreaseWeightByQuantityForNoAmmunition.hint`,
+      scope: 'client',
+      config: true,
+      default: false,
+      type: Boolean,
     },
 
     // ===================================================================

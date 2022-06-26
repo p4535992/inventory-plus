@@ -921,9 +921,9 @@ export class InventoryPlus {
   async removeCategory(catType: string) {
     //const catType = <string>ev.target.dataset.type || <string>ev.currentTarget.dataset.type;
     const changedItems: ItemData[] = [];
-    const items = API.getItemsFromCategory(this.actor,catType,this.customCategorys)
+    const items = API.getItemsFromCategory(this.actor, catType, this.customCategorys);
     for (const i of items) {
-    //for (const i of this.actor.items) {
+      //for (const i of this.actor.items) {
       const type = this.getItemType(i.data);
       if (type === catType) {
         //await item.unsetFlag(CONSTANTS.MODULE_NAME, InventoryPlusFlag.CATEGORY);
@@ -1053,26 +1053,35 @@ export class InventoryPlus {
 
   getCategoryItemWeight(type: string) {
     let totalCategoryWeight = 0;
-    const items = API.getItemsFromCategory(this.actor,type,this.customCategorys);
+    const items = API.getItemsFromCategory(this.actor, type, this.customCategorys);
     if (
       game.modules.get('variant-encumbrance-dnd5e')?.active &&
       game.settings.get(CONSTANTS.MODULE_NAME, 'enableIntegrationWithVariantEncumbrance')
     ) {
       const encumbranceData =
-        //@ts-ignore
-        <EncumbranceData>game.modules.get('variant-encumbrance-dnd5e')?.api.calculateWeightOnActorWithItems(this.actor,items);
+        
+        <EncumbranceData>(
+          //@ts-ignore
+          game.modules.get('variant-encumbrance-dnd5e')?.api.calculateWeightOnActorWithItems(this.actor, items)
+        );
       return encumbranceData.totalWeight;
-    }else{
+    } else {
       for (const i of items) {
-      //for (const i of this.actor.items) {
+        //for (const i of this.actor.items) {
         if (type === this.getItemType(i.data)) {
           //@ts-ignore
-          const q = <number>i.data.data.quantity;
+          let q = <number>i.data.data.quantity || 0;
           //@ts-ignore
           const w = <number>i.data.data.weight;
           let eqpMultiplyer = 1;
           if (game.settings.get(CONSTANTS.MODULE_NAME, 'enableEquipmentMultiplier')) {
             eqpMultiplyer = <number>game.settings.get(CONSTANTS.MODULE_NAME, 'equipmentMultiplier') || 1;
+          }
+          if (game.settings.get(CONSTANTS.MODULE_NAME, 'doNotIncreaseWeightByQuantityForNoAmmunition')) {
+            //@ts-ignore
+            if (i.data.data.consumableType !== 'ammo') {
+              q = 1;
+            }
           }
           //@ts-ignore
           const e = <number>i.data.data.equipped ? eqpMultiplyer : 1;
@@ -1092,14 +1101,16 @@ export class InventoryPlus {
 
   getCategoryItemBulk(type: string) {
     // let totalCategoryWeight = 0;
-    const items = API.getItemsFromCategory(this.actor,type,this.customCategorys);
+    const items = API.getItemsFromCategory(this.actor, type, this.customCategorys);
     if (
       game.modules.get('variant-encumbrance-dnd5e')?.active &&
       game.settings.get(CONSTANTS.MODULE_NAME, 'enableIntegrationWithVariantEncumbrance')
     ) {
       const encumbranceData =
-        //@ts-ignore
-        <EncumbranceBulkData>game.modules.get('variant-encumbrance-dnd5e')?.api.calculateBulkOnActorWithItems(this.actor,items);
+        <EncumbranceBulkData>(
+          //@ts-ignore
+          game.modules.get('variant-encumbrance-dnd5e')?.api.calculateBulkOnActorWithItems(this.actor, items)
+        );
       return encumbranceData.totalWeight;
     }
     // }else{
@@ -1116,6 +1127,12 @@ export class InventoryPlus {
     //       let eqpMultiplyer = 1;
     //       if (game.settings.get(CONSTANTS.MODULE_NAME, 'enableEquipmentMultiplier')) {
     //         eqpMultiplyer = <number>game.settings.get(CONSTANTS.MODULE_NAME, 'equipmentMultiplier') || 1;
+    //       }
+    //       if(game.settings.get(CONSTANTS.MODULE_NAME,'doNotIncreaseWeightByQuantityForNoAmmunition')){
+    //         //@ts-ignore
+    //         if(i.data.data.consumableType !== "ammo"){
+    //           q = 1;
+    //         }
     //       }
     //       //@ts-ignore
     //       const e = <number>i.data.data.equipped ? eqpMultiplyer : 1;

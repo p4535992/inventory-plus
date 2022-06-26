@@ -59,7 +59,7 @@ const API = {
         return weight;
       }
 
-      const itemQuantity =
+      let itemQuantity =
         //@ts-ignore
         (item.data.quantity && item.data.quantity != item.data.data?.quantity
           ? //@ts-ignore
@@ -169,6 +169,13 @@ const API = {
 
       // End External modules calculation
 
+      if (game.settings.get(CONSTANTS.MODULE_NAME, 'doNotIncreaseWeightByQuantityForNoAmmunition')) {
+        //@ts-ignore
+        if (item.data.data.consumableType !== 'ammo') {
+          itemQuantity = 1;
+        }
+      }
+
       let appliedWeight = itemQuantity * itemWeight;
       if (ignoreEquipmentCheck) {
         return weight + appliedWeight;
@@ -237,52 +244,6 @@ const API = {
       encumbered: encumbered,
     });
   },
-
-  // calculateWeight(inventory: Category[], currency: number): number {
-  //   let customWeight = 0;
-  //   for (const id in inventory) {
-  //     const section = <Category>inventory[id];
-  //     if (!section) {
-  //       warn(`Can't find the section with id '${id}'`, true);
-  //       continue;
-  //     }
-  //     if (section.ignoreWeight !== true) {
-  //       for (const i of <ItemData[]>section.items) {
-  //         debug(i);
-  //         let eqpMultiplyer = 1;
-  //         if (game.settings.get(CONSTANTS.MODULE_NAME, 'enableEquipmentMultiplier')) {
-  //           eqpMultiplyer = <number>game.settings.get(CONSTANTS.MODULE_NAME, 'equipmentMultiplier') || 1;
-  //         }
-  //         //@ts-ignore
-  //         const e = <number>i.data.equipped ? eqpMultiplyer : 1;
-  //         //@ts-ignore
-  //         customWeight += i.totalWeight * e;
-  //       }
-  //     }
-  //     if (Number(section.ownWeight) > 0) {
-  //       customWeight += Number(section.ownWeight);
-  //     }
-  //   }
-
-  //   let coinWeight = 0;
-  //   if (game.settings.get('dnd5e', 'currencyWeight')) {
-  //     const numCoins = <number>(
-  //       Object.values(currency).reduce((val: number, denom: number) => (val += Math.max(denom, 0)), 0)
-  //     );
-  //     if (game.settings.get('dnd5e', 'metricWeightUnits')) {
-  //       //@ts-ignore
-  //       coinWeight = Math.round((numCoins * 10) / CONFIG.DND5E.encumbrance.currencyPerWeight.metric) / 10;
-  //     } else {
-  //       //@ts-ignore
-  //       coinWeight = Math.round((numCoins * 10) / CONFIG.DND5E.encumbrance.currencyPerWeight.imperial) / 10;
-  //     }
-  //   }
-  //   customWeight += coinWeight;
-
-  //   customWeight = Number(customWeight.toFixed(2));
-
-  //   return customWeight;
-  // },
 
   isCategoryFulled(actor: Actor, categoryType: string, itemData: ItemData): boolean {
     //@ts-ignore

@@ -1,3 +1,7 @@
+### 0.5.14
+
+- Feature: Do Not increase weight by quantity for no ammunition item
+
 ### 0.5.13
 
 - Better integration with the bulk system from the module 'variant Encumbrance'
