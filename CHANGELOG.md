@@ -1,3 +1,7 @@
+### 0.5.13
+
+- Better integration with the bulk system from the module 'variant Encumbrance'
+
 ### 0.5.12
 
 - Bug fix [[BUG] Ignore Item Weight and Inherent Weight does not work](https://github.com/p4535992/inventory-plus/issues/10)

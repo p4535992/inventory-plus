@@ -139,7 +139,7 @@ const API = {
                 invPlusCategoriesWeightToAdd.set(categoryId, Number(section.ownWeight));
               }
             }
-            if(actorHasCustomCategories){
+            if (actorHasCustomCategories) {
               break;
             }
           }

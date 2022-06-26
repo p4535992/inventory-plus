@@ -7,6 +7,8 @@ import API from './api';
 import CONSTANTS from './constants';
 import {
   Category,
+  EncumbranceBulkData,
+  EncumbranceData,
   InventoryPlusFlags,
   InventoryPlusItemType,
   inventoryPlusItemTypeCollection,
@@ -734,33 +736,73 @@ export class InventoryPlus {
       }
 
       const weight = <number>this.getCategoryItemWeight(type);
-      const weightUnit = game.settings.get('dnd5e', 'metricWeightUnits')
+      let bulkWeightS = '';
+      let weightUnit = game.settings.get('dnd5e', 'metricWeightUnits')
         ? game.i18n.localize('DND5E.AbbreviationKgs')
         : game.i18n.localize('DND5E.AbbreviationLbs');
+
+      const isVariantEncumbrance =
+        game.modules.get('variant-encumbrance-dnd5e')?.active &&
+        game.settings.get(CONSTANTS.MODULE_NAME, 'enableIntegrationWithVariantEncumbrance');
+      if (isVariantEncumbrance) {
+        weightUnit = game.settings.get('dnd5e', 'metricWeightUnits')
+          ? <string>game.settings.get('variant-encumbrance-dnd5e', 'unitsMetric')
+          : <string>game.settings.get('variant-encumbrance-dnd5e', 'units');
+
+        const isBulked = isVariantEncumbrance && game.settings.get('variant-encumbrance-dnd5e', 'enableBulkSystem');
+        if (isBulked) {
+          const bulkUnit = <string>game.settings.get('variant-encumbrance-dnd5e', 'unitsBulk');
+          //@ts-ignore
+          const weigthBulk = <number>this.getCategoryItemBulk(type);
+          //game.modules.get('variant-encumbrance-dnd5e')?.api.convertLbToBulk(weight) || 0;
+          bulkWeightS = String(weigthBulk + ' ' + bulkUnit);
+        }
+      }
+
       let weightValue = '';
       if (currentCategory.ignoreWeight) {
         if (currentCategory.maxWeight > 0) {
           if (currentCategory.ownWeight > 0) {
-            weightValue = `(${weight}/${currentCategory.maxWeight} ${weightUnit})[${currentCategory.ownWeight} ${weightUnit}]`;
+            if (bulkWeightS) {
+              weightValue = `(${weight}/${currentCategory.maxWeight} ${weightUnit})[${currentCategory.ownWeight} ${weightUnit}][${bulkWeightS}]`;
+            } else {
+              weightValue = `(${weight}/${currentCategory.maxWeight} ${weightUnit})[${currentCategory.ownWeight} ${weightUnit}]`;
+            }
           } else {
             weightValue = `(${weight}/${currentCategory.maxWeight} ${weightUnit})`;
           }
         } else {
           if (currentCategory.ownWeight > 0) {
-            weightValue = `(${weight} ${weightUnit})[${currentCategory.ownWeight} ${weightUnit}]`;
+            if (bulkWeightS) {
+              weightValue = `(${weight} ${weightUnit})[${currentCategory.ownWeight} ${weightUnit}][${bulkWeightS}]`;
+            } else {
+              weightValue = `(${weight} ${weightUnit})[${currentCategory.ownWeight} ${weightUnit}]`;
+            }
           } else {
             weightValue = `(${weight} ${weightUnit})`;
           }
         }
       } else if (currentCategory.ownWeight > 0) {
         if (currentCategory.maxWeight > 0) {
-          weightValue = `(${weight}/${currentCategory.maxWeight} ${weightUnit})[${currentCategory.ownWeight} ${weightUnit}]`;
+          if (bulkWeightS) {
+            weightValue = `(${weight}/${currentCategory.maxWeight} ${weightUnit})[${currentCategory.ownWeight} ${weightUnit}][${bulkWeightS}]`;
+          } else {
+            weightValue = `(${weight}/${currentCategory.maxWeight} ${weightUnit})[${currentCategory.ownWeight} ${weightUnit}]`;
+          }
         } else {
-          weightValue = `(${weight} ${weightUnit})[${currentCategory.ownWeight} ${weightUnit}]`;
+          if (bulkWeightS) {
+            weightValue = `(${weight} ${weightUnit})[${currentCategory.ownWeight} ${weightUnit}][${bulkWeightS}]`;
+          } else {
+            weightValue = `(${weight} ${weightUnit})[${currentCategory.ownWeight} ${weightUnit}]`;
+          }
         }
       } else if (currentCategory.maxWeight > 0) {
         if (currentCategory.ownWeight > 0) {
-          weightValue = `(${weight}/${currentCategory.maxWeight} ${weightUnit})[${currentCategory.ownWeight} ${weightUnit}]`;
+          if (bulkWeightS) {
+            weightValue = `(${weight}/${currentCategory.maxWeight} ${weightUnit})[${currentCategory.ownWeight} ${weightUnit}][${bulkWeightS}]`;
+          } else {
+            weightValue = `(${weight}/${currentCategory.maxWeight} ${weightUnit})[${currentCategory.ownWeight} ${weightUnit}]`;
+          }
         } else {
           weightValue = `(${weight}/${currentCategory.maxWeight} ${weightUnit})`;
         }
@@ -879,12 +921,14 @@ export class InventoryPlus {
   async removeCategory(catType: string) {
     //const catType = <string>ev.target.dataset.type || <string>ev.currentTarget.dataset.type;
     const changedItems: ItemData[] = [];
-    for (const item of this.actor.items) {
-      const type = this.getItemType(item.data);
+    const items = API.getItemsFromCategory(this.actor,catType,this.customCategorys)
+    for (const i of items) {
+    //for (const i of this.actor.items) {
+      const type = this.getItemType(i.data);
       if (type === catType) {
         //await item.unsetFlag(CONSTANTS.MODULE_NAME, InventoryPlusFlag.CATEGORY);
         changedItems.push(<any>{
-          _id: <string>item.id,
+          _id: <string>i.id,
           flags: {
             'inventory-plus': null,
           },
@@ -1009,29 +1053,84 @@ export class InventoryPlus {
 
   getCategoryItemWeight(type: string) {
     let totalCategoryWeight = 0;
-    for (const i of this.actor.items) {
-      if (type === this.getItemType(i.data)) {
+    const items = API.getItemsFromCategory(this.actor,type,this.customCategorys);
+    if (
+      game.modules.get('variant-encumbrance-dnd5e')?.active &&
+      game.settings.get(CONSTANTS.MODULE_NAME, 'enableIntegrationWithVariantEncumbrance')
+    ) {
+      const encumbranceData =
         //@ts-ignore
-        const q = <number>i.data.data.quantity;
-        //@ts-ignore
-        const w = <number>i.data.data.weight;
-        let eqpMultiplyer = 1;
-        if (game.settings.get(CONSTANTS.MODULE_NAME, 'enableEquipmentMultiplier')) {
-          eqpMultiplyer = <number>game.settings.get(CONSTANTS.MODULE_NAME, 'equipmentMultiplier') || 1;
-        }
-        //@ts-ignore
-        const e = <number>i.data.data.equipped ? eqpMultiplyer : 1;
-        if (is_real_number(w) && is_real_number(q)) {
+        <EncumbranceData>game.modules.get('variant-encumbrance-dnd5e')?.api.calculateWeightOnActorWithItems(this.actor,items);
+      return encumbranceData.totalWeight;
+    }else{
+      for (const i of items) {
+      //for (const i of this.actor.items) {
+        if (type === this.getItemType(i.data)) {
           //@ts-ignore
-          totalCategoryWeight += w * q * e;
-        } else {
-          debug(
-            `The item '${i.name}', on category '${type}', on actor ${this.actor?.name} has not valid weight or quantity `,
-          );
+          const q = <number>i.data.data.quantity;
+          //@ts-ignore
+          const w = <number>i.data.data.weight;
+          let eqpMultiplyer = 1;
+          if (game.settings.get(CONSTANTS.MODULE_NAME, 'enableEquipmentMultiplier')) {
+            eqpMultiplyer = <number>game.settings.get(CONSTANTS.MODULE_NAME, 'equipmentMultiplier') || 1;
+          }
+          //@ts-ignore
+          const e = <number>i.data.data.equipped ? eqpMultiplyer : 1;
+          if (is_real_number(w) && is_real_number(q)) {
+            //@ts-ignore
+            totalCategoryWeight += w * q * e;
+          } else {
+            debug(
+              `The item '${i.name}', on category '${type}', on actor ${this.actor?.name} has not valid weight or quantity `,
+            );
+          }
         }
       }
     }
     return totalCategoryWeight.toNearest(0.1);
+  }
+
+  getCategoryItemBulk(type: string) {
+    // let totalCategoryWeight = 0;
+    const items = API.getItemsFromCategory(this.actor,type,this.customCategorys);
+    if (
+      game.modules.get('variant-encumbrance-dnd5e')?.active &&
+      game.settings.get(CONSTANTS.MODULE_NAME, 'enableIntegrationWithVariantEncumbrance')
+    ) {
+      const encumbranceData =
+        //@ts-ignore
+        <EncumbranceBulkData>game.modules.get('variant-encumbrance-dnd5e')?.api.calculateBulkOnActorWithItems(this.actor,items);
+      return encumbranceData.totalWeight;
+    }
+    // }else{
+    //   for (const i of items) {
+    //   //for (const i of this.actor.items) {
+    //     if (type === this.getItemType(i.data)) {
+    //       //@ts-ignore
+    //       const q = <number>i.data.data.quantity;
+    //       //@ts-ignore
+    //       const bulk = <number>i.data.data.bulk;
+    //       if (!bulk || !is_real_number(bulk){
+    //         bulk = XXXX
+    //       }
+    //       let eqpMultiplyer = 1;
+    //       if (game.settings.get(CONSTANTS.MODULE_NAME, 'enableEquipmentMultiplier')) {
+    //         eqpMultiplyer = <number>game.settings.get(CONSTANTS.MODULE_NAME, 'equipmentMultiplier') || 1;
+    //       }
+    //       //@ts-ignore
+    //       const e = <number>i.data.data.equipped ? eqpMultiplyer : 1;
+    //       if (is_real_number(bulk) && is_real_number(q)) {
+    //         //@ts-ignore
+    //         totalCategoryWeight += bulk * q * e;
+    //       } else {
+    //         debug(
+    //           `The item '${i.name}', on category '${type}', on actor ${this.actor?.name} has not valid weight or quantity `,
+    //         );
+    //       }
+    //     }
+    //   }
+    // }
+    // return totalCategoryWeight.toNearest(0.1);
   }
 
   // static getCSSName(element) {
