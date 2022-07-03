@@ -1109,7 +1109,7 @@ export class InventoryPlus {
           }
           if (game.settings.get(CONSTANTS.MODULE_NAME, 'doNotIncreaseWeightByQuantityForNoAmmunition')) {
             //@ts-ignore
-            if (i.data.data.consumableType !== 'ammo') {
+            if (i.data?.data?.consumableType !== 'ammo') {
               q = 1;
             }
           }
@@ -1158,7 +1158,7 @@ export class InventoryPlus {
     //       }
     //       if(game.settings.get(CONSTANTS.MODULE_NAME,'doNotIncreaseWeightByQuantityForNoAmmunition')){
     //         //@ts-ignore
-    //         if(i.data.data.consumableType !== "ammo"){
+    //         if(i.data?.data?.consumableType !== "ammo"){
     //           q = 1;
     //         }
     //       }

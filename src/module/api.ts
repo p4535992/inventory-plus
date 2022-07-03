@@ -171,7 +171,7 @@ const API = {
 
       if (game.settings.get(CONSTANTS.MODULE_NAME, 'doNotIncreaseWeightByQuantityForNoAmmunition')) {
         //@ts-ignore
-        if (item.data.data.consumableType !== 'ammo') {
+        if (item.data?.data?.consumableType !== 'ammo') {
           itemQuantity = 1;
         }
       }

@@ -1,4 +1,4 @@
-### 0.5.15-16
+### 0.5.15-16-17
 
 - Bug fix: [[Compatibility] Quick Insert](https://github.com/p4535992/inventory-plus/issues/11)
 
