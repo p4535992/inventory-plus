@@ -332,12 +332,17 @@ export async function retrieveItemFromData(
     const pack = game.packs.get(currentCompendium);
     if (pack) {
       await pack.getIndex();
-      for (const entityComp of pack.index) {
-        const itemComp = <StoredDocument<Item>>await pack.getDocument(entityComp._id);
-        if (itemComp.id === itemId || itemComp.name === itemName) {
-          itemFounded = itemComp;
-          break;
-        }
+      // Try to find the item by exact ID
+      itemFounded = pack.index.get(itemId);
+      // If not found, search for the item by name
+      if (!itemFounded) {
+        for (const entityComp of pack.index) {
+          const itemComp = <StoredDocument<Item>>await pack.getDocument(entityComp._id);
+          if (itemComp.name === itemName) {
+            itemFounded = itemComp;
+            break;
+          }
+        } 
       }
     }
   }
