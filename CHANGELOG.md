@@ -1,3 +1,8 @@
+### 0.5.18
+
+- Better retrieve from compendium ty @TheGiddyLimit 
+- Bug fix (again): [[BUG] v0.5.16/v0.5.17 custom category weight tracking broken when using Variant Encumbrance module](https://github.com/p4535992/inventory-plus/issues/13)
+
 ### 0.5.15-16-17
 
 - Bug fix: [[Compatibility] Quick Insert](https://github.com/p4535992/inventory-plus/issues/11)

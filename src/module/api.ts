@@ -61,7 +61,7 @@ const API = {
 
       let itemQuantity =
         //@ts-ignore
-        (item.data.quantity && item.data.quantity != item.data.data?.quantity
+        (is_real_number(item.data.quantity) && item.data.quantity != item.data.data?.quantity
           ? //@ts-ignore
             item.data.quantity
           : //@ts-ignore
@@ -69,7 +69,7 @@ const API = {
 
       let itemWeight =
         //@ts-ignore
-        (item.data.weight && item.data.weight != item.data.data?.weight
+        (is_real_number(item.data.weight) && item.data.weight != item.data.data?.weight
           ? //@ts-ignore
             item.data.weight
           : //@ts-ignore

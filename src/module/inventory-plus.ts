@@ -843,17 +843,6 @@ export class InventoryPlus {
 
       const weightString = $(`<label class="category-weight"> ${icon} ${weightValue}</label>`);
       header.find('h3').append(weightString);
-      // }
-      // else {
-      //   const weight = <number>this.getCategoryItemWeight(type);
-      //   const weightUnit = game.settings.get('dnd5e', 'metricWeightUnits')
-      //     ? game.i18n.localize('DND5E.AbbreviationKgs')
-      //     : game.i18n.localize('DND5E.AbbreviationLbs');
-      //   const weightValue = `(${weight} ${weightUnit})`;
-
-      //   const weightString = $(`<label class="category-weight"> ${icon} ${weightValue}</label>`);
-      //   header.find('h3').append(weightString);
-      // }
     }
   }
 
@@ -1093,7 +1082,7 @@ export class InventoryPlus {
     ) {
       const encumbranceData = <
         EncumbranceData //@ts-ignore
-      >game.modules.get('variant-encumbrance-dnd5e')?.api.calculateWeightOnActorWithItems(this.actor, items);
+      >game.modules.get('variant-encumbrance-dnd5e')?.api.calculateWeightOnActorWithItemsNoInventoryPlus(this.actor, items);
       return encumbranceData.totalWeight;
     } else {
       for (const i of items) {

@@ -427,28 +427,6 @@ export const readyHooks = async (): Promise<void> => {
         // END itemDataType
         await dropedItem.setFlag(CONSTANTS.MODULE_NAME, InventoryPlusFlags.CATEGORY, targetType);
         itemType = targetType;
-        /*
-        const categoryWeight = this.inventoryPlus.getCategoryItemWeight(targetType);
-        //@ts-ignore
-        const itemWeight = dropedItem.data.data.weight * dropedItem.data.data.quantity;
-        const maxWeight = Number(
-          this.inventoryPlus.customCategorys[targetType].maxWeight
-            ? this.inventoryPlus.customCategorys[targetType].maxWeight
-            : 0,
-        );
-
-        if (isNaN(maxWeight) || maxWeight <= 0 || maxWeight >= categoryWeight + itemWeight) {
-          // await dropedItem.update({ 'flags.inventory-plus.category': targetType });
-          await dropedItem.setFlag(CONSTANTS.MODULE_NAME, InventoryPlusFlags.CATEGORY, targetType);
-          itemType = targetType;
-        } else {
-          warn(
-            i18nFormat(`${CONSTANTS.MODULE_NAME}.dialogs.warn.exceedsmaxweight`, { categoryName: categoryName }),
-            true,
-          );
-          return;
-        }
-        */
       }
 
       // reordering items

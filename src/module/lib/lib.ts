@@ -333,7 +333,7 @@ export async function retrieveItemFromData(
     if (pack) {
       await pack.getIndex();
       // Try to find the item by exact ID
-      itemFounded = pack.index.get(itemId);
+      itemFounded = <Item><unknown>pack.index.get(itemId);
       // If not found, search for the item by name
       if (!itemFounded) {
         for (const entityComp of pack.index) {
@@ -408,7 +408,7 @@ export function deleteItemIfZero(sheet: ActorSheet, itemId: string) {
     return;
   }
   //@ts-ignore
-  if (item.data.data.quantity <= 0) {
+  if (item.data?.data?.quantity <= 0) {
     deleteItem(sheet, itemId);
   }
 }
@@ -908,14 +908,14 @@ function _calcItemWeight(item: Item) {
   // const weight = item.data.data.weight || 0;
   const quantity =
     //@ts-ignore
-    (item.data.quantity && item.data.quantity != item.data.data?.quantity
+    (is_real_number(item.data.quantity) && item.data.quantity != item.data.data?.quantity
       ? //@ts-ignore
         item.data.quantity
       : //@ts-ignore
         item.data.data?.quantity) || 0;
   const weight =
     //@ts-ignore
-    (item.data.weight && item.data.weight != item.data.data?.weight
+    (is_real_number(item.data.weight) && item.data.weight != item.data.data?.weight
       ? //@ts-ignore
         item.data.weight
       : //@ts-ignore
