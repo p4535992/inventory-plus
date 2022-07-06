@@ -343,6 +343,8 @@ export async function retrieveItemFromData(
             break;
           }
         }
+      }else{
+        itemFounded = <StoredDocument<Item>>await pack.getDocument(itemId);
       }
     }
   }
