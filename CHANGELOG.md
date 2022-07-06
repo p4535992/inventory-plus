@@ -1,3 +1,7 @@
+### 0.5.19
+
+- Bug fix: [[BUG] Unable to import spells via drag and drop to characters sheet from compendium](https://github.com/p4535992/inventory-plus/issues/15)
+
 ### 0.5.18
 
 - Better retrieve from compendium ty @TheGiddyLimit 

@@ -338,11 +338,11 @@ export async function retrieveItemFromData(
       if (!itemFounded) {
         for (const entityComp of pack.index) {
           const itemComp = <StoredDocument<Item>>await pack.getDocument(entityComp._id);
-          if (itemComp.name === itemName) {
+          if (itemComp.id === itemId || itemComp.name === itemName) {
             itemFounded = itemComp;
             break;
           }
-        } 
+        }
       }
     }
   }
