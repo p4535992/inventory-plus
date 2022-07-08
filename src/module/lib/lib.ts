@@ -333,7 +333,9 @@ export async function retrieveItemFromData(
     if (pack) {
       await pack.getIndex();
       // If the item is found in the index, return it by exact ID
-      if (pack.index.get(itemId)) itemFounded = await pack.getDocument(itemId);
+      if (pack.index.get(itemId)) {
+        itemFounded = <StoredDocument<Item>>await pack.getDocument(itemId);
+      }
       // If not found, search for the item by name
       if (!itemFounded) {
         for (const entityComp of pack.index) {
@@ -343,8 +345,6 @@ export async function retrieveItemFromData(
             break;
           }
         }
-      }else{
-        itemFounded = <StoredDocument<Item>>await pack.getDocument(itemId);
       }
     }
   }
