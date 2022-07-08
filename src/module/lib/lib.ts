@@ -332,8 +332,8 @@ export async function retrieveItemFromData(
     const pack = game.packs.get(currentCompendium);
     if (pack) {
       await pack.getIndex();
-      // Try to find the item by exact ID
-      itemFounded = <Item><unknown>pack.index.get(itemId);
+      // If the item is found in the index, return it by exact ID
+      if (pack.index.get(itemId)) itemFounded = await pack.getDocument(itemId);
       // If not found, search for the item by name
       if (!itemFounded) {
         for (const entityComp of pack.index) {
