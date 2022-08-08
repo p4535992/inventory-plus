@@ -61,7 +61,7 @@ const API = {
 
       let itemQuantity =
         //@ts-ignore
-        (is_real_number(item.data.quantity) && item.data.quantity != item.data.data?.quantity
+        (is_real_number(item.data.quantity) && item.data.quantity !== item.data.data?.quantity
           ? //@ts-ignore
             item.data.quantity
           : //@ts-ignore
@@ -69,7 +69,7 @@ const API = {
 
       let itemWeight =
         //@ts-ignore
-        (is_real_number(item.data.weight) && item.data.weight != item.data.data?.weight
+        (is_real_number(item.data.weight) && item.data.weight !== item.data.data?.weight
           ? //@ts-ignore
             item.data.weight
           : //@ts-ignore
@@ -81,8 +81,8 @@ const API = {
 
       // Start Item container check
       if (
-        getProperty(item, 'data.flags.itemcollection.bagWeight') != null &&
-        getProperty(item, 'data.flags.itemcollection.bagWeight') != undefined
+        getProperty(item, 'data.flags.itemcollection.bagWeight') !== null &&
+        getProperty(item, 'data.flags.itemcollection.bagWeight') !== undefined
       ) {
         const weightless = getProperty(item, 'data.data.capacity.weightless') ?? false;
         if (weightless) {
@@ -125,7 +125,7 @@ const API = {
                 item.data?.data?.flags[CONSTANTS.MODULE_NAME]?.category === categoryId)
             ) {
               // Ignore weight
-              if (section?.ignoreWeight == true) {
+              if (section?.ignoreWeight === true) {
                 itemWeight = 0;
                 ignoreEquipmentCheck = true;
               }
@@ -148,7 +148,7 @@ const API = {
               if (item.type === categoryId) {
                 const section = inventoryPlusCategories[categoryId];
                 // Ignore weight
-                if (section?.ignoreWeight == true) {
+                if (section?.ignoreWeight === true) {
                   itemWeight = 0;
                   ignoreEquipmentCheck = true;
                 }
@@ -182,7 +182,7 @@ const API = {
       }
       const isEquipped: boolean =
         //@ts-ignore
-        (item.data.equipped && item.data.equipped != item.data.data?.equipped
+        (item.data.equipped && item.data.equipped !== item.data.data?.equipped
           ? //@ts-ignore
             item.data.equipped
           : //@ts-ignore
@@ -267,10 +267,10 @@ const API = {
       const acceptableTypes = categoryRef.explicitTypes.filter((i) => {
         return i.isSelected;
       });
-      if (acceptableTypes && acceptableTypes.length == 0) {
+      if (acceptableTypes && acceptableTypes.length === 0) {
         return true;
       }
-      if (acceptableTypes && acceptableTypes.length == 1 && acceptableTypes[0]?.id == '') {
+      if (acceptableTypes && acceptableTypes.length === 1 && acceptableTypes[0]?.id === '') {
         return true;
       }
       let isOk = false;

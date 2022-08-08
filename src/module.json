@@ -62,12 +62,32 @@
     }
   ],
   "system": ["dnd5e", "sw5e"],
+  "relationships": {
+    "systems": [
+      {
+          "id": "dnd5e",
+          "type": "system",
+          "compatibility": {
+              "verified": "1.6.3"
+          }
+      },
+      {
+        "id": "sw5e",
+        "type": "system"
+      }
+    ]
+},
   "scripts": ["module/lib/jquery.sumoselect.min.js"],
   "esmodules": ["./main.js"],
   "styles": ["styles/inventory-plus.css", "styles/sumoselect.css"],
   "packs": [],
   "minimumCoreVersion": "9",
   "compatibleCoreVersion": "9",
+  "compatibility": {
+    "minimum": 9,
+    "verified": 9,
+    "maximum": 9
+  },
   "manifestPlusVersion": "1.2.0",
   "url": "https://github.com/p4535992/inventory-plus",
   "manifest": "https://github.com/p4535992/inventory-plus/releases/latest/download/module.json",

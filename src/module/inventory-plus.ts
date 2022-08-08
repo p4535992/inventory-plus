@@ -268,7 +268,7 @@ export class InventoryPlus {
     const filterJSON = Object.keys(flagCategorys)
       .filter(function (key) {
         const entry = flagCategorys[key];
-        return entry != undefined && entry != null && entry.label;
+        return entry !== undefined && entry !== null && entry.label;
       })
       .reduce((res, key) => ((res[key] = flagCategorys[key]), res), {});
 
@@ -502,7 +502,7 @@ export class InventoryPlus {
       $(el).data('type', type);
       $(el).attr('data-type', type);
 
-      const removeCategoryBtnS = `<a class="item-control remove-category" 
+      const removeCategoryBtnS = `<a class="item-control remove-category"
           title="${i18n(`${CONSTANTS.MODULE_NAME}.inv-plus-dialog.deletecategory`)}"
           data-type="${type}">
           <i class="fas fa-minus"></i>${i18n(`${CONSTANTS.MODULE_NAME}.inv-plus-dialog.deletecategoryprefix`)}</a>`;
@@ -561,8 +561,8 @@ export class InventoryPlus {
         d.render(true);
       });
 
-      const createItemBtn = `<a class="item-control item-create-2" 
-          title="${i18n('DND5E.ItemCreate')}" 
+      const createItemBtn = `<a class="item-control item-create-2"
+          title="${i18n('DND5E.ItemCreate')}"
           data-type="${type}">
           <i class="fas fa-plus"></i> ${i18n('DND5E.Add')}</a>`;
 
@@ -868,17 +868,17 @@ export class InventoryPlus {
     /*
     const items = actor.data.items.contents;
     for (const section of inventory) {
-      for (const item of <Item[]>items) { 
+      for (const item of <Item[]>items) {
         if(!item){
           continue;
-        }   
+        }
         let type = this.getItemType(item.data);
         if (sections[type] === undefined) {
           type = item.type;
         }
-        if(!sections[type] && 
-          section.explicitTypes?.length > 0 && 
-          section.explicitTypes[0]?.id != ''){
+        if(!sections[type] &&
+          section.explicitTypes?.length > 0 &&
+          section.explicitTypes[0]?.id !== ''){
           type = section.explicitTypes[0];
         }
         if (sections[type]) {
@@ -1067,7 +1067,7 @@ export class InventoryPlus {
       type = item.type;
     }
     // 0.5.4 only thing i touched, this broke everything ????
-    //if (this.customCategorys[type] && this.customCategorys[type]?.dataset.type != item.type) {
+    //if (this.customCategorys[type] && this.customCategorys[type]?.dataset.type !== item.type) {
     //  return item.type;
     //}
     return type;

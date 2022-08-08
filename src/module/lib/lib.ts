@@ -235,7 +235,7 @@ export function getFirstPlayerTokenSelected(): Token | null {
     //iteractionFailNotification(i18n("foundryvtt-arms-reach.warningNoSelectMoreThanOneToken"));
     return null;
   }
-  if (!selectedTokens || selectedTokens.length == 0) {
+  if (!selectedTokens || selectedTokens.length === 0) {
     //if(game.user.character.data.token){
     //  //@ts-ignore
     //  return game.user.character.data.token;
@@ -262,7 +262,7 @@ export function getFirstPlayerToken(): Token | null {
   // If exactly one token is selected, take that
   token = <Token>controlled[0];
   if (!token) {
-    if (!controlled.length || controlled.length == 0) {
+    if (!controlled.length || controlled.length === 0) {
       // If no token is selected use the token of the users character
       token = <Token>canvas.tokens?.placeables.find((token) => token.data._id === game.user?.character?.data?._id);
     }
@@ -312,7 +312,7 @@ function getElevationPlaceableObject(placeableObject: any): number {
 export function getCSSName(element) {
   const version = <string[]>game.system.data.version.split('.');
   if (element === 'sub-header') {
-    if (Number(version[0]) == 0 && Number(version[1]) <= 9 && Number(version[2]) <= 8) {
+    if (Number(version[0]) === 0 && Number(version[1]) <= 9 && Number(version[2]) <= 8) {
       return 'inventory-header';
     } else {
       return 'items-header';
@@ -363,7 +363,7 @@ export async function retrieveItemFromData(
 export function isAlt() {
   // check if Alt and only Alt is being pressed during the drop event.
   const alts = new Set(['Alt', 'AltLeft']);
-  return game.keyboard?.downKeys.size == 1 && game.keyboard.downKeys.intersects(alts);
+  return game.keyboard?.downKeys.size === 1 && game.keyboard.downKeys.intersects(alts);
 }
 
 export function checkCompatible(actorTypeName1: string, actorTypeName2: string, item: Item) {
@@ -378,7 +378,7 @@ export function checkCompatible(actorTypeName1: string, actorTypeName2: string, 
   );
 
   const transferBetweenSameTypeActors = game.settings.get(CONSTANTS.MODULE_NAME, 'actorTransferSame');
-  if (transferBetweenSameTypeActors && actorTypeName1 == actorTypeName2) {
+  if (transferBetweenSameTypeActors && actorTypeName1 === actorTypeName2) {
     return true;
   }
   try {
@@ -387,8 +387,8 @@ export function checkCompatible(actorTypeName1: string, actorTypeName2: string, 
     const withActorTypeName2 = transferPairs[actorTypeName2];
     if (Array.isArray(withActorTypeName1) && withActorTypeName1.indexOf(actorTypeName2) !== -1) return true;
     if (Array.isArray(withActorTypeName2) && withActorTypeName2.indexOf(actorTypeName1) !== -1) return true;
-    if (withActorTypeName1 == actorTypeName2) return true;
-    if (withActorTypeName2 == actorTypeName1) return true;
+    if (withActorTypeName1 === actorTypeName2) return true;
+    if (withActorTypeName2 === actorTypeName1) return true;
   } catch (err: any) {
     error(err.message, true);
   }
@@ -396,7 +396,7 @@ export function checkCompatible(actorTypeName1: string, actorTypeName2: string, 
 }
 
 export function deleteItem(sheet: ActorSheet, itemId: string) {
-  if (sheet.actor?.deleteEmbeddedDocuments != undefined) {
+  if (sheet.actor?.deleteEmbeddedDocuments !== undefined) {
     sheet.actor?.deleteEmbeddedDocuments('Item', [itemId]);
   } else {
     //@ts-ignore
@@ -406,7 +406,7 @@ export function deleteItem(sheet: ActorSheet, itemId: string) {
 
 export function deleteItemIfZero(sheet: ActorSheet, itemId: string) {
   const item = sheet.actor?.data.items.get(itemId);
-  if (item == undefined) {
+  if (item === undefined) {
     return;
   }
   //@ts-ignore
@@ -425,7 +425,7 @@ export function transferItem(
   stackItems: boolean,
 ) {
   const originalItem = sourceSheet.actor?.items.get(originalItemId);
-  if (originalItem == undefined) {
+  if (originalItem === undefined) {
     console.error('Could not find the source item', originalItemId);
     return;
   }
@@ -436,7 +436,7 @@ export function transferItem(
     if (stackItems) {
       const potentialStacks = <Item[]>(
         targetSheet.actor?.data.items.filter(
-          (i) => i.name == originalItem.name && diffObject(createdItem, i) && i.data._id !== createdItem.data._id,
+          (i) => i.name === originalItem.name && diffObject(createdItem, i) && i.data._id !== createdItem.data._id,
         )
       );
       if (potentialStacks.length >= 1) {
@@ -651,17 +651,17 @@ const TYPE_OFFSETS = {
   UNKNOWN: 20000,
 };
 
-export function getItemsToSort(actor) {
-  if (!actor || !actor.data) {
+export function getItemsToSort(actor:Actor) {
+  if (!actor) {
     return [];
   }
-  return actor.data.items.map((itemEntity) => {
-    const item = itemEntity.data;
+  return actor.items.map((item) => {
+    // const item = itemEntity.data;
     const type = item.type;
     const name = item.name;
     let subtype = 0;
     if (type === 'spell') {
-      const prepMode = item.data.preparation && item.data.preparation.mode;
+      const prepMode = item.preparation && item.preparation.mode;
       if (prepMode === 'atwill') {
         subtype = 10;
       } else if (prepMode === 'innate') {
@@ -669,10 +669,10 @@ export function getItemsToSort(actor) {
       } else if (prepMode === 'pact') {
         subtype = 12;
       } else {
-        subtype = parseInt(item.data.level, 10) || 0;
+        subtype = parseInt(item.level, 10) || 0;
       }
     } else if (type === 'feat') {
-      if (!item.data.activation || item.data.activation.type === '') {
+      if (!item.activation || item.activation.type === '') {
         // Passive feats
         subtype = 0;
       } else {
@@ -681,7 +681,7 @@ export function getItemsToSort(actor) {
       }
     }
     return {
-      id: itemEntity.id,
+      id: item.id,
       type: type,
       subtype: subtype,
       name: name,
@@ -711,7 +711,7 @@ export function getItemSorts(actor: Actor): Map<string, { _id: string; sort: num
   const itemSorts = new Map();
   let nextSort = 0;
   let lastType: string | null = null;
-  let lastSubType = null;
+  let lastSubType:number|null = null;
   for (const item of sortedItems) {
     if (item.type !== lastType || item.subtype !== lastSubType) {
       nextSort = 0;
@@ -736,8 +736,8 @@ export function sortItems(actor: Actor) {
   const itemUpdates: any[] = [];
   for (const itemSort of itemSorts.values()) {
     const item = <Item>actor.items.get(itemSort._id);
-    if (item.data.sort !== itemSort.sort) {
-      debug(`item sort mismatch  id = ${item.id}, current = ${item.data.sort}, new = ${itemSort.sort}`);
+    if (item.sort !== itemSort.sort) {
+      debug(`item sort mismatch  id = ${item.id}, current = ${item.sort}, new = ${itemSort.sort}`);
       itemUpdates.push(itemSort);
     }
   }
@@ -851,7 +851,7 @@ export function calcWeight(
   // );
   const isEquipped: boolean =
     //@ts-ignore
-    (item.data.equipped && item.data.equipped != item.data.data?.equipped
+    (item.data.equipped && item.data.equipped !== item.data.data?.equipped
       ? //@ts-ignore
         item.data.equipped
       : //@ts-ignore
@@ -910,14 +910,14 @@ function _calcItemWeight(item: Item) {
   // const weight = item.data.data.weight || 0;
   const quantity =
     //@ts-ignore
-    (is_real_number(item.data.quantity) && item.data.quantity != item.data.data?.quantity
+    (is_real_number(item.data.quantity) && item.data.quantity !== item.data.data?.quantity
       ? //@ts-ignore
         item.data.quantity
       : //@ts-ignore
         item.data.data?.quantity) || 0;
   const weight =
     //@ts-ignore
-    (is_real_number(item.data.weight) && item.data.weight != item.data.data?.weight
+    (is_real_number(item.data.weight) && item.data.weight !== item.data.data?.weight
       ? //@ts-ignore
         item.data.weight
       : //@ts-ignore

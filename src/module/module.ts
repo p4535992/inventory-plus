@@ -92,7 +92,7 @@ export const readyHooks = async (): Promise<void> => {
       const targetActor = actor;
       const itemTypeCurrent = data?.type; // || event.type;
 
-      if (itemTypeCurrent != 'Item') {
+      if (itemTypeCurrent !== 'Item') {
         warn(i18n(`${CONSTANTS.MODULE_NAME}.dialogs.warn.itemtypecurrent`));
         return;
       }
@@ -174,7 +174,7 @@ export const readyHooks = async (): Promise<void> => {
         }
       }
 
-      if (targetType == 'feat' || targetType == 'spell' || targetType == 'class' || targetType == 'subclass') {
+      if (targetType === 'feat' || targetType === 'spell' || targetType === 'class' || targetType === 'subclass') {
         if (!this.actor.isOwner) return false;
         const item = <Item>await Item.fromDropData(data);
         const itemData = item.toObject();
@@ -451,7 +451,7 @@ export const readyHooks = async (): Promise<void> => {
       });
 
       updateData = updateData.filter((i) => {
-        return i._id != null && i._id != undefined && i._id != '';
+        return i._id !== null && i._id !== undefined && i._id !== '';
       });
 
       // Perform the update
@@ -507,21 +507,21 @@ const module = {
     //   return; // ignore when Alt is pressed to drop.
     // }
 
-    if (targetActor.permission != 3) {
+    if (targetActor.permission !== 3) {
       error("You don't have the permissions to transfer items here", true);
       return;
     }
 
-    if (data.type == 'Item' && data.actorId) {
+    if (data.type === 'Item' && data.actorId) {
       if (!targetActor.data._id) {
         warn(`target has no data._id? ${targetActor}`);
         return;
       }
-      if (targetActor.data._id == data.actorId) {
+      if (targetActor.data._id === data.actorId) {
         return; // ignore dropping on self
       }
       let sourceSheet: ActorSheet;
-      if (data.tokenId != null) {
+      if (data.tokenId !== null) {
         //game.scenes.get("hyfUtn3VVPnVUpJe").tokens.get("OYwRVJ7crDyid19t").sheet.actor.items
         //@ts-ignore
         sourceSheet = <ActorSheet>game.scenes?.get(data.sceneId)!.tokens.get(data.tokenId)!.sheet;
