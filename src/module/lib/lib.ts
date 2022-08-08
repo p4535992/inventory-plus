@@ -655,13 +655,26 @@ export function getItemsToSort(actor:Actor) {
   if (!actor) {
     return [];
   }
-  return actor.items.map((item) => {
+  const itemsToCheck = actor.items
+    ? actor.items  // fvtt10
+    : actor.data.items; // fvtt9
+  return itemsToCheck.map((item) => {
     // const item = itemEntity.data;
     const type = item.type;
     const name = item.name;
     let subtype = 0;
     if (type === 'spell') {
-      const prepMode = item.preparation && item.preparation.mode;
+      //@ts-ignore
+      const prepMode = (item.preparation && item.preparation.mode)
+        //@ts-ignore
+        ? item.preparation.mode //fvtt10
+        : (
+          //@ts-ignore
+          (item.data.preparation && item.data.preparation.mode)
+          //@ts-ignore
+          ? item.data.preparation.mode //fvtt9
+          : undefined
+        );
       if (prepMode === 'atwill') {
         subtype = 10;
       } else if (prepMode === 'innate') {
@@ -669,13 +682,31 @@ export function getItemsToSort(actor:Actor) {
       } else if (prepMode === 'pact') {
         subtype = 12;
       } else {
-        subtype = parseInt(item.level, 10) || 0;
+        //@ts-ignore
+        const level = item.level
+          //@ts-ignore
+          ? item.level //fvtt10
+          //@ts-ignore
+          : item.data.level; //fvtt9
+        subtype = parseInt(level, 10) || 0;
       }
     } else if (type === 'feat') {
-      if (!item.activation || item.activation.type === '') {
+      let foundSubType = false;
+      //@ts-ignore
+      // fvtt10
+      if (!item.data && (!item.activation || item.activation.type === '')) {
         // Passive feats
         subtype = 0;
-      } else {
+        foundSubType = true;
+      }
+      //@ts-ignore
+      // fvtt9
+      if (item.data && (!item.data.activation || item.data.activation.type === '')) {
+        // Passive feats
+        subtype = 0;
+        foundSubType = true;
+      }
+      if(!foundSubType){
         // Active feats
         subtype = 1;
       }
@@ -685,6 +716,7 @@ export function getItemsToSort(actor:Actor) {
       type: type,
       subtype: subtype,
       name: name,
+      //@ts-ignore
       sort: item.sort,
     };
   });
@@ -736,9 +768,22 @@ export function sortItems(actor: Actor) {
   const itemUpdates: any[] = [];
   for (const itemSort of itemSorts.values()) {
     const item = <Item>actor.items.get(itemSort._id);
-    if (item.sort !== itemSort.sort) {
-      debug(`item sort mismatch  id = ${item.id}, current = ${item.sort}, new = ${itemSort.sort}`);
-      itemUpdates.push(itemSort);
+    // fvtt10
+    //@ts-ignore
+    if(item.sort){
+      //@ts-ignore
+      if (item.sort !== itemSort.sort) {
+        //@ts-ignore
+        debug(`item sort mismatch  id = ${item.id}, current = ${item.sort}, new = ${itemSort.sort}`);
+        itemUpdates.push(itemSort);
+      }
+    }
+    // fvtt9
+    if(item.data.sort){
+      if (item.data.sort !== itemSort.sort) {
+        debug(`item sort mismatch  id = ${item.id}, current = ${item.data.sort}, new = ${itemSort.sort}`);
+        itemUpdates.push(itemSort);
+      }
     }
   }
   if (itemUpdates.length > 0) {
