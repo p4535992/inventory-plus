@@ -5,7 +5,9 @@
     "strict": false,
     "target": "ES2021",
     "lib": ["ES2021", "DOM"],
-    "types": ["@league-of-foundry-developers/foundry-vtt-types/index-lenient"],
+    "module": "commonjs",
+    "rootDir": "./src", 
+    "types": ["@league-of-foundry-developers/foundry-vtt-types/index-lenient", "jest"],
     "strictNullChecks": true,
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
@@ -13,5 +15,6 @@
     "resolveJsonModule": true,
     "importsNotUsedAsValues": "error"
   },
-  "include": ["src"]
+  "include": ["src/**/*.ts"],
+  "exclude": ["gulpfile.ts","dist"]
 }
