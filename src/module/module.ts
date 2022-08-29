@@ -492,11 +492,11 @@ const module = {
   },
   async renderActorSheet5eCharacterInventoryPlus(...args) {
     const [app, html, data] = args;
-    if (!app.inventoryPlus) {
-      const actorEntityTmp: any = <Actor>game.actors?.get(data.actor._id);
-      app.inventoryPlus = new InventoryPlus();
-      app.inventoryPlus.init(actorEntityTmp);
-    }
+    const actorEntityTmp: any = <Actor>game.actors?.get(data.actor._id);
+    // if (!app.inventoryPlus) {
+    app.inventoryPlus = new InventoryPlus();
+    app.inventoryPlus.init(actorEntityTmp);
+    // }
     app.inventoryPlus.addInventoryFunctions(html);
   },
   dropActorSheetDataTransferStuff(targetActor: Actor, targetSheet: ActorSheet, data: any) {

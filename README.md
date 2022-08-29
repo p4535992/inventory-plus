@@ -77,22 +77,13 @@ Due to collisions, code maintenance problems, and **reduction in the number of m
 
 ### game.modules.get('inventory-plus').api.calculateWeightFromActor(actorIdOrName:string) ⇒ <code>number</code>
 
-A method to calculate the weight (the one from the module filters) on the actor
+A method to calculate the weight (the one from the module filters) on inventory array and the current currency present on the actor
 
 **Returns**: <code>number</code>
 
 | Param | Type | Description | Default |
 | --- | --- | --- | --- |
 | actorIdOrName | <code>string</code> | The actor id or name (if founded) | <code>undefined</code> |
-
-### [REMOVED] game.modules.get('inventory-plus').api.calculateWeight(inventory: Category[], currency: number) ⇒ <code>number</code>
-
-**Returns**: <code>number</code>
-
-| Param | Type | Description | Default |
-| --- | --- | --- | --- |
-| inventory | <code>Category[]</code> | Array of categories | <code>undefined</code> |
-| currency | <code>number</code> | Total weigth currency | <code>undefined</code> |
 
 ### game.modules.get('inventory-plus').api.isCategoryFulled(actor: Actor, categoryType: string, itemData:ItemData) ⇒ <code>boolean</code>
 
@@ -102,9 +93,42 @@ A method to calculate the weight (the one from the module filters) on the actor
 | --- | --- | --- | --- |
 | actor | <code>Actor</code> | The actor | <code>undefined</code> |
 | categoryType | <code>string</code> | The id of the category | <code>undefined</code> |
-| itemData | <code>ItemData</code> | The item data to drop on the invetory with specific category type | <code>undefined</code> |
+| itemData | <code>ItemData</code> | The item data to drop on the inventory with specific category type | <code>undefined</code> |
 
-A method to calculate the weight (the one from the module filters) on inventory array and the current currency present on the actor
+
+###  game.modules.get('inventory-plus').api.addCategory(actorId: string, categoryLabel: string, ignoreWeight: boolean | undefined, maxWeight: number | undefined, ownWeight: number | undefined, items: ItemData[] | undefined, explicitTypes: InventoryPlusItemType[]|undefined) ⇒ <code>Promise<void></code>
+
+| Param | Type | Description | Default |
+| --- | --- | --- | --- |
+| actorId | <code>string</code> | The actor Id | <code>undefined</code> |
+| categoryLabel | <code>string</code> | The label of the category | <code>undefined</code> |
+| ignoreWeight | <code>boolean</code> | The boolean value for ignore the weight | <code>false</code> |
+| maxWeight | <code>number</code> | The value of the max weight of the category | <code>0</code> |
+| ownWeight | <code>number</code> | The value of the own weight of the category | <code>0</code> |
+| items | <code>ItemData[]</code> | The array of itemData to associate to the category. If the item is not present on the actor it will be created so pay attention. | <code>undefined</code> |
+| explicitTypes | <code>InventoryPlusItemType[]</code> | The array of `InventoryPlusItemType` associated to the category| <code>undefined</code> |
+
+#### Example
+
+```
+const actorEntityTmp = game.actors?.getName('PARTY INVENTORY');
+const actorId = actorEntityTmp.id;
+game.modules.get('inventory-plus').api.addCategory(actorId, 'label16')
+```
+
+### Models used from API
+
+The `InventoryPlusItemType` object is represented like this:
+```
+{
+  id: string;
+  name: string;
+  namePl: string;
+  img: string;
+  isSelected: boolean;
+  isInventory: boolean;
+}
+```
 
 The `Category` object is represented like this:
 ```
@@ -119,12 +143,6 @@ The `Category` object is represented like this:
   items: ItemData[];
 }
 ```
-
-**Returns**: <code>number</code>
-
-| Param | Type | Description | Default |
-| --- | --- | --- | --- |
-| actorIdOrName | <code>string</code> | The actro id or name (if founded) | <code>undefined</code> 
 
 # Build
 

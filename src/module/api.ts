@@ -1,7 +1,13 @@
 import type { ItemData } from '@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/data/module.mjs';
 import CONSTANTS from './constants';
-import type { InventoryPlus } from './inventory-plus';
-import { Category, EncumbranceData, EncumbranceDnd5e, InventoryPlusFlags } from './inventory-plus-models';
+import { InventoryPlus } from './inventory-plus';
+import {
+  Category,
+  EncumbranceData,
+  EncumbranceDnd5e,
+  InventoryPlusFlags,
+  InventoryPlusItemType,
+} from './inventory-plus-models';
 import { calcWeight, debug, is_real_number, warn } from './lib/lib';
 
 const API = {
@@ -298,6 +304,60 @@ const API = {
       }
       return categoryDatasetType === type;
     });
+  },
+
+  async addCategory(
+    actorId: string,
+    categoryLabel: string,
+    ignoreWeight: boolean | undefined,
+    maxWeight: number | undefined,
+    ownWeight: number | undefined,
+    items: ItemData[] | undefined,
+    explicitTypes: InventoryPlusItemType[] | undefined,
+  ): Promise<void> {
+    if (!actorId) {
+      warn(`No actor id is been passed`);
+      return;
+    }
+    const actorEntityTmp = game.actors?.get(actorId);
+    if (!actorEntityTmp) {
+      warn(`No actor found with id '${actorId}'`);
+      return;
+    }
+    if (!categoryLabel) {
+      warn(`No category label is been passed`);
+      return;
+    }
+    const inventoryPlus = new InventoryPlus();
+    inventoryPlus.init(actorEntityTmp);
+
+    const key = inventoryPlus.generateCategoryId();
+    const newCategory = new Category();
+    newCategory.label = categoryLabel;
+    newCategory.dataset = { type: key };
+    newCategory.ignoreWeight = ignoreWeight ?? false;
+    newCategory.maxWeight = maxWeight ?? 0;
+    newCategory.ownWeight = ownWeight ?? 0;
+    newCategory.collapsed = false;
+    newCategory.sortFlag = inventoryPlus.getHighestSortFlag() + 1000;
+    if (explicitTypes) {
+      newCategory.explicitTypes = explicitTypes;
+    }
+    inventoryPlus.customCategorys[key] = newCategory;
+    inventoryPlus.saveCategorys();
+    if (items && items.length > 0) {
+      for (const itmData of items) {
+        let itemOnActor = <Item>actorEntityTmp.items.find((i: Item) => {
+          return i.data._id === itmData._id;
+        });
+        if (!itemOnActor) {
+          //@ts-ignore
+          itemOnActor = await actorEntityTmp?.createEmbeddedDocuments('Item', [itmData]);
+        }
+        await itemOnActor.setFlag(CONSTANTS.MODULE_NAME, InventoryPlusFlags.CATEGORY, key);
+      }
+      //newCategory.items = items;
+    }
   },
 };
 

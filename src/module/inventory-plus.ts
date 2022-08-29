@@ -32,10 +32,10 @@ export class InventoryPlus {
   customCategorys: Record<string, Category>;
 
   static processInventory(app, actor: Actor, inventory: Category[]) {
-    if (app.inventoryPlus === undefined) {
-      app.inventoryPlus = new InventoryPlus();
-      (<InventoryPlus>app.inventoryPlus).init(actor);
-    }
+    //if (app.inventoryPlus === undefined) {
+    app.inventoryPlus = new InventoryPlus();
+    (<InventoryPlus>app.inventoryPlus).init(actor);
+    //}
     return (<InventoryPlus>app.inventoryPlus).prepareInventory(actor, inventory);
   }
 

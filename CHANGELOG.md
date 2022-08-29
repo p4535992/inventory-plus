@@ -1,3 +1,7 @@
+### 0.5.22
+
+- Add to the API the `addCategory` method
+
 ### 0.5.21
 
 - Correctly fast-find compendium item IDs

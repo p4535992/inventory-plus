@@ -651,12 +651,12 @@ const TYPE_OFFSETS = {
   UNKNOWN: 20000,
 };
 
-export function getItemsToSort(actor:Actor) {
+export function getItemsToSort(actor: Actor) {
   if (!actor) {
     return [];
   }
   const itemsToCheck = actor.items
-    ? actor.items  // fvtt10
+    ? actor.items // fvtt10
     : actor.data.items; // fvtt9
   return itemsToCheck.map((item) => {
     // const item = itemEntity.data;
@@ -664,17 +664,16 @@ export function getItemsToSort(actor:Actor) {
     const name = item.name;
     let subtype = 0;
     if (type === 'spell') {
-      //@ts-ignore
-      const prepMode = (item.preparation && item.preparation.mode)
+      const prepMode =
         //@ts-ignore
-        ? item.preparation.mode //fvtt10
-        : (
-          //@ts-ignore
-          (item.data.preparation && item.data.preparation.mode)
-          //@ts-ignore
-          ? item.data.preparation.mode //fvtt9
-          : undefined
-        );
+        item.preparation && item.preparation.mode
+          ? //@ts-ignore
+            item.preparation.mode //fvtt10
+          : //@ts-ignore
+          item.data.preparation && item.data.preparation.mode
+          ? //@ts-ignore
+            item.data.preparation.mode //fvtt9
+          : undefined;
       if (prepMode === 'atwill') {
         subtype = 10;
       } else if (prepMode === 'innate') {
@@ -684,10 +683,10 @@ export function getItemsToSort(actor:Actor) {
       } else {
         //@ts-ignore
         const level = item.level
-          //@ts-ignore
-          ? item.level //fvtt10
-          //@ts-ignore
-          : item.data.level; //fvtt9
+          ? //@ts-ignore
+            item.level //fvtt10
+          : //@ts-ignore
+            item.data.level; //fvtt9
         subtype = parseInt(level, 10) || 0;
       }
     } else if (type === 'feat') {
@@ -706,7 +705,7 @@ export function getItemsToSort(actor:Actor) {
         subtype = 0;
         foundSubType = true;
       }
-      if(!foundSubType){
+      if (!foundSubType) {
         // Active feats
         subtype = 1;
       }
@@ -743,7 +742,7 @@ export function getItemSorts(actor: Actor): Map<string, { _id: string; sort: num
   const itemSorts = new Map();
   let nextSort = 0;
   let lastType: string | null = null;
-  let lastSubType:number|null = null;
+  let lastSubType: number | null = null;
   for (const item of sortedItems) {
     if (item.type !== lastType || item.subtype !== lastSubType) {
       nextSort = 0;
@@ -770,7 +769,7 @@ export function sortItems(actor: Actor) {
     const item = <Item>actor.items.get(itemSort._id);
     // fvtt10
     //@ts-ignore
-    if(item.sort){
+    if (item.sort) {
       //@ts-ignore
       if (item.sort !== itemSort.sort) {
         //@ts-ignore
@@ -779,7 +778,7 @@ export function sortItems(actor: Actor) {
       }
     }
     // fvtt9
-    if(item.data.sort){
+    if (item.data.sort) {
       if (item.data.sort !== itemSort.sort) {
         debug(`item sort mismatch  id = ${item.id}, current = ${item.data.sort}, new = ${itemSort.sort}`);
         itemUpdates.push(itemSort);
