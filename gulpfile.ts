@@ -4,7 +4,7 @@
 /**
  * This is important for the bundle.js
  */
-const mainFilePath = "src/main.ts";
+// const mainFilePath = "src/main.ts"; // MOD 4535992
 
 import * as gulp from "gulp";
 import fs from "fs";
@@ -255,19 +255,22 @@ function buildSASS() {
   return gulp.src('src/**/*.scss').pipe(sass().on('error', sass.logError)).pipe(gulp.dest('dist'));
 }
 
-const bundleModule = () => {
-    // TODO I don't like but is more faster ?
-    // const debug = argv.dbg || argv.debug;
-    // const bsfy = browserify(path.join(__dirname, mainFilePath), { debug: debug });
-    // return bsfy
-    //     .on('error', console.error)
-    //     .plugin(tsify)
-    //     .bundle()
-    //     .pipe(source(path.join("dist", "bundle.js")))
-    //     .pipe(buffer())
-    //     .pipe(sourcemaps.init({loadMaps: true}))
-    //     .pipe(sourcemaps.write('./'))
-    //     .pipe(gulp.dest('./'));
+const bundleModule = async () => {
+    // TODO I don't like but is more faster in production ?
+    /* MOD 4535992
+    const debug = argv.dbg || argv.debug;
+    const bsfy = browserify(path.join(__dirname, mainFilePath), { debug: debug });
+    return bsfy
+        .on('error', console.error)
+        .plugin(tsify)
+        .bundle()
+        .pipe(source(path.join("dist", "bundle.js")))
+        .pipe(buffer())
+        .pipe(sourcemaps.init({loadMaps: true}))
+        .pipe(sourcemaps.write('./'))
+        .pipe(gulp.dest('./'));
+    */
+    await Promise.resolve('bundleModule done');
 }
 
 const copyFiles = async() => {
@@ -306,12 +309,15 @@ const copyFiles = async() => {
     try {
         for (const entity of statics) {
 
+            const p = path.join("src", entity);
+            /* MOD 4535992
             let p:string|null = null;
-            // if (entity.endsWith("module.json") || entity.endsWith("templates") || entity.endsWith("lang")) {
-                p = path.join("src", entity);
-            // } else {
-            //  p = path.join("assets", entity);
-            // }
+            if (entity.endsWith("module.json") || entity.endsWith("templates") || entity.endsWith("lang")) {
+              p = path.join("src", entity);
+            } else {
+              p = path.join("assets", entity);
+            }
+            */
             if (fs.existsSync(p)) {
                 if (fs.lstatSync(p).isDirectory())
                     recursiveFileSearch(p, (err: NodeJS.ErrnoException | null, res: Array<string>) => {
@@ -361,6 +367,7 @@ const cleanDist = async () => {
 
     await getFiles(path.resolve("./dist"));
     for(const file of files) {
+        /* MOD 4535992
         if (file.endsWith("bundle.js") ||
             file.endsWith(".css") ||
             file.endsWith("module.json") ||
@@ -370,6 +377,7 @@ const cleanDist = async () => {
             file.endsWith(".html")){
             continue;
         }
+        */
         console.warn("Cleaning " + path.relative(process.cwd(), file));
         await fs.promises.unlink(file);
     }
@@ -401,7 +409,7 @@ const clean = async () => {
     const files:string[] = [];
 
     // If the project uses TypeScript
-    // if (fs.existsSync(path.join("src", mainFilePath))) {
+    // if (fs.existsSync(path.join("src", mainFilePath))) { // MOD 4535992
         files.push(
             "lang",
             "fonts",
@@ -415,18 +423,19 @@ const clean = async () => {
             "system.json",
             "template.json"
         );
-    // }
+    // } // MOD 4535992
 
     // If the project uses Less
+    /* MOD 4535992
     // if (fs.existsSync(path.join("src/styles/", `${name}.less`))) {
     //     files.push("fonts", `${name}.css`);
     // }
-
+    */
     // Attempt to remove the files
     try {
         for (const filePath of files) {
             if (fs.existsSync(path.join("dist", filePath))){
-              // fs.unlinkSync(path.join("dist", filePath));
+              // fs.unlinkSync(path.join("dist", filePath)); // MOD 4535992
               fs.rmSync(path.join("dist", filePath), { recursive: true, force: true });
             }
         }
@@ -500,7 +509,7 @@ async function packageBuild() {
             fs.existsSync("package");
 
             // Initialize the zip file
-            const zipName = `${manifest.file.name}-v${manifest.file.version}.zip`;
+            const zipName = 'module.zip'; // `${manifest.file.name}-v${manifest.file.version}.zip`; // MOD 4535992
             const zipFile = fs.createWriteStream(path.join("package", zipName));
             //@ts-ignore
             const zip = archiver("zip", { zlib: { level: 9 } });
@@ -517,14 +526,15 @@ async function packageBuild() {
 
             zip.pipe(zipFile);
 
-
-
             // Add the directory with the final code
+            zip.directory('dist/', manifest.file.name);
+            /* MOD 4535992
             zip.file("dist/module.json", { name: "module.json" });
             zip.file("dist/bundle.js", { name: "bundle.js" });
             zip.glob("dist/*.css", {cwd:__dirname});
             zip.directory("dist/lang", "lang");
             zip.directory("dist/templates", "templates");
+            */
             console.log(`Zip files`);
 
             zip.finalize();
@@ -549,15 +559,16 @@ const updateManifest = (cb: any) => {
         repoURL = config.repository,
         manifestRoot = manifest!.root;
 
-    if (!config)
+    if (!config) {
         cb(Error("foundryconfig.json not found"));
+    }
     if (manifest === null) {
         cb(Error("Manifest JSON not found"));
         return;
     }
-    if (!rawURL || !repoURL)
+    if (!rawURL || !repoURL) {
         cb(Error("Repository URLs not configured in foundryconfig.json"));
-
+    }
     try {
         const version = argv.update || argv.u;
 
@@ -632,7 +643,7 @@ const test = () => {
 }
 
 
-// const execBuild = gulp.parallel(buildTS, buildLess, copyFiles);
+// const execBuild = gulp.parallel(buildTS, buildLess, copyFiles); // MOD 4535992
 const execBuild = gulp.parallel(buildTS, buildJS, buildMJS, buildCSS, buildLess, buildSASS, copyFiles);
 
 exports.build = gulp.series(clean, execBuild, bundleModule, cleanDist);

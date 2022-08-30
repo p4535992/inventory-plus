@@ -6,9 +6,10 @@
   "version": "0.5.22",
   "main": "main.js",
   "scripts": {
-    "package": "gulp publish --update",
-    "buildold": "gulp build && gulp link",
-    "build": "gulp build --dbg && gulp link && npm test",
+    "packageold": "gulp publish --update",
+    "package": "gulp package",
+    "buildold": "gulp build --dbg && gulp link && npm test",
+    "build": "gulp build --dbg && gulp link",
     "build:prod": "gulp build && npm test",
     "build:watch": "gulp watch",
     "clean": "gulp clean && gulp link --clean",
@@ -20,7 +21,7 @@
   "license": "",
   "devDependencies": {
     "@babel/core": "^7.15.0",
-    "@league-of-foundry-developers/foundry-vtt-types": "^9.242.0",
+    "@league-of-foundry-developers/foundry-vtt-types": "^9.280.0",
     "@types/archiver": "^5.1.1",
     "@types/browserify": "^12.0.37",
     "@types/color": "^3.0.2",
