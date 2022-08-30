@@ -1,6 +1,7 @@
 ### 0.5.22
 
 - Add to the API the `addCategory` method
+- Update gulp file
 
 ### 0.5.21
 
