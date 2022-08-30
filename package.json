@@ -8,7 +8,8 @@
   "scripts": {
     "publish": "gulp publish --update",
     "package": "gulp package",
-    "build": "gulp build --dbg && gulp link",
+    "build": "gulp build --dbg",
+    "build:link": "gulp build --dbg && gulp link",
     "build:test": "gulp build --dbg && gulp link && npm test",
     "build:prod": "gulp bundle && npm test",
     "build:watch": "gulp watch",
