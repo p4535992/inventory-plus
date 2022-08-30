@@ -1,6 +1,11 @@
 /* eslint-disable no-useless-escape */
 /* eslint-disable @typescript-eslint/no-var-requires */
 
+/**
+ * This is important for the bundle.js
+ */
+const mainFilePath = "src/main.ts";
+
 import * as gulp from "gulp";
 import fs from "fs";
 import * as path from "path";
@@ -251,8 +256,9 @@ function buildSASS() {
 }
 
 const bundleModule = () => {
+    // TODO I don't like but is more faster ?
     // const debug = argv.dbg || argv.debug;
-    // const bsfy = browserify(path.join(__dirname, "src/index.ts"), { debug: debug });
+    // const bsfy = browserify(path.join(__dirname, mainFilePath), { debug: debug });
     // return bsfy
     //     .on('error', console.error)
     //     .plugin(tsify)
@@ -265,7 +271,7 @@ const bundleModule = () => {
 }
 
 const copyFiles = async() => {
-    const statics = ["lang", "fonts", "assets", "templates", "packs", "module.json"];
+    const statics = ["lang", "fonts", "assets", "icons", "templates", "packs", "module.json", "system.json", "template.json"];
 
     const recursiveFileSearch = (dir: string, callback: (err: NodeJS.ErrnoException | null, res: Array<string>) => void) => {
         let results: Array<string> = [];
@@ -299,12 +305,13 @@ const copyFiles = async() => {
     console.log("files:" + statics);
     try {
         for (const entity of statics) {
+
             let p:string|null = null;
-            if (entity.endsWith("module.json") || entity.endsWith("templates") || entity.endsWith("lang")) {
+            // if (entity.endsWith("module.json") || entity.endsWith("templates") || entity.endsWith("lang")) {
                 p = path.join("src", entity);
-            } else {
-                p = path.join("Assets", entity);
-            }
+            // } else {
+            //  p = path.join("assets", entity);
+            // }
             if (fs.existsSync(p)) {
                 if (fs.lstatSync(p).isDirectory())
                     recursiveFileSearch(p, (err: NodeJS.ErrnoException | null, res: Array<string>) => {
@@ -312,7 +319,7 @@ const copyFiles = async() => {
                             throw err;
 
                         for (const file of res) {
-                            const newFile = path.join("dist", path.relative(process.cwd(), file.replace(/[S]ource[\/\\]/g, '')));
+                            const newFile = path.join("dist", path.relative(process.cwd(), file.replace(/src[\/\\]/g, '')));
                             console.log("Copying file: " + newFile);
                             const folder = path.parse(newFile).dir;
                             if (!fs.existsSync(folder))
@@ -333,8 +340,9 @@ const copyFiles = async() => {
 }
 
 const cleanDist = async () => {
-    if (argv.dbg || argv.debug)
+    if (argv.dbg || argv.debug){
         return;
+    }
     console.log("Cleaning dist file clutter");
 
     const files: string[] = [];
@@ -353,9 +361,15 @@ const cleanDist = async () => {
 
     await getFiles(path.resolve("./dist"));
     for(const file of files) {
-        if (file.endsWith("bundle.js") || file.endsWith(".css") || file.endsWith("module.json") || file.endsWith("templates") || file.endsWith("lang")|| file.endsWith(".json") || file.endsWith(".html"))
+        if (file.endsWith("bundle.js") ||
+            file.endsWith(".css") ||
+            file.endsWith("module.json") ||
+            file.endsWith("templates") ||
+            file.endsWith("lang")||
+            file.endsWith(".json") ||
+            file.endsWith(".html")){
             continue;
-
+        }
         console.warn("Cleaning " + path.relative(process.cwd(), file));
         await fs.promises.unlink(file);
     }
@@ -379,39 +393,42 @@ const buildWatch = () => {
  * while ignoring source files
  */
 const clean = async () => {
-    if (!fs.existsSync("dist"))
+    if (!fs.existsSync("dist")){
         fs.mkdirSync("dist");
+    }
 
     const name = path.basename(path.resolve("."));
     const files:string[] = [];
 
     // If the project uses TypeScript
-    if (fs.existsSync(path.join("src", `index.ts`))) {
+    // if (fs.existsSync(path.join("src", mainFilePath))) {
         files.push(
             "lang",
-            "font",
+            "fonts",
             "icons",
             "packs",
             "templates",
             "assets",
             "module",
-            `index.js`,
+            "index.js",
             "module.json",
             "system.json",
-            "template.json"  
+            "template.json"
         );
-    }
+    // }
 
     // If the project uses Less
-    if (fs.existsSync(path.join("src/styles/", `${name}.less`))) {
-        files.push("fonts", `${name}.css`);
-    }
+    // if (fs.existsSync(path.join("src/styles/", `${name}.less`))) {
+    //     files.push("fonts", `${name}.css`);
+    // }
 
     // Attempt to remove the files
     try {
         for (const filePath of files) {
-            if (fs.existsSync(path.join("dist", filePath)))
-                fs.unlinkSync(path.join("dist", filePath));
+            if (fs.existsSync(path.join("dist", filePath))){
+              // fs.unlinkSync(path.join("dist", filePath));
+              fs.rmSync(path.join("dist", filePath), { recursive: true, force: true });
+            }
         }
         return Promise.resolve();
     } catch (err) {
