@@ -499,7 +499,7 @@ async function packageBuild() {
 
     return new Promise((resolve, reject) => {
         try {
-            // Remove the package dir without doing Objectthing else
+            // Remove the package dir without doing anything else
             if (argv.clean || argv.c) {
                 console.warn('Removing all packaged files');
                 fs.rmSync('package', { force: true, recursive: true });
