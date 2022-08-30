@@ -6,19 +6,24 @@
   "version": "0.5.22",
   "main": "main.js",
   "scripts": {
-    "packageold": "gulp publish --update",
+    "publish": "gulp publish --update",
     "package": "gulp package",
-    "buildold": "gulp build --dbg && gulp link && npm test",
     "build": "gulp build --dbg && gulp link",
-    "build:prod": "gulp build && npm test",
+    "build:test": "gulp build --dbg && gulp link && npm test",
+    "build:prod": "gulp bundle && npm test",
     "build:watch": "gulp watch",
     "clean": "gulp clean && gulp link --clean",
     "test": "jest",
     "update": "npm install --save-dev @league-of-foundry-developers/foundry-vtt-types@9",
     "prettier-format": "prettier --config .prettierrc --write \"./src/**/*.{ts,js,json,scss,css,html}\""
   },
-  "author": "",
-  "license": "",
+  "keywords": [
+    "foundryvtt",
+    "fvtt",
+    "module"
+  ],
+  "author": "p4535992",
+  "license": "SEE LICENSE IN LICENSE",
   "devDependencies": {
     "@babel/core": "^7.15.0",
     "@league-of-foundry-developers/foundry-vtt-types": "^9.280.0",

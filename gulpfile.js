@@ -255,8 +255,6 @@ function buildSASS() {
 }
 
 const bundleModule = async () => {
-    // TODO I don't like but is more faster in production ?
-    /* MOD 4535992
     const debug = argv.dbg || argv.debug;
     const bsfy = browserify(path.join(__dirname, mainFilePath), { debug: debug });
     return bsfy
@@ -268,8 +266,8 @@ const bundleModule = async () => {
         .pipe(sourcemaps.init({loadMaps: true}))
         .pipe(sourcemaps.write('./'))
         .pipe(gulp.dest('./'));
-    */
-    await Promise.resolve('bundleModule done');
+
+    // await Promise.resolve('bundleModule done');
 }
 
 const copyFiles = async() => {
@@ -388,8 +386,10 @@ const cleanDist = async () => {
  * Watch for changes for each build step
  */
 const buildWatch = () => {
-    gulp.watch('src/**/*.ts', { ignoreInitial: false }, gulp.series(buildTS, bundleModule));
+    // gulp.watch('src/**/*.ts', { ignoreInitial: false }, gulp.series(buildTS, bundleModule));
+    gulp.watch('src/**/*.ts', { ignoreInitial: false }, gulp.series(buildTS));
     gulp.watch('src/**/*.less', { ignoreInitial: false }, buildLess);
+    gulp.watch('src/**/*.sass', { ignoreInitial: false }, buildSASS);
     gulp.watch(['src/fonts', 'src/lang', 'src/templates', 'src/*.json'], { ignoreInitial: false }, copyFiles);
 }
 
@@ -647,7 +647,8 @@ const test = () => {
 // const execBuild = gulp.parallel(buildTS, buildLess, copyFiles); // MOD 4535992
 const execBuild = gulp.parallel(buildTS, buildJS, buildMJS, buildCSS, buildLess, buildSASS, copyFiles);
 
-exports.build = gulp.series(clean, execBuild, bundleModule, cleanDist);
+exports.build = gulp.series(clean, execBuild, cleanDist);
+exports.bundle = gulp.series(clean, execBuild, bundleModule, cleanDist);
 exports.watch = buildWatch;
 exports.clean = clean;
 exports.link = linkUserData;
