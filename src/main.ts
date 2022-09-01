@@ -12,64 +12,64 @@
 // Import JavaScript modules
 
 // Import TypeScript modules
-import type API from './module/api';
-import CONSTANTS from './module/constants';
-import { error } from './module/lib/lib';
-import { initHooks, readyHooks, setupHooks } from './module/module';
-import { registerSettings } from './module/settings';
+import type API from "./module/api";
+import CONSTANTS from "./module/constants";
+import { error } from "./module/lib/lib";
+import { initHooks, readyHooks, setupHooks } from "./module/module";
+import { registerSettings } from "./module/settings";
 
 /* ------------------------------------ */
 /* Initialize module					*/
 /* ------------------------------------ */
-Hooks.once('init', async () => {
-  console.log(`${CONSTANTS.MODULE_NAME} | Initializing ${CONSTANTS.MODULE_NAME}`);
+Hooks.once("init", async () => {
+	console.log(`${CONSTANTS.MODULE_NAME} | Initializing ${CONSTANTS.MODULE_NAME}`);
 
-  // Register custom module settings
-  registerSettings();
+	// Register custom module settings
+	registerSettings();
 
-  initHooks();
-  // Assign custom classes and constants here
+	initHooks();
+	// Assign custom classes and constants here
 
-  // Register custom module settings
-  //registerSettings();
-  //fetchParams();
+	// Register custom module settings
+	//registerSettings();
+	//fetchParams();
 
-  // Preload Handlebars templates
-  // await preloadTemplates();
-  // Register custom sheets (if any)
+	// Preload Handlebars templates
+	// await preloadTemplates();
+	// Register custom sheets (if any)
 });
 
 /* ------------------------------------ */
 /* Setup module							*/
 /* ------------------------------------ */
-Hooks.once('setup', function () {
-  // Do anything after initialization but before ready
-  //setupModules();
+Hooks.once("setup", function () {
+	// Do anything after initialization but before ready
+	//setupModules();
 
-  setupHooks();
+	setupHooks();
 
-  //registerSettings();
+	//registerSettings();
 });
 
 /* ------------------------------------ */
 /* When ready							*/
 /* ------------------------------------ */
-Hooks.once('ready', () => {
-  // Do anything once the module is ready
-  if (!game.modules.get('lib-wrapper')?.active && game.user?.isGM) {
-    let word = 'install and activate';
-    if (game.modules.get('lib-wrapper')) word = 'activate';
-    throw error(`Requires the 'libWrapper' module. Please ${word} it.`);
-  }
+Hooks.once("ready", () => {
+	// Do anything once the module is ready
+	if (!game.modules.get("lib-wrapper")?.active && game.user?.isGM) {
+		let word = "install and activate";
+		if (game.modules.get("lib-wrapper")) word = "activate";
+		throw error(`Requires the 'libWrapper' module. Please ${word} it.`);
+	}
 
-  readyHooks();
+	readyHooks();
 });
 
 // Add any additional hooks if necessary
 
 export interface InventoryPlusModuleData {
-  api: typeof API;
-  socket: any;
+	api: typeof API;
+	socket: any;
 }
 
 /**
@@ -77,8 +77,8 @@ export interface InventoryPlusModuleData {
  * @param api to set to game module.
  */
 export function setApi(api: typeof API): void {
-  const data = game.modules.get(CONSTANTS.MODULE_NAME) as unknown as InventoryPlusModuleData;
-  data.api = api;
+	const data = game.modules.get(CONSTANTS.MODULE_NAME) as unknown as InventoryPlusModuleData;
+	data.api = api;
 }
 
 /**
@@ -86,8 +86,8 @@ export function setApi(api: typeof API): void {
  * @returns Api from games module.
  */
 export function getApi(): typeof API {
-  const data = game.modules.get(CONSTANTS.MODULE_NAME) as unknown as InventoryPlusModuleData;
-  return data.api;
+	const data = game.modules.get(CONSTANTS.MODULE_NAME) as unknown as InventoryPlusModuleData;
+	return data.api;
 }
 
 /**
@@ -95,8 +95,8 @@ export function getApi(): typeof API {
  * @param socket to set to game module.
  */
 export function setSocket(socket: any): void {
-  const data = game.modules.get(CONSTANTS.MODULE_NAME) as unknown as InventoryPlusModuleData;
-  data.socket = socket;
+	const data = game.modules.get(CONSTANTS.MODULE_NAME) as unknown as InventoryPlusModuleData;
+	data.socket = socket;
 }
 
 /*
@@ -104,6 +104,6 @@ export function setSocket(socket: any): void {
  * @returns Socket from games module.
  */
 export function getSocket() {
-  const data = game.modules.get(CONSTANTS.MODULE_NAME) as unknown as InventoryPlusModuleData;
-  return data.socket;
+	const data = game.modules.get(CONSTANTS.MODULE_NAME) as unknown as InventoryPlusModuleData;
+	return data.socket;
 }
