@@ -12,6 +12,8 @@
 
 ![GitHub all releases](https://img.shields.io/github/downloads/p4535992/inventory-plus/total?style=for-the-badge)
 
+# [THIS PROJECT IS BEEN TRANSFERRED HERE FRO FVTT10](https://github.com/p4535992/foundryvtt-inventory-plus)
+
 ### If you want to buy me a coffee [![alt-text](https://img.shields.io/badge/-Patreon-%23ff424d?style=for-the-badge)](https://www.patreon.com/p4535992) or if you want to support the original author with paypal  to felix.mueller.86@web.de
 
 A Foundry VTT module to enhance the dnd5e inventory. Allows to customize your Inventory in various ways, transfer items instead duplicate between character sheet, ordering the items, and many other feature hidden under the hood.
